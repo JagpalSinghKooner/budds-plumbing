@@ -956,6 +956,33 @@ export type Settings = {
   };
   siteName?: string;
   copyright?: BlockContent;
+  businessName?: string;
+  phoneNumber?: string;
+  email?: string;
+  address?: {
+    street?: string;
+    city?: string;
+    state?: string;
+    zip?: string;
+  };
+  businessHours?: Array<{
+    day?:
+      | 'Monday'
+      | 'Tuesday'
+      | 'Wednesday'
+      | 'Thursday'
+      | 'Friday'
+      | 'Saturday'
+      | 'Sunday';
+    open?: string;
+    close?: string;
+    _key: string;
+  }>;
+  emergencyAvailable?: '24/7' | 'after-hours' | 'weekends' | 'not-available';
+  licenseNumber?: string;
+  insuranceInfo?: string;
+  serviceRadius?: number;
+  primaryServiceArea?: string;
 };
 
 export type Navigation = {
