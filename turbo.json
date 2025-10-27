@@ -5,7 +5,17 @@
     "build": {
       "dependsOn": ["^build"],
       "inputs": ["$TURBO_DEFAULT$", ".env*"],
-      "outputs": [".next/**", "!.next/cache/**", "dist/**"]
+      "outputs": [".next/**", "!.next/cache/**", "dist/**"],
+      "env": [
+        "NEXT_PUBLIC_SANITY_PROJECT_ID",
+        "NEXT_PUBLIC_SANITY_DATASET",
+        "NEXT_PUBLIC_SANITY_API_VERSION",
+        "NEXT_PUBLIC_SITE_URL",
+        "NEXT_PUBLIC_SITE_ENV",
+        "SANITY_API_READ_TOKEN",
+        "RESEND_API_KEY",
+        "RESEND_AUDIENCE_ID"
+      ]
     },
     "dev": {
       "cache": false,
