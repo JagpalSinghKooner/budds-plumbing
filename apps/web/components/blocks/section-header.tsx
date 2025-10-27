@@ -22,6 +22,17 @@ export default function SectionHeader({
   const align = stegaClean(stackAlign);
   const color = stegaClean(colorVariant);
 
+  // Helper function to safely extract text from strings or custom text objects
+  const getText = (value: any): string => {
+    if (typeof value === "string") return value;
+    if (value && typeof value === "object" && "text" in value) return value.text;
+    return "";
+  };
+
+  const tagLineText = getText(tagLine);
+  const titleText = getText(title);
+  const descriptionText = getText(description);
+
   return (
     <SectionContainer color={color} padding={padding}>
       <div
@@ -33,14 +44,14 @@ export default function SectionHeader({
         <div
           className={cn(color === "primary" ? "text-background" : undefined)}
         >
-          {tagLine && (
+          {tagLineText && (
             <h1 className="leading-[0] mb-4">
-              <span className="text-base font-semibold">{tagLine}</span>
+              <span className="text-base font-semibold">{tagLineText}</span>
             </h1>
           )}
-          <h2 className="text-3xl md:text-5xl mb-4">{title}</h2>
+          <h2 className="text-3xl md:text-5xl mb-4">{titleText}</h2>
         </div>
-        <p>{description}</p>
+        <p>{descriptionText}</p>
       </div>
     </SectionContainer>
   );

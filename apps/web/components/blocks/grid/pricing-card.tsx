@@ -24,19 +24,30 @@ export default function PricingCard({
   list,
   link,
 }: PricingCardProps) {
+  // Helper function to safely extract text from strings or custom text objects
+  const getText = (value: any): string => {
+    if (typeof value === "string") return value;
+    if (value && typeof value === "object" && "text" in value) return value.text;
+    return "";
+  };
+
+  const titleText = getText(title);
+  const tagLineText = getText(tagLine);
+  const excerptText = getText(excerpt);
+
   return (
     <div
-      key={title}
+      key={titleText}
       className="flex w-full rounded-3xl ring-offset-background focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 group"
     >
       <div className="flex w-full flex-col justify-between border rounded-3xl p-8">
         <div
           className={cn(color === "primary" ? "text-background" : undefined)}
         >
-          {title && (
+          {titleText && (
             <div className="flex justify-between items-center">
-              <h3 className="font-bold text-xl leading-[1.2]">{title}</h3>
-              {tagLine && <Badge>{tagLine}</Badge>}
+              <h3 className="font-bold text-xl leading-[1.2]">{titleText}</h3>
+              {tagLineText && <Badge>{tagLineText}</Badge>}
             </div>
           )}
           {price && price.value !== null && price.value !== undefined && (
@@ -57,7 +68,7 @@ export default function PricingCard({
               ))}
             </ul>
           )}
-          {excerpt && <p>{excerpt}</p>}
+          {excerptText && <p>{excerptText}</p>}
         </div>
         <Button
           className="mt-6"

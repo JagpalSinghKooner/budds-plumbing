@@ -35,6 +35,27 @@ const portableTextComponents: PortableTextProps["components"] = {
         </div>
       );
     },
+    alert: ({ value }) => {
+      const { title, message, type } = value;
+      const alertType = type || "info";
+      const bgColor =
+        alertType === "error"
+          ? "bg-destructive/10 border-destructive"
+          : alertType === "warning"
+          ? "bg-yellow-50 border-yellow-500 dark:bg-yellow-950/20"
+          : alertType === "success"
+          ? "bg-green-50 border-green-500 dark:bg-green-950/20"
+          : "bg-blue-50 border-blue-500 dark:bg-blue-950/20";
+      return (
+        <div
+          className={`my-4 p-4 rounded-lg border-l-4 ${bgColor}`}
+          role="alert"
+        >
+          {title && <div className="font-semibold mb-1">{title}</div>}
+          {message && <div>{message}</div>}
+        </div>
+      );
+    },
     code: ({ value }) => {
       return (
         <div className="grid my-4 overflow-x-auto rounded-lg border border-border text-xs lg:text-sm bg-primary/80 dark:bg-muted/80">

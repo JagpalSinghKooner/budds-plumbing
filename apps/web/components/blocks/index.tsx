@@ -37,12 +37,25 @@ export default function Blocks({ blocks }: { blocks: Block[] }) {
   return (
     <>
       {blocks?.map((block) => {
+        // Skip blocks with undefined or missing _type
+        if (!block || !block._type) {
+          if (process.env.NODE_ENV === "development") {
+            console.warn(
+              `Skipping block with undefined or missing _type:`,
+              block
+            );
+          }
+          return null;
+        }
+
         const Component = componentMap[block._type];
         if (!Component) {
           // Fallback for development/debugging of new component types
-          console.warn(
-            `No component implemented for block type: ${block._type}`
-          );
+          if (process.env.NODE_ENV === "development") {
+            console.warn(
+              `No component implemented for block type: ${block._type}`
+            );
+          }
           return <div data-type={block._type} key={block._key} />;
         }
         return <Component {...(block as any)} key={block._key} />;
