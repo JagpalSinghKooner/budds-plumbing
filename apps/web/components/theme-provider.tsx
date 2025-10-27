@@ -64,14 +64,19 @@ export function ThemeProvider({
   // Apply theme to document
   const applyTheme = React.useCallback(
     (newTheme: 'light' | 'dark') => {
-      // eslint-disable-next-line no-undef
-      const root = document.documentElement;
+      try {
+        // eslint-disable-next-line no-undef
+        const root = document.documentElement;
 
-      if (attribute === 'class') {
-        root.classList.remove('light', 'dark');
-        root.classList.add(newTheme);
-      } else {
-        root.setAttribute(attribute, newTheme);
+        if (attribute === 'class') {
+          root.classList.remove('light', 'dark');
+          root.classList.add(newTheme);
+        } else {
+          root.setAttribute(attribute, newTheme);
+        }
+      } catch (error) {
+        // Handle DOM manipulation errors gracefully
+        console.error('Error applying theme:', error);
       }
     },
     [attribute]
@@ -79,13 +84,24 @@ export function ThemeProvider({
 
   // Load theme from localStorage on mount
   React.useEffect(() => {
-    // eslint-disable-next-line no-undef
-    const stored = localStorage.getItem('theme') as Theme | null;
-    if (
-      stored &&
-      (stored === 'light' || stored === 'dark' || stored === 'system')
-    ) {
-      setThemeState(stored);
+    try {
+      // eslint-disable-next-line no-undef
+      const stored = localStorage.getItem('theme') as Theme | null;
+
+      // Validate the stored theme
+      if (
+        stored &&
+        (stored === 'light' || stored === 'dark' || stored === 'system')
+      ) {
+        setThemeState(stored);
+      } else if (stored) {
+        // Clear invalid theme data from old implementations
+        // eslint-disable-next-line no-undef
+        localStorage.removeItem('theme');
+      }
+    } catch (error) {
+      // Handle localStorage access errors gracefully
+      console.error('Error accessing localStorage:', error);
     }
     setMounted(true);
   }, []);
@@ -112,8 +128,13 @@ export function ThemeProvider({
 
   const setTheme = React.useCallback((newTheme: Theme) => {
     setThemeState(newTheme);
-    // eslint-disable-next-line no-undef
-    localStorage.setItem('theme', newTheme);
+    try {
+      // eslint-disable-next-line no-undef
+      localStorage.setItem('theme', newTheme);
+    } catch (error) {
+      // Handle localStorage write errors gracefully
+      console.error('Error writing to localStorage:', error);
+    }
   }, []);
 
   const value = React.useMemo(
