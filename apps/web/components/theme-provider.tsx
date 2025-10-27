@@ -47,7 +47,6 @@ export function ThemeProvider({
   // Get system theme preference
   const getSystemTheme = React.useCallback((): 'light' | 'dark' => {
     if (typeof window === 'undefined') return 'light';
-    // eslint-disable-next-line no-undef
     return window.matchMedia('(prefers-color-scheme: dark)').matches
       ? 'dark'
       : 'light';
@@ -65,7 +64,6 @@ export function ThemeProvider({
   const applyTheme = React.useCallback(
     (newTheme: 'light' | 'dark') => {
       try {
-        // eslint-disable-next-line no-undef
         const root = document.documentElement;
 
         if (attribute === 'class') {
@@ -85,7 +83,6 @@ export function ThemeProvider({
   // Load theme from localStorage on mount
   React.useEffect(() => {
     try {
-      // eslint-disable-next-line no-undef
       const stored = localStorage.getItem('theme') as Theme | null;
 
       // Validate the stored theme
@@ -96,7 +93,6 @@ export function ThemeProvider({
         setThemeState(stored);
       } else if (stored) {
         // Clear invalid theme data from old implementations
-        // eslint-disable-next-line no-undef
         localStorage.removeItem('theme');
       }
     } catch (error) {
@@ -116,7 +112,6 @@ export function ThemeProvider({
   React.useEffect(() => {
     if (!mounted || !enableSystem || theme !== 'system') return;
 
-    // eslint-disable-next-line no-undef
     const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
     const handleChange = () => {
       applyTheme(getSystemTheme());
@@ -129,7 +124,6 @@ export function ThemeProvider({
   const setTheme = React.useCallback((newTheme: Theme) => {
     setThemeState(newTheme);
     try {
-      // eslint-disable-next-line no-undef
       localStorage.setItem('theme', newTheme);
     } catch (error) {
       // Handle localStorage write errors gracefully
