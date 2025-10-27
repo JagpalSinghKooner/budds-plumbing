@@ -172,27 +172,6 @@
             "value": "faqs"
           }
         },
-        "variant": {
-          "type": "objectAttribute",
-          "value": {
-            "type": "union",
-            "of": [
-              {
-                "type": "string",
-                "value": "faq-1"
-              },
-              {
-                "type": "string",
-                "value": "faq-2"
-              },
-              {
-                "type": "string",
-                "value": "faq-3"
-              }
-            ]
-          },
-          "optional": true
-        },
         "padding": {
           "type": "objectAttribute",
           "value": {
@@ -455,27 +434,6 @@
             "type": "string",
             "value": "cta-1"
           }
-        },
-        "variant": {
-          "type": "objectAttribute",
-          "value": {
-            "type": "union",
-            "of": [
-              {
-                "type": "string",
-                "value": "cta-1"
-              },
-              {
-                "type": "string",
-                "value": "cta-2"
-              },
-              {
-                "type": "string",
-                "value": "cta-3"
-              }
-            ]
-          },
-          "optional": true
         },
         "padding": {
           "type": "objectAttribute",
@@ -1479,27 +1437,6 @@
             "value": "carousel-2"
           }
         },
-        "variant": {
-          "type": "objectAttribute",
-          "value": {
-            "type": "union",
-            "of": [
-              {
-                "type": "string",
-                "value": "testimonial-1"
-              },
-              {
-                "type": "string",
-                "value": "testimonial-2"
-              },
-              {
-                "type": "string",
-                "value": "testimonial-3"
-              }
-            ]
-          },
-          "optional": true
-        },
         "padding": {
           "type": "objectAttribute",
           "value": {
@@ -1797,27 +1734,6 @@
             "type": "string",
             "value": "grid-row"
           }
-        },
-        "variant": {
-          "type": "objectAttribute",
-          "value": {
-            "type": "union",
-            "of": [
-              {
-                "type": "string",
-                "value": "pricing-1"
-              },
-              {
-                "type": "string",
-                "value": "pricing-2"
-              },
-              {
-                "type": "string",
-                "value": "pricing-3"
-              }
-            ]
-          },
-          "optional": true
         },
         "padding": {
           "type": "objectAttribute",
@@ -3986,27 +3902,6 @@
             "value": "hero-2"
           }
         },
-        "variant": {
-          "type": "objectAttribute",
-          "value": {
-            "type": "union",
-            "of": [
-              {
-                "type": "string",
-                "value": "hero-1"
-              },
-              {
-                "type": "string",
-                "value": "hero-2"
-              },
-              {
-                "type": "string",
-                "value": "hero-3"
-              }
-            ]
-          },
-          "optional": true
-        },
         "tagLine": {
           "type": "objectAttribute",
           "value": {
@@ -4437,27 +4332,6 @@
             "type": "string",
             "value": "hero-1"
           }
-        },
-        "variant": {
-          "type": "objectAttribute",
-          "value": {
-            "type": "union",
-            "of": [
-              {
-                "type": "string",
-                "value": "hero-1"
-              },
-              {
-                "type": "string",
-                "value": "hero-2"
-              },
-              {
-                "type": "string",
-                "value": "hero-3"
-              }
-            ]
-          },
-          "optional": true
         },
         "tagLine": {
           "type": "objectAttribute",

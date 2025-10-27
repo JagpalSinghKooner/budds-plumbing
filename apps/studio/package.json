@@ -17,9 +17,12 @@
     "@sanity/orderable-document-list": "^1.4.0",
     "@sanity/ui": "^3.1.6",
     "@sanity/vision": "^4.10.0",
+    "lucide-react": "^0.544.0",
     "react": "19.1.1",
     "react-dom": "19.1.1",
-    "sanity": "^4.10.0"
+    "react-player": "^3.3.3",
+    "sanity": "^4.10.0",
+    "styled-components": "^6.1.19"
   },
   "devDependencies": {
     "@sanity/client": "^7.11.2",

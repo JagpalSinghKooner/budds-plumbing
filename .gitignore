@@ -41,4 +41,4 @@ next-env.d.ts
 
 # monorepo
 node_modules/
-dist/
+dist/apps/web/.next/
