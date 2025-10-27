@@ -22,6 +22,28 @@ const nextConfig = {
   },
   // Skip static generation during build for validation
   skipTrailingSlashRedirect: true,
+
+  // Webpack configuration for React 19 compatibility
+  webpack: (config, { isServer }) => {
+    // Handle styled-components properly
+    if (!isServer) {
+      config.resolve.fallback = {
+        ...config.resolve.fallback,
+        fs: false,
+        net: false,
+        tls: false,
+      };
+    }
+
+    // Ensure proper module resolution
+    config.resolve.extensionAlias = {
+      '.js': ['.ts', '.tsx', '.js', '.jsx'],
+      '.mjs': ['.mts', '.mjs'],
+      '.cjs': ['.cts', '.cjs'],
+    };
+
+    return config;
+  },
 };
 
 export default nextConfig;
