@@ -1,0 +1,148 @@
+import { notFound } from 'next/navigation';
+import { client } from '@/sanity/lib/client';
+import { SERVICE_QUERY, SERVICES_SLUGS_QUERY } from '@/sanity/queries/service';
+import {
+  generateSEOMetadata,
+  generateServiceSchema,
+  generateLocalBusinessSchema,
+  combineSchemas,
+} from '@/lib/seo';
+import SectionRenderer from '@/components/SectionRenderer';
+import type { Service } from '@/sanity.types';
+
+interface ServicePageProps {
+  params: Promise<{
+    serviceSlug: string;
+  }>;
+}
+
+/**
+ * Generate static params for all services
+ */
+export async function generateStaticParams() {
+  const services =
+    await client.fetch<Array<{ slug: string }>>(SERVICES_SLUGS_QUERY);
+
+  return services.map((service) => ({
+    serviceSlug: service.slug,
+  }));
+}
+
+/**
+ * Generate metadata for SEO
+ */
+export async function generateMetadata({ params }: ServicePageProps) {
+  const { serviceSlug } = await params;
+  const service = await client.fetch<Service>(SERVICE_QUERY, {
+    slug: serviceSlug,
+  });
+
+  if (!service) {
+    return {
+      title: 'Service Not Found',
+    };
+  }
+
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
+  const canonical = `${siteUrl}/services/${serviceSlug}`;
+
+  return generateSEOMetadata({
+    title: service.meta_title || service.name || 'Service',
+    description: service.meta_description || service.headline || '',
+    canonical,
+    noindex: service.noindex || false,
+    openGraph: service.ogImage
+      ? {
+          title: service.meta_title || service.name,
+          description: service.meta_description || service.headline,
+        }
+      : undefined,
+    twitter: service.ogImage
+      ? {
+          card: 'summary_large_image',
+          title: service.meta_title || service.name,
+          description: service.meta_description || service.headline,
+        }
+      : undefined,
+  });
+}
+
+/**
+ * Service page component
+ */
+export default async function ServicePage({ params }: ServicePageProps) {
+  const { serviceSlug } = await params;
+  const service = await client.fetch<Service>(SERVICE_QUERY, {
+    slug: serviceSlug,
+  });
+
+  if (!service) {
+    notFound();
+  }
+
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
+
+  // Generate JSON-LD schemas
+  const serviceSchema = generateServiceSchema({
+    name: service.name || 'Service',
+    description: service.headline || service.meta_description || '',
+    provider: {
+      name: 'Budds Plumbing',
+      url: siteUrl,
+    },
+    serviceType: 'Plumbing Service',
+  });
+
+  const businessSchema = generateLocalBusinessSchema({
+    name: 'Budds Plumbing',
+    description: 'Professional plumbing services',
+    url: siteUrl,
+    telephone: '+1-555-PLUMBING',
+    address: {
+      streetAddress: '123 Main St',
+      addressLocality: 'City',
+      addressRegion: 'State',
+      postalCode: '12345',
+      addressCountry: 'US',
+    },
+  });
+
+  const combinedSchema = combineSchemas(serviceSchema, businessSchema);
+
+  return (
+    <>
+      {/* JSON-LD Schema */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(combinedSchema),
+        }}
+      />
+
+      {/* Page Content */}
+      <main>
+        {/* Render dynamic sections */}
+        {service.blocks && service.blocks.length > 0 && (
+          <SectionRenderer sections={service.blocks as any} />
+        )}
+
+        {/* Default content if no blocks */}
+        {(!service.blocks || service.blocks.length === 0) && (
+          <div className="container mx-auto px-4 py-16">
+            <h1 className="text-4xl font-bold mb-4">{service.name}</h1>
+            {service.headline && (
+              <p className="text-xl text-muted-foreground mb-8">
+                {service.headline}
+              </p>
+            )}
+            {service.introCopy && (
+              <div className="prose max-w-none mb-8">
+                <p>{service.introCopy}</p>
+              </div>
+            )}
+          </div>
+        )}
+      </main>
+    </>
+  );
+}
