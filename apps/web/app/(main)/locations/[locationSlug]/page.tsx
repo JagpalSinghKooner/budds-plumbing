@@ -53,7 +53,7 @@ export async function generateMetadata({ params }: LocationPageProps) {
     title: location.meta_title || location.name || 'Location',
     description: location.meta_description || location.aboutLocation || '',
     canonical,
-    noindex: location.noindex || false,
+    noindex: location.noindex === 'noindex',
     openGraph: location.ogImage
       ? {
           title: location.meta_title || location.name,

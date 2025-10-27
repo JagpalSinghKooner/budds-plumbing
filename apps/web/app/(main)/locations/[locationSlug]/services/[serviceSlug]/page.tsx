@@ -86,7 +86,8 @@ export async function generateMetadata({ params }: ServiceLocationPageProps) {
     description,
     canonical,
     noindex:
-      serviceLocation.noindex || serviceLocation.service.noindex || false,
+      serviceLocation.noindex === 'noindex' ||
+      serviceLocation.service.noindex === 'noindex',
     openGraph:
       serviceLocation.ogImage || serviceLocation.service.ogImage
         ? {

@@ -1114,7 +1114,7 @@ export type ServiceLocation = {
   >;
   meta_title?: string;
   meta_description?: string;
-  noindex?: boolean;
+  noindex?: 'index' | 'noindex';
   ogImage?: {
     asset?: {
       _ref: string;
@@ -1194,7 +1194,7 @@ export type Location = {
   >;
   meta_title?: string;
   meta_description?: string;
-  noindex?: boolean;
+  noindex?: 'index' | 'noindex';
   ogImage?: {
     asset?: {
       _ref: string;
@@ -1274,7 +1274,7 @@ export type Service = {
   >;
   meta_title?: string;
   meta_description?: string;
-  noindex?: boolean;
+  noindex?: 'index' | 'noindex';
   ogImage?: {
     asset?: {
       _ref: string;
@@ -2835,7 +2835,7 @@ export type LOCATION_QUERYResult = {
   > | null;
   meta_title: string | null;
   meta_description: string | null;
-  noindex: boolean | null;
+  noindex: 'index' | 'noindex' | null;
   ogImage: {
     asset: {
       _id: string;
@@ -5523,7 +5523,7 @@ export type SERVICE_LOCATION_QUERYResult = {
     > | null;
     meta_title: string | null;
     meta_description: string | null;
-    noindex: boolean | null;
+    noindex: 'index' | 'noindex' | null;
     ogImage: {
       asset: {
         _id: string;
@@ -6761,7 +6761,7 @@ export type SERVICE_LOCATION_QUERYResult = {
   > | null;
   meta_title: string | null;
   meta_description: string | null;
-  noindex: boolean | null;
+  noindex: 'index' | 'noindex' | null;
   ogImage: {
     asset: {
       _id: string;
@@ -8026,7 +8026,7 @@ export type SERVICE_QUERYResult = {
   > | null;
   meta_title: string | null;
   meta_description: string | null;
-  noindex: boolean | null;
+  noindex: 'index' | 'noindex' | null;
   ogImage: {
     asset: {
       _id: string;

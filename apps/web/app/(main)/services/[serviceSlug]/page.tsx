@@ -50,7 +50,7 @@ export async function generateMetadata({ params }: ServicePageProps) {
     title: service.meta_title || service.name || 'Service',
     description: service.meta_description || service.headline || '',
     canonical,
-    noindex: service.noindex || false,
+    noindex: service.noindex === 'noindex',
     openGraph: service.ogImage
       ? {
           title: service.meta_title || service.name,

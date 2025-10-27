@@ -1,5 +1,5 @@
 import { defineField, defineType } from 'sanity';
-import { MapPinned } from 'lucide-react';
+import { MapPinned, Link, FileText, Search, Layout } from 'lucide-react';
 
 export default defineType({
   name: 'service-location',
@@ -10,18 +10,22 @@ export default defineType({
     {
       name: 'references',
       title: 'References',
+      icon: Link,
     },
     {
       name: 'content',
       title: 'Content Overrides',
+      icon: FileText,
     },
     {
       name: 'seo',
       title: 'SEO',
+      icon: Search,
     },
     {
       name: 'sections',
       title: 'Sections',
+      icon: Layout,
     },
   ],
   fields: [
@@ -223,11 +227,18 @@ export default defineType({
     }),
     defineField({
       name: 'noindex',
-      title: 'No Index',
-      type: 'boolean',
+      title: 'Search Engine Indexing',
+      type: 'string',
       group: 'seo',
-      description: 'Prevent search engines from indexing this page',
-      initialValue: false,
+      description: 'Control whether search engines can index this page',
+      options: {
+        list: [
+          { title: 'Allow indexing', value: 'index' },
+          { title: 'Prevent indexing (noindex)', value: 'noindex' },
+        ],
+        layout: 'radio',
+      },
+      initialValue: 'index',
     }),
     defineField({
       name: 'ogImage',

@@ -6642,7 +6642,17 @@
       "noindex": {
         "type": "objectAttribute",
         "value": {
-          "type": "boolean"
+          "type": "union",
+          "of": [
+            {
+              "type": "string",
+              "value": "index"
+            },
+            {
+              "type": "string",
+              "value": "noindex"
+            }
+          ]
         },
         "optional": true
       },
@@ -7083,7 +7093,17 @@
       "noindex": {
         "type": "objectAttribute",
         "value": {
-          "type": "boolean"
+          "type": "union",
+          "of": [
+            {
+              "type": "string",
+              "value": "index"
+            },
+            {
+              "type": "string",
+              "value": "noindex"
+            }
+          ]
         },
         "optional": true
       },
@@ -7527,7 +7547,17 @@
       "noindex": {
         "type": "objectAttribute",
         "value": {
-          "type": "boolean"
+          "type": "union",
+          "of": [
+            {
+              "type": "string",
+              "value": "index"
+            },
+            {
+              "type": "string",
+              "value": "noindex"
+            }
+          ]
         },
         "optional": true
       },
