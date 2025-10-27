@@ -114,7 +114,7 @@ const Navbar2 = ({
             <div className="flex items-center">
               <NavigationMenuWithoutViewport>
                 <NavigationMenuList className="relative">
-                  {menu.map((item, index) => renderMenuItem(item, index))}
+                  {menu.map((item) => renderMenuItem(item))}
                 </NavigationMenuList>
               </NavigationMenuWithoutViewport>
             </div>
@@ -178,9 +178,7 @@ const Navbar2 = ({
                       collapsible
                       className="flex w-full flex-col gap-4"
                     >
-                      {menu.map((item, index) =>
-                        renderMobileMenuItem(item, index)
-                      )}
+                      {menu.map((item) => renderMobileMenuItem(item))}
                     </Accordion>
 
                     {(auth?.login || auth?.signup) && (
@@ -212,14 +210,20 @@ const Navbar2 = ({
   );
 };
 
-const renderMenuItem = (item: MenuItem, index: number) => {
+const renderMenuItem = (item: MenuItem) => {
+  const itemKey = `${item.title}-${item.url}`;
+
   if (item.items && item.items.length > 0) {
     return (
-      <NavigationMenuItem key={index}>
+      <NavigationMenuItem key={itemKey}>
         <NavigationMenuTrigger>{item.title}</NavigationMenuTrigger>
         <NavigationMenuContent className="origin-top-center data-[motion=from-end]:slide-in-from-right-52 data-[motion=from-start]:slide-in-from-left-52 data-[motion=to-end]:slide-out-to-right-52 data-[motion=to-start]:slide-out-to-left-52 data-[motion^=from-]:animate-in data-[motion^=from-]:fade-in data-[motion^=to-]:animate-out data-[motion^=to-]:fade-out data-[state=closed]:animate-out data-[state=closed]:zoom-out-95 data-[state=open]:animate-in data-[state=open]:zoom-in-90 relative top-11 w-full overflow-hidden rounded-md border shadow md:absolute md:left-1/2 md:w-80 md:-translate-x-1/2">
-          {item.items.map((subItem, subIndex) => (
-            <NavigationMenuLink asChild key={subIndex} className="w-full">
+          {item.items.map((subItem) => (
+            <NavigationMenuLink
+              asChild
+              key={`${subItem.title}-${subItem.url}`}
+              className="w-full"
+            >
               <SubMenuLink item={subItem} />
             </NavigationMenuLink>
           ))}
@@ -229,7 +233,7 @@ const renderMenuItem = (item: MenuItem, index: number) => {
   }
 
   return (
-    <NavigationMenuItem key={index}>
+    <NavigationMenuItem key={itemKey}>
       <NavigationMenuLink
         asChild
         className="bg-background hover:bg-muted hover:text-accent-foreground group inline-flex h-10 w-max items-center justify-center rounded-md px-4 py-2 text-sm font-medium transition-colors"
@@ -246,16 +250,21 @@ const renderMenuItem = (item: MenuItem, index: number) => {
   );
 };
 
-const renderMobileMenuItem = (item: MenuItem, index: number) => {
+const renderMobileMenuItem = (item: MenuItem) => {
+  const itemKey = `${item.title}-${item.url}`;
+
   if (item.items && item.items.length > 0) {
     return (
-      <AccordionItem key={index} value={`item-${index}`} className="border-b-0">
+      <AccordionItem key={itemKey} value={itemKey} className="border-b-0">
         <AccordionTrigger className="text-md py-0 font-semibold hover:no-underline">
           {item.title}
         </AccordionTrigger>
         <AccordionContent className="mt-2">
-          {item.items.map((subItem, subIndex) => (
-            <SubMenuLink key={subIndex} item={subItem} />
+          {item.items.map((subItem) => (
+            <SubMenuLink
+              key={`${subItem.title}-${subItem.url}`}
+              item={subItem}
+            />
           ))}
         </AccordionContent>
       </AccordionItem>
@@ -264,7 +273,7 @@ const renderMobileMenuItem = (item: MenuItem, index: number) => {
 
   return (
     <Link
-      key={index}
+      key={itemKey}
       href={item.url}
       target={item.target || undefined}
       rel={item.target ? 'noopener noreferrer' : undefined}
