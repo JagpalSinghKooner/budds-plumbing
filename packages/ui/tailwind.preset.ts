@@ -17,7 +17,7 @@ import type { Config } from 'tailwindcss';
  * ```
  */
 const preset: Partial<Config> = {
-  darkMode: ['class'],
+  darkMode: 'class',
   theme: {
     container: {
       center: true,
