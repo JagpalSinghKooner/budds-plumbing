@@ -47,7 +47,7 @@ async function getPostsSitemap(): Promise<MetadataRoute.Sitemap[]> {
 
 async function getServicesSitemap(): Promise<MetadataRoute.Sitemap[]> {
   const servicesQuery = groq`
-    *[_type == 'service' && noindex != 'noindex'] | order(_updatedAt desc) {
+    *[_type == 'service' && noindex != true] | order(_updatedAt desc) {
       'url': $baseUrl + '/services/' + slug.current,
       'lastModified': _updatedAt,
       'changeFrequency': 'weekly',
@@ -67,7 +67,7 @@ async function getServicesSitemap(): Promise<MetadataRoute.Sitemap[]> {
 
 async function getLocationsSitemap(): Promise<MetadataRoute.Sitemap[]> {
   const locationsQuery = groq`
-    *[_type == 'location' && noindex != 'noindex'] | order(_updatedAt desc) {
+    *[_type == 'location' && noindex != true] | order(_updatedAt desc) {
       'url': $baseUrl + '/locations/' + slug.current,
       'lastModified': _updatedAt,
       'changeFrequency': 'weekly',
@@ -87,7 +87,7 @@ async function getLocationsSitemap(): Promise<MetadataRoute.Sitemap[]> {
 
 async function getServiceLocationsSitemap(): Promise<MetadataRoute.Sitemap[]> {
   const serviceLocationsQuery = groq`
-    *[_type == 'service-location' && noindex != 'noindex'] | order(_updatedAt desc) {
+    *[_type == 'service-location' && noindex != true] | order(_updatedAt desc) {
       'url': $baseUrl + '/locations/' + location->slug.current + '/services/' + service->slug.current,
       'lastModified': _updatedAt,
       'changeFrequency': 'weekly',
