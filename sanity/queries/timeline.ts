@@ -1,6 +1,5 @@
-import { groq } from "next-sanity";
-import { bodyQuery } from "./shared/body";
-import { imageQuery } from "./shared/image";
+import { groq } from 'next-sanity';
+import { bodyQuery } from './shared/body';
 
 // @sanity-typegen-ignore
 export const timelineQuery = groq`

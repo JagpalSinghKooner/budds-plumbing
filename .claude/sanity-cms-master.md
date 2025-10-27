@@ -29,18 +29,21 @@ tools: Write, Read, MultiEdit, Bash, Grep, Glob
 These rules are **ABSOLUTE** and **NON-NEGOTIABLE**. Every schema type MUST follow them.
 
 ### File Structure Rules
+
 - ✅ **ALWAYS** use `defineType`, `defineField`, and `defineArrayMember` helper functions
 - ✅ **ALWAYS** write schema types to their own files (e.g., `/sanity/schemas/documents/service.ts`)
 - ✅ **ALWAYS** export a named `const` that matches the filename (e.g., `export default serviceSchema`)
 - ✅ **ALWAYS** register schemas in `/sanity/schema.ts` or `/sanity/schemaTypes/index.ts`
 
 ### Icon and Display Rules
+
 - ✅ **ALWAYS** include an appropriate icon from `lucide-react` for each schema type
 - ✅ **ALWAYS** include a customized `preview` property showing rich contextual details
 - ✅ **ALWAYS** use `groups` when schema has more than a few fields (with icons for each group)
 - ✅ **ONLY** use `name` attribute in fields unless the `title` needs to differ from title-case version of `name`
 
 ### Field Type Rules
+
 - ✅ **ANY** `string` field type with `options.list` array with fewer than 5 options **MUST** use `options.layout: "radio"`
 - ✅ **ANY** `image` field **MUST** include `options.hotspot: true`
 - ✅ **AVOID** `boolean` fields — write a `string` field with `options.list` configuration instead
@@ -50,17 +53,21 @@ These rules are **ABSOLUTE** and **NON-NEGOTIABLE**. Every schema type MUST foll
 - ✅ **INCLUDE** brief, useful validation errors in `rule.required().error('<Message>')` that signal why the field must be correct
 
 ### Field Order Rules
+
 - ✅ **CONSIDER** the order of fields: most important and relevant first, least often used last
 
 ### Reusable Schema Types
+
 - ✅ **ANY** schema type that benefits from being reused in multiple document types **MUST** be registered as its own custom schema type and located in shared folder (e.g., `/sanity/schemas/blocks/shared/block-content.ts`)
 - ✅ **NEVER** create anonymous inline types that could be reused
 
 ### Parent-Child Block Structure
+
 - ✅ Parent blocks (like `split-row` or `grid-row`) **MUST** contain an array field for child components
 - ✅ Child components **MUST** be defined as separate schema types
 - ✅ Use `validation: (rule) => rule.max(n)` to limit the number of child components when appropriate
 - ✅ Use `options.insertMenu` to organize child components with preview images:
+
 ```typescript
 options: {
   insertMenu: {
@@ -76,6 +83,7 @@ options: {
 ```
 
 ### Groups and Fieldsets
+
 - ✅ Every `document` and `object` schema type **MUST** have an `icon` property from `lucide-react`
 - ✅ Use `groups` when schema type has more than a few fields to collate related fields
 - ✅ Show only the most important group by default
@@ -87,11 +95,13 @@ options: {
 ## Content Modeling — Schema UI Patterns
 
 ### Model What Things Are, Not What They Look Like
+
 - ✅ Unless explicitly modeling web pages or app views, create content models for **what things are**, not what they look like in a front-end
 - ✅ For example, consider the `status` of an element instead of its `color`
 - ✅ Organize blocks into logical groups (hero, grid, split, carousel, etc.) for better content management
 
 ### Standard Content Modeling Rules
+
 - Design atomic documents. Avoid nested objects unless required
 - Use references for relationships. Arrays for one-to-many or many-to-many
 - Singletons for global data: siteSettings, navigation, SEO defaults
@@ -125,6 +135,7 @@ options: {
 **CRITICAL**: Schema UI uses modular query composition with fragments.
 
 ### Mandatory GROQ Rules
+
 - ✅ **ALWAYS** use SCREAMING_SNAKE_CASE for variable names (e.g., `SERVICE_QUERY`, `POSTS_QUERY`)
 - ✅ **ALWAYS** write queries to their own variables, never as a parameter in a function
 - ✅ **ALWAYS** import the `groq` function from `next-sanity` or `sanity` to tag query strings
@@ -143,9 +154,9 @@ For parent-child block structures, create separate query fragments:
 
 ```typescript
 // ./sanity/queries/split/split-row.ts
-import { groq } from "next-sanity";
-import { splitContentQuery } from "./split-content";
-import { splitCardsListQuery } from "./split-cards-list";
+import { groq } from 'next-sanity';
+import { splitContentQuery } from './split-content';
+import { splitCardsListQuery } from './split-cards-list';
 
 // @sanity-typegen-ignore
 export const splitRowQuery = groq`
@@ -169,9 +180,9 @@ Compose main queries from individual block query fragments:
 
 ```typescript
 // ./sanity/queries/page.ts
-import { groq } from "next-sanity";
-import { hero1Query } from "./hero/hero-1";
-import { splitRowQuery } from "./split/split-row";
+import { groq } from 'next-sanity';
+import { hero1Query } from './hero/hero-1';
+import { splitRowQuery } from './split/split-row';
 
 export const PAGE_QUERY = groq`
   *[_type == "page" && slug.current == $slug][0]{
@@ -242,6 +253,7 @@ export const SERVICES_SLUGS_QUERY = groq`*[
 ```
 
 ### Standard Query Rules
+
 - One query per page or endpoint
 - Use explicit projections. Never `*[]` without filters
 - Guard nulls with conditionals or defaults
@@ -484,7 +496,10 @@ When asked to write content:
 - ✅ **ALWAYS** write images in this format, replacing the document ID value to generate the same placeholder image:
 
 ```json
-{"_type":"image","_sanityAsset":"image@https://picsum.photos/seed/DOCUMENT_ID/1920/1080"}
+{
+  "_type": "image",
+  "_sanityAsset": "image@https://picsum.photos/seed/DOCUMENT_ID/1920/1080"
+}
 ```
 
 ---

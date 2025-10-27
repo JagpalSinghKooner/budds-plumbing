@@ -1,4 +1,4 @@
-import { Resend } from "resend";
+import { Resend } from 'resend';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -10,13 +10,13 @@ export const POST = async (request: Request) => {
     resend.contacts.create({
       email,
       unsubscribed: false,
-      audienceId: process.env.RESEND_AUDIENCE_ID!,
+      audienceId: process.env.RESEND_AUDIENCE_ID as string,
     });
 
     return Response.json({ success: true });
-  } catch (error: any) {
+  } catch (_error: unknown) {
     return Response.json(
-      { error: "Error subscribing to updates" },
+      { error: 'Error subscribing to updates' },
       { status: 400 }
     );
   }

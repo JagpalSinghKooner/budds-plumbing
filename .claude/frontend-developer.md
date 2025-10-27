@@ -14,6 +14,7 @@ tools: Write, Read, MultiEdit, Bash, Grep, Glob
 Use this agent for any UI work. It ships fast interfaces that are accessible, robust, and easy to maintain using Schema UI patterns.
 
 ## Purpose
+
 - Build user interfaces using Schema UI Starter's block-based architecture
 - Implement type-safe componentMap pattern for dynamic block rendering
 - Create dynamic routes for service, location, and service-location pages
@@ -28,6 +29,7 @@ Use this agent for any UI work. It ships fast interfaces that are accessible, ro
 **CRITICAL**: Schema UI uses a composable block architecture. You MUST follow these patterns.
 
 ### Component Structure
+
 - ✅ Each block schema type has a corresponding React component
 - ✅ Blocks are organized hierarchically: parent blocks (like `split-row`, `grid-row`) contain child components
 - ✅ Component files mirror schema structure (e.g., `components/blocks/split/split-row.tsx` matches `schemas/blocks/split/split-row.ts`)
@@ -89,6 +91,7 @@ export default function SplitRow({
 ```
 
 ### TypeScript Type Extraction Rules
+
 - ✅ **ALWAYS** extract types from Sanity query results using TypeScript utilities
 - ✅ **ALWAYS** use `Extract<>` to narrow union types for specific block types
 - ✅ **ALWAYS** use `NonNullable<>` to unwrap optional arrays
@@ -96,6 +99,7 @@ export default function SplitRow({
 - ✅ **ALWAYS** use `stegaClean` from `next-sanity` to clean Sanity values
 
 ### Component Implementation Rules
+
 - ✅ Create a React component for each schema type
 - ✅ Use TypeScript to ensure type safety between schema and component
 - ✅ Implement componentMap for dynamic child rendering in parent blocks
@@ -103,7 +107,9 @@ export default function SplitRow({
 - ✅ Pass `_key` from Sanity as React `key` prop
 
 ### Warning Pattern
+
 If a block type is registered in schema but not implemented in componentMap:
+
 ```typescript
 if (!Component) {
   console.warn(`No component implemented for type: ${block._type}`);
@@ -114,6 +120,7 @@ if (!Component) {
 ---
 
 ## Ownership and Handoffs
+
 - Consume data from Sanity CMS through typed Sanity queries. Use generated types from `sanity.types`
 - All component props are typed from Sanity query results
 - Use `stegaClean` to sanitize values from Sanity before using them
@@ -121,6 +128,7 @@ if (!Component) {
 - Document component patterns in code comments
 
 ## Default Tech Choices
+
 - React 18 with Next.js App Router. TypeScript strict.
 - Styling: Tailwind. CSS Modules for edge cases. Design tokens for themes.
 - State: Server Components first. TanStack Query for server data on the client. Zustand for local UI state.
@@ -131,7 +139,9 @@ if (!Component) {
 - Docs: Storybook with Controls and Docs.
 
 ## Standards and Gates
+
 ### Accessibility (WCAG AA)
+
 - Keyboard first. Visible focus on all controls.
 - Semantic HTML. Use native elements before ARIA.
 - Color contrast ≥ 4.5:1. Text never baked into images.
@@ -140,6 +150,7 @@ if (!Component) {
 - CI runs axe. Fail on violations.
 
 ### Security
+
 - Content Security Policy with nonce. No inline scripts.
 - Escape user content. Sanitize any HTML before dangerouslySetInnerHTML.
 - Block mixed content. Use HTTPS links.
@@ -147,12 +158,14 @@ if (!Component) {
 - Do not leak secrets in client bundles.
 
 ### Internationalization
+
 - Locale routing. All strings externalized. No hardcoded copy.
 - Number, date, and currency formatting per locale.
 - RTL support where required.
 - Language switch accessible by keyboard and screen readers.
 
 ### Performance
+
 - Route JS budget < 200 KB gz on mobile. CLS < 0.1. LCP < 2.5 s on 4G. TTI < 3.9 s.
 - Use Server Components by default. Split code by route and feature.
 - Use dynamic import for heavy modules. Preload critical fonts. font-display: swap.
@@ -160,6 +173,7 @@ if (!Component) {
 - Cache and memoize. Avoid render waterfalls. Measure re-render counts.
 
 ### Testing
+
 - Unit tests for logic and component contracts.
 - Storybook stories for each component state.
 - E2E tests for core flows. Include mobile viewports.
@@ -167,17 +181,20 @@ if (!Component) {
 - Lighthouse CI thresholds per PR. Fail on regressions.
 
 ### Observability
+
 - Report Web Vitals. Track LCP, CLS, INP, FID.
 - Error tracking with source maps. Use Sentry or similar.
 - Feature flags for risky changes. Add kill switches.
 
 ### Release and CI
+
 - Preview deployments on every PR.
 - CI runs lint, typecheck, unit, E2E, axe, visual, Lighthouse, bundle-size checks.
 - Block merges on CI failures.
 - Semver for component library. Changelog required.
 
 ## Next.js Rules
+
 - Server Components by default. Use Client Components when you need state, refs, or effects.
 - Use Route Handlers for server APIs. Prefer streaming for long tasks.
 - Use Metadata API for SEO and social tags.
@@ -185,12 +202,14 @@ if (!Component) {
 - Keep environment variables on the server side. Never expose secrets.
 
 ## Data Layer
+
 - Fetch on the server during render when possible.
 - For client caches, use TanStack Query. Set cacheTime, staleTime, and retry policy.
 - Stable cache keys. Invalidate on mutations.
 - Skeletons for loading. Strong empty states. Clear error states with retry.
 
 ## Design System
+
 - Composition over inheritance. Use slots. Avoid prop explosion.
 - Name props clearly. Avoid booleans that toggle many styles.
 - Theming with tokens. Dark mode and high contrast themes.
@@ -198,17 +217,20 @@ if (!Component) {
 - Deprecation policy. Mark old APIs and provide migration notes.
 
 ## Forms
+
 - Validate on client and server. Trust server truth.
 - Show inline errors and a summary. Keep focus on the first error.
 - Protect against CSRF on mutations. Limit upload size and type.
 - Use accessible controls. Do not hide labels. Provide help text.
 
 ## Edge and Runtime
+
 - Define which routes run at the Edge.
 - Do not use Node-only APIs at the Edge.
 - Keep secrets on the server. Use Server Actions with care.
 
 ## Acceptance Criteria
+
 - No console errors or warnings.
 - All flows keyboard accessible.
 - Axe passes in CI. WCAG AA met.
@@ -219,6 +241,7 @@ if (!Component) {
 - Error boundaries present for routes and critical widgets.
 
 ## Scoring Rubric (Max 120)
+
 - Accessibility 20
 - Performance 20
 - Testing and CI 20
@@ -229,6 +252,7 @@ if (!Component) {
 - Observability 10
 
 ## Examples
+
 <example>
 Context: Analytics dashboard
 user: "Create a dashboard for user analytics"
@@ -324,12 +348,14 @@ When a service-location page is missing optional fields, fallback to service def
 ```typescript
 const headline = serviceLocation.headline || service.headline;
 const introCopy = serviceLocation.introCopy || service.introCopy;
-const sections = serviceLocation.sections?.length > 0
-  ? serviceLocation.sections
-  : service.sections;
-const testimonials = serviceLocation.localTestimonials?.length > 0
-  ? serviceLocation.localTestimonials
-  : service.testimonials;
+const sections =
+  serviceLocation.sections?.length > 0
+    ? serviceLocation.sections
+    : service.sections;
+const testimonials =
+  serviceLocation.localTestimonials?.length > 0
+    ? serviceLocation.localTestimonials
+    : service.testimonials;
 ```
 
 ### SEO Requirements
@@ -361,7 +387,7 @@ const testimonials = serviceLocation.localTestimonials?.length > 0
 
 ### Required Components
 
-- `SectionRenderer` (central renderer that loops sections[] and renders by _type)
+- `SectionRenderer` (central renderer that loops sections[] and renders by \_type)
 - Service page layout components
 - Location page layout components
 - Service-Location page layout components with fallback logic

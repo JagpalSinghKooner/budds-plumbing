@@ -6,8 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
-    "typecheck": "tsc --noEmit",
+    "lint": "echo 'Linting handled at root level'",
+    "typecheck": "cd ../.. && tsc --noEmit --project tsconfig.json",
     "clean": "rm -rf .next node_modules"
   },
   "dependencies": {
