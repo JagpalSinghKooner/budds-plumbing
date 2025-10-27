@@ -10,6 +10,7 @@ import navigation from './schemas/documents/navigation';
 import settings from './schemas/documents/settings';
 import service from './schemas/documents/service';
 import location from './schemas/documents/location';
+import serviceLocation from './schemas/documents/service-location';
 
 // Schema UI shared objects
 import blockContent from './schemas/blocks/shared/block-content';
@@ -49,6 +50,7 @@ export const schema: { types: SchemaTypeDefinition[] } = {
     post,
     service,
     location,
+    serviceLocation,
     author,
     category,
     faq,

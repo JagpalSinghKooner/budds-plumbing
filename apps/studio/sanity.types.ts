@@ -1017,6 +1017,91 @@ export type Category = {
   orderRank?: string;
 };
 
+export type ServiceLocation = {
+  _id: string;
+  _type: 'service-location';
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  service?: {
+    _ref: string;
+    _type: 'reference';
+    _weak?: boolean;
+    [internalGroqTypeReferenceTo]?: 'service';
+  };
+  location?: {
+    _ref: string;
+    _type: 'reference';
+    _weak?: boolean;
+    [internalGroqTypeReferenceTo]?: 'location';
+  };
+  slug?: Slug;
+  headline?: string;
+  introCopy?: string;
+  body?: BlockContent;
+  whyUsBullets?: Array<string>;
+  localTestimonials?: Array<{
+    _ref: string;
+    _type: 'reference';
+    _weak?: boolean;
+    _key: string;
+    [internalGroqTypeReferenceTo]?: 'testimonial';
+  }>;
+  blocks?: Array<
+    | ({
+        _key: string;
+      } & Hero1)
+    | ({
+        _key: string;
+      } & Hero2)
+    | ({
+        _key: string;
+      } & SectionHeader)
+    | ({
+        _key: string;
+      } & SplitRow)
+    | ({
+        _key: string;
+      } & GridRow)
+    | ({
+        _key: string;
+      } & Carousel1)
+    | ({
+        _key: string;
+      } & Carousel2)
+    | ({
+        _key: string;
+      } & TimelineRow)
+    | ({
+        _key: string;
+      } & Cta1)
+    | ({
+        _key: string;
+      } & LogoCloud1)
+    | ({
+        _key: string;
+      } & Faqs)
+    | ({
+        _key: string;
+      } & FormNewsletter)
+  >;
+  meta_title?: string;
+  meta_description?: string;
+  noindex?: boolean;
+  ogImage?: {
+    asset?: {
+      _ref: string;
+      _type: 'reference';
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: 'sanity.imageAsset';
+    };
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    _type: 'image';
+  };
+};
+
 export type Location = {
   _id: string;
   _type: 'location';
@@ -1481,6 +1566,7 @@ export type AllSanitySchemaTypes =
   | Testimonial
   | Faq
   | Category
+  | ServiceLocation
   | Location
   | Service
   | Page
