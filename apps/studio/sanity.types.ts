@@ -1017,6 +1017,86 @@ export type Category = {
   orderRank?: string;
 };
 
+export type Location = {
+  _id: string;
+  _type: 'location';
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  name?: string;
+  slug?: Slug;
+  aboutLocation?: string;
+  coverageAreas?: Array<string>;
+  operatingHours?: string;
+  phoneNumber?: string;
+  image?: {
+    asset?: {
+      _ref: string;
+      _type: 'reference';
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: 'sanity.imageAsset';
+    };
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt?: string;
+    _type: 'image';
+  };
+  blocks?: Array<
+    | ({
+        _key: string;
+      } & Hero1)
+    | ({
+        _key: string;
+      } & Hero2)
+    | ({
+        _key: string;
+      } & SectionHeader)
+    | ({
+        _key: string;
+      } & SplitRow)
+    | ({
+        _key: string;
+      } & GridRow)
+    | ({
+        _key: string;
+      } & Carousel1)
+    | ({
+        _key: string;
+      } & Carousel2)
+    | ({
+        _key: string;
+      } & TimelineRow)
+    | ({
+        _key: string;
+      } & Cta1)
+    | ({
+        _key: string;
+      } & LogoCloud1)
+    | ({
+        _key: string;
+      } & Faqs)
+    | ({
+        _key: string;
+      } & FormNewsletter)
+  >;
+  meta_title?: string;
+  meta_description?: string;
+  noindex?: boolean;
+  ogImage?: {
+    asset?: {
+      _ref: string;
+      _type: 'reference';
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: 'sanity.imageAsset';
+    };
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    _type: 'image';
+  };
+};
+
 export type Service = {
   _id: string;
   _type: 'service';
@@ -1401,6 +1481,7 @@ export type AllSanitySchemaTypes =
   | Testimonial
   | Faq
   | Category
+  | Location
   | Service
   | Page
   | Post

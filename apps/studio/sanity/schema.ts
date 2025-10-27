@@ -9,6 +9,7 @@ import testimonial from './schemas/documents/testimonial';
 import navigation from './schemas/documents/navigation';
 import settings from './schemas/documents/settings';
 import service from './schemas/documents/service';
+import location from './schemas/documents/location';
 
 // Schema UI shared objects
 import blockContent from './schemas/blocks/shared/block-content';
@@ -47,6 +48,7 @@ export const schema: { types: SchemaTypeDefinition[] } = {
     page,
     post,
     service,
+    location,
     author,
     category,
     faq,
