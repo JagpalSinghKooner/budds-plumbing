@@ -10,3 +10,4 @@ coverage
 sanity.types.ts
 schema.json
 pnpm-lock.yaml
+**/.sanity/**
