@@ -1,5 +1,5 @@
 import { defineField, defineType } from 'sanity';
-import { MapPinned, Link, FileText, Search, Layout } from 'lucide-react';
+import { MapPinned } from 'lucide-react';
 
 export default defineType({
   name: 'service-location',
@@ -10,22 +10,18 @@ export default defineType({
     {
       name: 'references',
       title: 'References',
-      icon: Link,
     },
     {
       name: 'content',
-      title: 'Content Overrides',
-      icon: FileText,
+      title: 'Content',
     },
     {
       name: 'seo',
       title: 'SEO',
-      icon: Search,
     },
     {
-      name: 'sections',
-      title: 'Sections',
-      icon: Layout,
+      name: 'settings',
+      title: 'Settings',
     },
   ],
   fields: [
@@ -53,7 +49,7 @@ export default defineType({
       name: 'slug',
       title: 'Slug',
       type: 'slug',
-      group: 'references',
+      group: 'settings',
       description: 'URL slug (auto-generated or manually set)',
       options: {
         source: () => {
@@ -67,66 +63,10 @@ export default defineType({
         Rule.required().error('Slug is required for the service-location URL'),
     }),
     defineField({
-      name: 'headline',
-      title: 'Headline Override',
-      type: 'string',
-      group: 'content',
-      description: 'Optional: Override the service headline for this location',
-      validation: (Rule) =>
-        Rule.max(120).warning('Keep headlines under 120 characters'),
-    }),
-    defineField({
-      name: 'introCopy',
-      title: 'Introduction Override',
-      type: 'text',
-      group: 'content',
-      description:
-        'Optional: Override the service introduction for this location',
-      rows: 4,
-      validation: (Rule) =>
-        Rule.max(500).warning('Keep intro under 500 characters'),
-    }),
-    defineField({
-      name: 'body',
-      title: 'Body Content Override',
-      type: 'block-content',
-      group: 'content',
-      description:
-        'Optional: Override the service body content for this location',
-    }),
-    defineField({
-      name: 'whyUsBullets',
-      title: 'Why Choose Us',
-      type: 'array',
-      group: 'content',
-      description:
-        'Location-specific reasons why customers should choose your service',
-      of: [{ type: 'string' }],
-      options: {
-        layout: 'tags',
-      },
-    }),
-    defineField({
-      name: 'localTestimonials',
-      title: 'Local Testimonials Override',
-      type: 'array',
-      group: 'content',
-      description:
-        'Optional: Override testimonials with location-specific ones',
-      of: [
-        {
-          type: 'reference',
-          to: [{ type: 'testimonial' }],
-        },
-      ],
-    }),
-    defineField({
       name: 'blocks',
-      title: 'Page Sections Override',
+      title: 'Page Sections',
       type: 'array',
-      group: 'sections',
-      description:
-        'Optional: Override service sections with location-specific ones',
+      group: 'content',
       of: [
         { type: 'hero-1' },
         { type: 'hero-2' },

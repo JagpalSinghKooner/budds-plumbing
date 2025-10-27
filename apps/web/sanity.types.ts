@@ -1312,17 +1312,6 @@ export type ServiceLocation = {
     [internalGroqTypeReferenceTo]?: 'location';
   };
   slug?: Slug;
-  headline?: string;
-  introCopy?: string;
-  body?: BlockContent;
-  whyUsBullets?: Array<string>;
-  localTestimonials?: Array<{
-    _ref: string;
-    _type: 'reference';
-    _weak?: boolean;
-    _key: string;
-    [internalGroqTypeReferenceTo]?: 'testimonial';
-  }>;
   blocks?: Array<
     | ({
         _key: string;

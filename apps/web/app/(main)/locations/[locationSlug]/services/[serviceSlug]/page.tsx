@@ -180,7 +180,9 @@ export default async function ServiceLocationPage({
       {/* Page Content */}
       <main>
         {/* Render dynamic sections */}
-        {blocks && blocks.length > 0 && <SectionRenderer sections={blocks} />}
+        {blocks && blocks.length > 0 && (
+          <SectionRenderer sections={blocks as any} />
+        )}
 
         {/* Default content if no blocks */}
         {(!blocks || blocks.length === 0) && (
