@@ -2,9 +2,19 @@
 
 ## Prerequisites
 
-- GitHub account with repository access
+- GitHub account
 - Vercel account (sign up at https://vercel.com)
 - Sanity project ID and dataset (already configured)
+
+## Step 0: Create GitHub Repository (Required First)
+
+**⚠️ IMPORTANT**: Before deploying to Vercel, you must first push your code to GitHub.
+
+👉 **Follow the guide**: [GITHUB_SETUP.md](GITHUB_SETUP.md)
+
+Once your repository is on GitHub and secrets are configured, return here to continue with Vercel deployment.
+
+---
 
 ## Vercel Deployment Steps
 
