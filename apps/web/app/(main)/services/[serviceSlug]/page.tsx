@@ -48,20 +48,20 @@ export async function generateMetadata({ params }: ServicePageProps) {
 
   return generateSEOMetadata({
     title: service.meta_title || service.name || 'Service',
-    description: service.meta_description || service.headline || '',
+    description: service.meta_description || '',
     canonical,
-    noindex: service.noindex === 'noindex',
+    noindex: service.noindex || false,
     openGraph: service.ogImage
       ? {
           title: service.meta_title || service.name,
-          description: service.meta_description || service.headline,
+          description: service.meta_description || '',
         }
       : undefined,
     twitter: service.ogImage
       ? {
           card: 'summary_large_image',
           title: service.meta_title || service.name,
-          description: service.meta_description || service.headline,
+          description: service.meta_description || '',
         }
       : undefined,
   });
@@ -85,7 +85,7 @@ export default async function ServicePage({ params }: ServicePageProps) {
   // Generate JSON-LD schemas
   const serviceSchema = generateServiceSchema({
     name: service.name || 'Service',
-    description: service.headline || service.meta_description || '',
+    description: service.meta_description || '',
     provider: {
       name: 'Budds Plumbing',
       url: siteUrl,
@@ -123,23 +123,16 @@ export default async function ServicePage({ params }: ServicePageProps) {
       <main>
         {/* Render dynamic sections */}
         {service.blocks && service.blocks.length > 0 && (
-          <SectionRenderer sections={service.blocks as any} />
+          <SectionRenderer sections={service.blocks} />
         )}
 
         {/* Default content if no blocks */}
         {(!service.blocks || service.blocks.length === 0) && (
           <div className="container mx-auto px-4 py-16">
             <h1 className="text-4xl font-bold mb-4">{service.name}</h1>
-            {service.headline && (
-              <p className="text-xl text-muted-foreground mb-8">
-                {service.headline}
-              </p>
-            )}
-            {service.introCopy && (
-              <div className="prose max-w-none mb-8">
-                <p>{service.introCopy}</p>
-              </div>
-            )}
+            <p className="text-muted-foreground">
+              Content coming soon. Please add blocks to this service in the CMS.
+            </p>
           </div>
         )}
       </main>

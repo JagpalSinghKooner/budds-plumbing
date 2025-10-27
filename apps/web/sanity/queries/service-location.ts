@@ -25,33 +25,6 @@ export const SERVICE_LOCATION_QUERY = groq`
       _id,
       name,
       slug,
-      headline,
-      introCopy,
-      body,
-      faqs[]->{
-        _id,
-        question,
-        answer
-      },
-      testimonials[]->{
-        _id,
-        name,
-        role,
-        company,
-        quote,
-        image {
-          asset->{
-            _id,
-            url,
-            metadata {
-              dimensions {
-                width,
-                height
-              }
-            }
-          }
-        }
-      },
       blocks[]{
         ${hero1Query},
         ${hero2Query},
@@ -86,38 +59,10 @@ export const SERVICE_LOCATION_QUERY = groq`
       _id,
       name,
       slug,
-      aboutLocation,
-      coverageAreas,
-      operatingHours,
-      phoneNumber,
-      image {
-        asset->{
-          _id,
-          url,
-          metadata {
-            dimensions {
-              width,
-              height
-            }
-          }
-        },
-        alt
-      }
-    },
-    headline,
-    introCopy,
-    faqs[]->{
-      _id,
-      question,
-      answer
-    },
-    testimonials[]->{
-      _id,
-      name,
-      role,
-      company,
-      quote,
-      image {
+      meta_title,
+      meta_description,
+      noindex,
+      ogImage {
         asset->{
           _id,
           url,
@@ -184,7 +129,6 @@ export const SERVICE_LOCATIONS_QUERY = groq`
     "serviceSlug": service->slug.current,
     "locationName": location->name,
     "locationSlug": location->slug.current,
-    headline,
     meta_description
   }
 `;

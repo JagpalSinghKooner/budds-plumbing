@@ -7,14 +7,32 @@ import pricingRegistry from './blocks/pricing/pricingRegistry';
 import {
   Hero1,
   Hero2,
-  Carousel2,
-  Faqs,
-  Cta1,
+  SectionHeader,
+  SplitRow,
   GridRow,
+  Carousel1,
+  Carousel2,
+  TimelineRow,
+  Cta1,
+  LogoCloud1,
+  Faqs,
+  FormNewsletter,
 } from '@/sanity.types';
 
 // Union type for all possible section types
-export type SectionType = Hero1 | Hero2 | Carousel2 | Faqs | Cta1 | GridRow;
+export type SectionType =
+  | Hero1
+  | Hero2
+  | SectionHeader
+  | SplitRow
+  | GridRow
+  | Carousel1
+  | Carousel2
+  | TimelineRow
+  | Cta1
+  | LogoCloud1
+  | Faqs
+  | FormNewsletter;
 
 // Base section interface with required _key
 interface BaseSection {

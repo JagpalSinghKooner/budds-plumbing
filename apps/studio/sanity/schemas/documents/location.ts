@@ -1,5 +1,5 @@
 import { defineField, defineType } from 'sanity';
-import { MapPin, FileText, Search, Layout } from 'lucide-react';
+import { MapPin } from 'lucide-react';
 
 export default defineType({
   name: 'location',
@@ -10,17 +10,14 @@ export default defineType({
     {
       name: 'content',
       title: 'Content',
-      icon: FileText,
     },
     {
       name: 'seo',
       title: 'SEO',
-      icon: Search,
     },
     {
-      name: 'sections',
-      title: 'Sections',
-      icon: Layout,
+      name: 'settings',
+      title: 'Settings',
     },
   ],
   fields: [
@@ -29,92 +26,23 @@ export default defineType({
       title: 'Location Name',
       type: 'string',
       group: 'content',
-      description: "City or area name (e.g., 'Downtown Toronto', 'North York')",
-      validation: (Rule) => Rule.required().error('Location name is required'),
+      validation: (Rule) => Rule.required(),
     }),
     defineField({
       name: 'slug',
       title: 'Slug',
       type: 'slug',
-      group: 'content',
+      group: 'settings',
       options: {
         source: 'name',
         maxLength: 96,
       },
-      validation: (Rule) =>
-        Rule.required().error('Slug is required for the location URL'),
-    }),
-    defineField({
-      name: 'aboutLocation',
-      title: 'About This Location',
-      type: 'text',
-      group: 'content',
-      description: 'Description of the area and why you serve it',
-      rows: 4,
-      validation: (Rule) =>
-        Rule.max(500).warning('Keep description under 500 characters'),
-    }),
-    defineField({
-      name: 'coverageAreas',
-      title: 'Coverage Areas',
-      type: 'array',
-      group: 'content',
-      description:
-        'Neighborhoods, zones, or postal codes served in this location',
-      of: [{ type: 'string' }],
-      options: {
-        layout: 'tags',
-      },
-    }),
-    defineField({
-      name: 'operatingHours',
-      title: 'Operating Hours',
-      type: 'text',
-      group: 'content',
-      description:
-        "Operating hours for this location (e.g., 'Mon-Fri: 8am-5pm')",
-      rows: 3,
-    }),
-    defineField({
-      name: 'phoneNumber',
-      title: 'Phone Number',
-      type: 'string',
-      group: 'content',
-      description: 'Phone number for this location',
-      validation: (Rule) =>
-        Rule.custom((phone) => {
-          if (!phone) return true;
-          // Basic phone validation
-          const phoneRegex = /^[\d\s\-()]+$/;
-          return phoneRegex.test(phone) || 'Please enter a valid phone number';
-        }),
-    }),
-    defineField({
-      name: 'image',
-      title: 'Location Image',
-      type: 'image',
-      group: 'content',
-      description: 'Image representing this location',
-      options: {
-        hotspot: true,
-      },
-      fields: [
-        {
-          name: 'alt',
-          type: 'string',
-          title: 'Alternative Text',
-          description: 'Describe the image for accessibility',
-          validation: (Rule) =>
-            Rule.required().error('Alt text is required for accessibility'),
-        },
-      ],
+      validation: (Rule) => Rule.required(),
     }),
     defineField({
       name: 'blocks',
-      title: 'Page Sections',
       type: 'array',
-      group: 'sections',
-      description: 'Add and arrange sections for this location page',
+      group: 'content',
       of: [
         { type: 'hero-1' },
         { type: 'hero-2' },
@@ -198,59 +126,35 @@ export default defineType({
       title: 'Meta Title',
       type: 'string',
       group: 'seo',
-      description: 'SEO title tag (leave empty to use location name)',
-      validation: (Rule) =>
-        Rule.max(60).warning('Meta titles should be under 60 characters'),
     }),
     defineField({
       name: 'meta_description',
       title: 'Meta Description',
       type: 'text',
       group: 'seo',
-      description: 'SEO meta description',
-      validation: (Rule) =>
-        Rule.max(160).warning(
-          'Meta descriptions should be under 160 characters'
-        ),
     }),
     defineField({
       name: 'noindex',
-      title: 'Search Engine Indexing',
-      type: 'string',
+      title: 'No Index',
+      type: 'boolean',
+      initialValue: false,
       group: 'seo',
-      description: 'Control whether search engines can index this page',
-      options: {
-        list: [
-          { title: 'Allow indexing', value: 'index' },
-          { title: 'Prevent indexing (noindex)', value: 'noindex' },
-        ],
-        layout: 'radio',
-      },
-      initialValue: 'index',
     }),
     defineField({
       name: 'ogImage',
       title: 'Open Graph Image - [1200x630]',
       type: 'image',
       group: 'seo',
-      description: 'Social media share image',
-      options: {
-        hotspot: true,
-      },
     }),
   ],
   preview: {
     select: {
       title: 'name',
-      subtitle: 'aboutLocation',
-      coverageAreas: 'coverageAreas',
-      media: 'image',
+      media: 'ogImage',
     },
-    prepare({ title, subtitle, coverageAreas, media }) {
-      const areas = coverageAreas?.slice(0, 3).join(', ');
+    prepare({ title, media }) {
       return {
         title: title || 'Untitled Location',
-        subtitle: areas ? `Serving: ${areas}` : subtitle || 'No description',
         media: media || MapPin,
       };
     },

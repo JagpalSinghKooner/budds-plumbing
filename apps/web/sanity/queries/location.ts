@@ -21,23 +21,6 @@ export const LOCATION_QUERY = groq`
     _type,
     name,
     slug,
-    aboutLocation,
-    coverageAreas,
-    operatingHours,
-    phoneNumber,
-    image {
-      asset->{
-        _id,
-        url,
-        metadata {
-          dimensions {
-            width,
-            height
-          }
-        }
-      },
-      alt
-    },
     blocks[]{
       ${hero1Query},
       ${hero2Query},
@@ -78,8 +61,6 @@ export const LOCATIONS_QUERY = groq`
     _id,
     name,
     slug,
-    aboutLocation,
-    coverageAreas,
     meta_description
   }
 `;

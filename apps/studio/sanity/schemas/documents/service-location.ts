@@ -227,18 +227,10 @@ export default defineType({
     }),
     defineField({
       name: 'noindex',
-      title: 'Search Engine Indexing',
-      type: 'string',
+      title: 'No Index',
+      type: 'boolean',
+      initialValue: false,
       group: 'seo',
-      description: 'Control whether search engines can index this page',
-      options: {
-        list: [
-          { title: 'Allow indexing', value: 'index' },
-          { title: 'Prevent indexing (noindex)', value: 'noindex' },
-        ],
-        layout: 'radio',
-      },
-      initialValue: 'index',
     }),
     defineField({
       name: 'ogImage',

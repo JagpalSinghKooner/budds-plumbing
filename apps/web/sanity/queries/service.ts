@@ -21,33 +21,6 @@ export const SERVICE_QUERY = groq`
     _type,
     name,
     slug,
-    headline,
-    introCopy,
-    body,
-    faqs[]->{
-      _id,
-      question,
-      answer
-    },
-    testimonials[]->{
-      _id,
-      name,
-      role,
-      company,
-      quote,
-      image {
-        asset->{
-          _id,
-          url,
-          metadata {
-            dimensions {
-              width,
-              height
-            }
-          }
-        }
-      }
-    },
     blocks[]{
       ${hero1Query},
       ${hero2Query},
@@ -88,7 +61,6 @@ export const SERVICES_QUERY = groq`
     _id,
     name,
     slug,
-    headline,
     meta_description
   }
 `;
