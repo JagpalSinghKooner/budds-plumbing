@@ -51,6 +51,7 @@ export default defineConfig({
     structureTool({ structure }),
     presentationTool({
       previewUrl: {
+        origin: 'http://localhost:3000',
         draftMode: {
           enable: '/api/draft-mode/enable',
         },
