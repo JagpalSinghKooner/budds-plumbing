@@ -1,20 +1,64 @@
-import { LockKeyhole, ShieldCheck, Users, FileCheck, Shield, Award } from "lucide-react";
-import { PAGE_QUERYResult } from "@/sanity.types";
-import SectionContainer from "@/components/ui/section-container";
-import { stegaClean } from "next-sanity";
-import Image from "next/image";
-import { urlFor } from "@/sanity/lib/image";
+import {
+  LockKeyhole,
+  ShieldCheck,
+  Users,
+  FileCheck,
+  Shield,
+  Award,
+} from 'lucide-react';
+import { SectionPadding } from '@/sanity.types';
+import SectionContainer from '@/components/ui/section-container';
+import { stegaClean } from 'next-sanity';
+import Image from 'next/image';
+import { urlFor } from '@/sanity/lib/image';
 
-type Compliance1Props = Extract<
-  NonNullable<NonNullable<PAGE_QUERYResult>["blocks"]>[number],
-  { _type: "compliance-1" }
->;
+type Compliance1Props = {
+  _type: 'compliance-1';
+  _key: string;
+  padding: SectionPadding | null;
+  colorVariant:
+    | 'background'
+    | 'primary'
+    | 'secondary'
+    | 'card'
+    | 'accent'
+    | 'destructive'
+    | 'muted'
+    | null;
+  tagLine?: string | null;
+  title?: string | null;
+  body?: string | null;
+  badges?: Array<{
+    _key: string;
+    image?: {
+      asset?: {
+        _id: string;
+        url: string | null;
+        metadata?: {
+          lqip?: string | null;
+          dimensions?: {
+            width?: number | null;
+            height?: number | null;
+          } | null;
+        } | null;
+      } | null;
+      alt?: string;
+    };
+    label?: string;
+  }> | null;
+  features?: Array<{
+    _key: string;
+    icon?: string;
+    title?: string;
+    description?: string;
+  }> | null;
+};
 
 const iconMap = {
-  "lock-keyhole": LockKeyhole,
-  "shield-check": ShieldCheck,
+  'lock-keyhole': LockKeyhole,
+  'shield-check': ShieldCheck,
   users: Users,
-  "file-check": FileCheck,
+  'file-check': FileCheck,
   shield: Shield,
   award: Award,
 };
@@ -58,7 +102,7 @@ export default function Compliance1({
                 {badge.image && badge.image.asset?._id && (
                   <Image
                     src={urlFor(badge.image).url()}
-                    alt={badge.image.alt || badge.label || ""}
+                    alt={badge.image.alt || badge.label || ''}
                     width={96}
                     height={96}
                     className="w-full max-w-16 md:max-w-24 dark:invert"

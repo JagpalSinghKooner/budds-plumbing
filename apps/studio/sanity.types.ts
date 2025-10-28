@@ -13,6 +13,53 @@
  */
 
 // Source: schema.json
+export type Compliance1 = {
+  _type: 'compliance-1';
+  padding?: SectionPadding;
+  colorVariant?:
+    | 'background'
+    | 'primary'
+    | 'secondary'
+    | 'card'
+    | 'accent'
+    | 'destructive'
+    | 'muted';
+  tagLine?: string;
+  title?: string;
+  body?: string;
+  badges?: Array<{
+    image?: {
+      asset?: {
+        _ref: string;
+        _type: 'reference';
+        _weak?: boolean;
+        [internalGroqTypeReferenceTo]?: 'sanity.imageAsset';
+      };
+      media?: unknown;
+      hotspot?: SanityImageHotspot;
+      crop?: SanityImageCrop;
+      alt?: string;
+      _type: 'image';
+    };
+    label?: string;
+    _type: 'badge';
+    _key: string;
+  }>;
+  features?: Array<{
+    icon?:
+      | 'lock-keyhole'
+      | 'shield-check'
+      | 'users'
+      | 'file-check'
+      | 'shield'
+      | 'award';
+    title?: string;
+    description?: string;
+    _type: 'feature';
+    _key: string;
+  }>;
+};
+
 export type AllPosts = {
   _type: 'all-posts';
   padding?: SectionPadding;
@@ -1630,6 +1677,7 @@ export type SanityAssetSourceData = {
 };
 
 export type AllSanitySchemaTypes =
+  | Compliance1
   | AllPosts
   | FormNewsletter
   | Faqs
