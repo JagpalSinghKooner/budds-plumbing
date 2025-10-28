@@ -120,6 +120,100 @@ Your goal is to create and maintain a healthy, reliable test suite that provides
 - Accessibility: @axe-core/playwright
 - Component Testing: React Testing Library
 
+### TypeScript Type Safety in Tests (ZERO TOLERANCE)
+
+**CRITICAL**: All test data MUST match schema types from `sanity.types.ts`. See `.claude/typescript-standards-enforcer.md`.
+
+**Type Safety Rules for Tests:**
+
+- ✅ **ALWAYS** extract types from `sanity.types.ts` for test data
+- ✅ **ALWAYS** use actual type structures, never simplified versions
+- ✅ **NEVER** use `any` in test files
+- ✅ **NEVER** create test data with wrong property names
+- ✅ **NEVER** use incorrect nested structures
+- ✅ **ALWAYS** match actual schema structure exactly
+
+**Common Test Data Patterns:**
+
+```typescript
+// ✅ CORRECT - Type extracted from generated types
+import { GridRow as PricingType } from '@/sanity.types';
+
+const testPricingData: PricingType = {
+  _type: 'grid-row',
+  _key: 'test-pricing-1',
+  padding: {
+    _type: 'section-padding',
+    top: true,
+    bottom: true,
+  },
+  colorVariant: 'background',
+  gridColumns: 'grid-cols-3',
+  columns: [
+    {
+      _type: 'grid-card',
+      _key: 'card-1',
+      title: 'Basic',
+      excerpt: '$99/month', // Correct property name
+      image: null,
+      link: null,
+    },
+  ],
+};
+
+// ❌ WRONG - Outdated test data with wrong properties
+const badTestData = {
+  _type: 'grid-row',
+  padding: { pt: 'lg', pb: 'lg' }, // Wrong: should be { top, bottom }
+  columns: [
+    {
+      body: '$99/month', // Wrong: should be 'excerpt'
+    },
+  ],
+};
+```
+
+**Reference vs Expanded Objects in Tests:**
+
+```typescript
+// ✅ CORRECT - Reference uses _ref
+const testServiceWithImageRef = {
+  _type: 'service',
+  image: {
+    _type: 'image',
+    asset: {
+      _ref: 'image-abc123', // References have _ref
+      _type: 'reference',
+    },
+  },
+};
+
+// ❌ WRONG - Using _id on reference
+const badTest = {
+  image: {
+    asset: {
+      _id: 'image-abc123', // Wrong: _id is for expanded objects
+    },
+  },
+};
+```
+
+**Null vs Undefined in Tests:**
+
+```typescript
+// ✅ CORRECT - Match Sanity's null behavior
+const testService = {
+  meta_title: null, // Sanity uses null for empty optional fields
+  meta_description: null,
+  ogImage: null,
+};
+
+// ❌ WRONG - Using undefined when type expects null
+const badTest = {
+  meta_title: undefined, // Wrong: Sanity types use | null
+};
+```
+
 ### Critical Test Coverage Areas
 
 #### 1. Sanity Schema Validation
@@ -318,14 +412,38 @@ After implementing any task from the roadmap:
 
 If you detect ANY of these violations, **STOP IMMEDIATELY** and refuse to proceed:
 
+### Test Execution Violations
+
 ❌ Tests failing but task marked complete
 ❌ Test coverage significantly decreased
 ❌ Tests disabled just to make them pass
 ❌ Accessibility violations not addressed
 ❌ Build failing but tests passing
-❌ TypeScript errors in test files
 ❌ Missing tests for new features
 ❌ Flaky tests not investigated
 ❌ Starting a new task before previous tests pass
 
+### TypeScript Violations in Tests (ZERO TOLERANCE)
+
+❌ Using `any` type in test files
+❌ Test data not matching schema types from `sanity.types.ts`
+❌ Test data using wrong property names (e.g., `body` instead of `excerpt`)
+❌ Test data using wrong structure (e.g., `{ pt, pb }` instead of `{ top, bottom }`)
+❌ Using `_id` when should use `_ref` on references
+❌ Using `undefined` when schema expects `null`
+❌ TypeScript errors in test files
+❌ Not running `pnpm typecheck` on test files
+❌ Creating simplified mock data instead of using actual types
+
+**MANDATORY VALIDATION FOR TEST FILES**:
+
+```bash
+# All must pass with zero errors/warnings
+pnpm typecheck   # Includes test files
+pnpm lint        # Includes test files
+pnpm test        # All tests must pass
+```
+
 **Your job is to ensure code quality through comprehensive testing with ABSOLUTE STRICTNESS.**
+
+See `.claude/typescript-standards-enforcer.md` for comprehensive TypeScript rules and patterns.

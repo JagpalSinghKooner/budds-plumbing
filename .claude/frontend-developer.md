@@ -79,8 +79,17 @@ export default function SplitRow({
               );
               return <div data-type={column._type} key={column._key} />;
             }
+
+            // TypeScript limitation: dynamic lookup breaks discriminated union narrowing
+            // This is one of ONLY acceptable any usages in the codebase
+            // Safe: componentMap guarantees Component type matches column._type at runtime
+            // Alternative: Cast to specific type if known
             return (
-              <Component {...(column as any)} color={color} key={column._key} />
+              <Component
+                {...(column as Extract<SplitColumn, { _type: typeof column._type }>)}
+                color={color}
+                key={column._key}
+              />
             );
           })}
         </div>
@@ -92,11 +101,61 @@ export default function SplitRow({
 
 ### TypeScript Type Extraction Rules
 
+**CRITICAL**: Follow TypeScript Standards Enforcer for detailed rules (`.claude/typescript-standards-enforcer.md`).
+
 - ✅ **ALWAYS** extract types from Sanity query results using TypeScript utilities
 - ✅ **ALWAYS** use `Extract<>` to narrow union types for specific block types
 - ✅ **ALWAYS** use `NonNullable<>` to unwrap optional arrays
+- ✅ **ALWAYS** use `[number]` to extract array item types
 - ✅ **ALWAYS** type the componentMap with mapped types for type safety
 - ✅ **ALWAYS** use `stegaClean` from `next-sanity` to clean Sanity values
+- ✅ **NEVER** use `any` type (see Emergency Violations below for ONLY exception)
+- ✅ **NEVER** use `@ts-ignore` or `@ts-expect-error` without documented justification
+
+**Type Extraction Pattern**:
+
+```typescript
+// Extract block type from query result
+type Block = NonNullable<NonNullable<PAGE_QUERYResult>['blocks']>[number];
+type SplitRow = Extract<Block, { _type: 'split-row' }>;
+
+// Extract array item type
+type SplitColumn = NonNullable<NonNullable<SplitRow['splitColumns']>[number]>;
+
+// Extract specific variant from union
+type Hero1Block = Extract<Block, { _type: 'hero-1' }>;
+```
+
+**Null vs Undefined Handling**:
+
+```typescript
+// Sanity returns | null, Next.js APIs expect | undefined
+// Use null coalescing at API boundaries
+
+// ✅ CORRECT - generateMetadata
+export async function generateMetadata({ params }): Promise<Metadata> {
+  const service = await client.fetch(SERVICE_QUERY, {
+    slug: params.serviceSlug,
+  });
+  if (!service) return {};
+
+  return {
+    title: service.meta_title || service.name || 'Service', // Coalesce null
+    description: service.meta_description || '',
+    openGraph: service.ogImage
+      ? {
+          title: service.meta_title || service.name || 'Service',
+          description: service.meta_description || '',
+        }
+      : undefined, // Use undefined for optional objects
+  };
+}
+
+// ❌ WRONG - Don't pass null to Next.js APIs
+return {
+  title: service.meta_title, // Error: Type 'string | null' not assignable to 'string | undefined'
+};
+```
 
 ### Component Implementation Rules
 
@@ -422,6 +481,8 @@ const testimonials =
 
 If you detect ANY of these violations, **STOP IMMEDIATELY** and refuse to proceed:
 
+### Architecture Violations
+
 ❌ Creating components without componentMap pattern for parent blocks
 ❌ Not using stegaClean for Sanity values
 ❌ Not extracting types from Sanity query results
@@ -433,4 +494,28 @@ If you detect ANY of these violations, **STOP IMMEDIATELY** and refuse to procee
 ❌ Starting a new task before previous task is complete
 ❌ Skipping build checks before marking task complete
 
+### TypeScript Violations (ZERO TOLERANCE)
+
+❌ Using `any` type anywhere (except documented single case in `components/blocks/index.tsx`)
+❌ Using `@ts-ignore` or `@ts-expect-error` without full justification
+❌ Not running `pnpm typecheck` before completing task
+❌ Passing Sanity `| null` types to Next.js APIs (must coalesce to `| undefined`)
+❌ Accessing properties not projected in GROQ queries
+❌ Using wrong property on Sanity references (\_id vs \_ref)
+❌ Not using Extract<>, NonNullable<>, [number] for type narrowing
+❌ Creating test data that doesn't match schema types
+❌ Ignoring TypeScript errors instead of fixing root cause
+❌ Using type assertions (`as`) without documented justification
+
+**MANDATORY VALIDATION BEFORE TASK COMPLETION**:
+
+```bash
+# All must pass with zero errors/warnings
+pnpm typecheck  # 0 errors
+pnpm lint       # 0 warnings
+pnpm build      # successful build
+```
+
 **Your job is to enforce these patterns with ABSOLUTE STRICTNESS.**
+
+See `.claude/typescript-standards-enforcer.md` for comprehensive TypeScript rules and patterns.

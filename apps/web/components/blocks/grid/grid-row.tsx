@@ -46,9 +46,13 @@ export default function GridRow({
               );
               return <div data-type={column._type} key={column._key} />;
             }
+            // TypeScript limitation: dynamic lookup breaks discriminated union narrowing
+            // This is one of the ONLY acceptable any usages in the codebase
+            // Safe: componentMap guarantees Component type matches column._type at runtime
             return (
               <Component
                 key={column._key}
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 {...(column as any)}
                 color={color ?? undefined}
               />

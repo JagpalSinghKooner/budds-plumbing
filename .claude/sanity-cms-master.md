@@ -504,7 +504,11 @@ When asked to write content:
 
 ---
 
-## TypeScript Type Generation
+## TypeScript Type Generation and Type Safety (ZERO TOLERANCE)
+
+**CRITICAL**: All GROQ query results MUST be properly typed. See `.claude/typescript-standards-enforcer.md`.
+
+### Type Generation Rules
 
 - ✅ **ONLY** write Types for responses if you cannot generate them with Sanity TypeGen
 - ✅ **ALWAYS** export schema types first from inside Studio codebase: `npx sanity@latest typegen generate`
@@ -512,6 +516,139 @@ When asked to write content:
 - ✅ Generate and commit TypeScript types with `sanity codegen`
 - ✅ Validate query output against generated types
 - ✅ CI must fail on type mismatch
+
+### Type Extraction from GROQ Query Results
+
+**CRITICAL**: Extract types from generated `sanity.types.ts`, NEVER write custom types manually.
+
+**Common Type Extraction Patterns:**
+
+```typescript
+// ✅ CORRECT - Extract from generated query result type
+import type { PAGE_QUERYResult } from '@/sanity.types';
+
+// Extract block union from query result
+type Block = NonNullable<NonNullable<PAGE_QUERYResult>['blocks']>[number];
+
+// Extract specific block type using Extract<>
+type Hero1Block = Extract<Block, { _type: 'hero-1' }>;
+type SplitRow = Extract<Block, { _type: 'split-row' }>;
+
+// Extract array item type from parent block
+type SplitColumn = NonNullable<NonNullable<SplitRow['splitColumns']>[number]>;
+
+// Extract specific column type
+type SplitContent = Extract<SplitColumn, { _type: 'split-content' }>;
+```
+
+**Wrong Patterns to Avoid:**
+
+```typescript
+// ❌ WRONG - Writing custom types manually
+type Hero1Block = {
+  _type: 'hero-1';
+  heading: string;
+  // ... manually typed fields
+};
+
+// ❌ WRONG - Using any
+type Block = any;
+
+// ❌ WRONG - Not using Extract to narrow unions
+type Hero1Block = Block; // Still a union, not narrowed!
+```
+
+### Reference vs Expanded Object Types
+
+**CRITICAL**: Sanity references use `_ref`, expanded objects use `_id`.
+
+```typescript
+// ✅ CORRECT - Checking reference
+if (service.image?.asset?._ref) {
+  const imageUrl = urlFor(service.image).url();
+}
+
+// ❌ WRONG - Using _id on reference
+if (service.image?.asset?._id) {
+  // Error: _id doesn't exist on reference
+  // ...
+}
+```
+
+### Null vs Undefined in Sanity Types
+
+**CRITICAL**: Sanity returns `| null`, Next.js APIs expect `| undefined`. Coalesce at API boundaries.
+
+```typescript
+// ✅ CORRECT - Coalescing null to undefined
+import type { Metadata } from 'next';
+import type { SERVICE_QUERYResult } from '@/sanity.types';
+
+export async function generateMetadata({ params }): Promise<Metadata> {
+  const service = await client.fetch<SERVICE_QUERYResult>(SERVICE_QUERY, {
+    slug: params.serviceSlug,
+  });
+
+  if (!service) return {};
+
+  return {
+    title: service.meta_title || service.name || 'Service', // Coalesce null
+    description: service.meta_description || '',
+    openGraph: service.ogImage
+      ? {
+          title: service.meta_title || service.name || 'Service',
+        }
+      : undefined, // Use undefined for optional objects
+  };
+}
+
+// ❌ WRONG - Passing null types to Next.js APIs
+return {
+  title: service.meta_title, // Error: string | null not assignable to string | undefined
+};
+```
+
+### GROQ Query Projection Rules
+
+**CRITICAL**: Only access properties that are explicitly projected in GROQ queries.
+
+```typescript
+// ✅ CORRECT - Query projects resolvedLink
+const LINKS_QUERY = groq`*[_type == "link"]{
+  _id,
+  _type,
+  title,
+  "resolvedLink": select(
+    defined(internalLink) => internalLink->slug.current,
+    defined(externalLink) => externalLink
+  )
+}`;
+
+// In component: only access projected fields
+{links.map(link => (
+  <a href={link.resolvedLink}>{link.title}</a>
+))}
+
+// ❌ WRONG - Accessing non-projected fields
+{links.map(link => (
+  <a href={link.internalLink?.slug?.current}>  // Error: internalLink not projected
+    {link.title}
+  </a>
+))}
+```
+
+### Type Safety Checklist
+
+Before completing any Sanity-related task:
+
+1. [ ] Run `pnpm sanity typegen` after schema changes
+2. [ ] Verify all GROQ queries are properly typed with generated types
+3. [ ] Check that components only access projected fields
+4. [ ] Use Extract<> and NonNullable<> for type narrowing
+5. [ ] Coalesce null to undefined at API boundaries
+6. [ ] Run `pnpm typecheck` - must pass with 0 errors
+7. [ ] Test queries in Vision tool
+8. [ ] Commit generated sanity.types.ts
 
 ---
 
@@ -584,6 +721,8 @@ When asked to write content:
 
 If you detect ANY of these violations, **STOP IMMEDIATELY** and refuse to proceed:
 
+### Schema and Studio Violations
+
 ❌ Creating schema without `defineType`/`defineField`
 ❌ Missing icon from lucide-react
 ❌ Missing preview property
@@ -596,4 +735,29 @@ If you detect ANY of these violations, **STOP IMMEDIATELY** and refuse to procee
 ❌ Starting a new task before previous task is complete
 ❌ Skipping TypeGen after schema changes
 
+### TypeScript Violations (ZERO TOLERANCE)
+
+❌ Using `any` type for GROQ query results
+❌ Writing custom types instead of extracting from generated `sanity.types.ts`
+❌ Not using Extract<> to narrow discriminated unions
+❌ Not using NonNullable<> to unwrap optional types
+❌ Accessing fields not projected in GROQ queries
+❌ Using `_id` when should use `_ref` on references
+❌ Passing Sanity `| null` types to Next.js APIs without coalescing
+❌ Not running `pnpm sanity typegen` after schema changes
+❌ Not running `pnpm typecheck` before completing task
+❌ Using `@ts-ignore` to suppress type errors
+
+**MANDATORY VALIDATION BEFORE TASK COMPLETION**:
+
+```bash
+# All must pass with zero errors/warnings
+pnpm sanity typegen  # Generate types after schema changes
+pnpm typecheck       # 0 errors
+pnpm lint            # 0 warnings
+pnpm build           # Successful build
+```
+
 **Your job is to enforce these rules with ABSOLUTE STRICTNESS.**
+
+See `.claude/typescript-standards-enforcer.md` for comprehensive TypeScript rules and patterns.
