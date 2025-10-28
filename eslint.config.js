@@ -138,4 +138,11 @@ module.exports = [
       },
     },
   },
+  // Allow console statements in CLI scripts
+  {
+    files: ['**/scripts/**/*.js', '**/scripts/**/*.ts', '**/migrations/**/*.js'],
+    rules: {
+      'no-console': 'off',
+    },
+  },
 ];
