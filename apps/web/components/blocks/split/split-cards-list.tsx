@@ -1,12 +1,12 @@
-import { stegaClean } from "next-sanity";
-import SplitCardsItem from "@/components/blocks/split/split-cards-item";
-import { PAGE_QUERYResult, ColorVariant } from "@/sanity.types";
+import { stegaClean } from 'next-sanity';
+import SplitCardsItem from '@/components/blocks/split/split-cards-item';
+import { PAGE_QUERYResult, ColorVariant } from '@/sanity.types';
 
-type Block = NonNullable<NonNullable<PAGE_QUERYResult>["blocks"]>[number];
-type SplitRow = Extract<Block, { _type: "split-row" }>;
+type Block = NonNullable<NonNullable<PAGE_QUERYResult>['blocks']>[number];
+type SplitRow = Extract<Block, { _type: 'split-row' }>;
 type SplitCardsList = Extract<
-  NonNullable<SplitRow["splitColumns"]>[number],
-  { _type: "split-cards-list" }
+  NonNullable<SplitRow['splitColumns']>[number],
+  { _type: 'split-cards-list' }
 >;
 
 interface SplitCardsListProps extends SplitCardsList {

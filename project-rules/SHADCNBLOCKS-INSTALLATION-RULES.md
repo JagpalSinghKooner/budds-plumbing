@@ -24,6 +24,7 @@ SHADCNBLOCKS_API_KEY=sk_live_your_api_key_here
 ```
 
 **Verify the key:**
+
 - Must start with `sk_live_`
 - Get from: https://www.shadcnblocks.com/dashboard (API Keys section)
 - Can set optional expiration date
@@ -33,6 +34,7 @@ SHADCNBLOCKS_API_KEY=sk_live_your_api_key_here
 **File:** `apps/web/components.json`
 
 **Required structure:**
+
 ```json
 {
   "$schema": "https://ui.shadcn.com/schema.json",
@@ -66,6 +68,7 @@ SHADCNBLOCKS_API_KEY=sk_live_your_api_key_here
 ```
 
 **Common Issues:**
+
 - ❌ Missing closing braces
 - ❌ Extra commas at end of objects
 - ❌ Incorrect nesting of registries object
@@ -89,6 +92,7 @@ npx shadcn@latest add @shadcnblocks/component-name --dry-run
 ```
 
 **What the CLI does:**
+
 1. Checks registry configuration
 2. Authenticates using API key
 3. Downloads official component code
@@ -176,11 +180,13 @@ pnpm dev
 ### 7. Component Location
 
 **Official components install to:**
+
 ```
 apps/web/components/{component-name}.tsx
 ```
 
 **Move to appropriate location if needed:**
+
 ```bash
 # Example: Move navbar to header folder
 mv apps/web/components/navbar2.tsx apps/web/components/header/navbar2.tsx
@@ -188,15 +194,16 @@ mv apps/web/components/navbar2.tsx apps/web/components/header/navbar2.tsx
 
 ### 8. Common Components from Shadcnblocks
 
-| Component | CLI Command | Required Dependencies |
-|-----------|-------------|----------------------|
-| navbar2 | `npx shadcn@latest add @shadcnblocks/navbar2` | accordion, button, navigation-menu, sheet |
-| hero125 | `npx shadcn@latest add @shadcnblocks/hero125` | button, badge |
-| pricing3 | `npx shadcn@latest add @shadcnblocks/pricing3` | card, button, badge |
+| Component | CLI Command                                    | Required Dependencies                     |
+| --------- | ---------------------------------------------- | ----------------------------------------- |
+| navbar2   | `npx shadcn@latest add @shadcnblocks/navbar2`  | accordion, button, navigation-menu, sheet |
+| hero125   | `npx shadcn@latest add @shadcnblocks/hero125`  | button, badge                             |
+| pricing3  | `npx shadcn@latest add @shadcnblocks/pricing3` | card, button, badge                       |
 
 ### 9. Troubleshooting
 
 #### Authentication Failed
+
 ```bash
 # Check API key exists
 cat .env.local | grep SHADCNBLOCKS
@@ -206,6 +213,7 @@ cat .env.local | grep SHADCNBLOCKS
 ```
 
 #### Component Already Exists
+
 ```bash
 # CLI will prompt to overwrite
 # Type 'y' to overwrite or 'n' to skip
@@ -215,6 +223,7 @@ yes | npx shadcn@latest add @shadcnblocks/component-name
 ```
 
 #### Missing Dependencies
+
 ```bash
 # CLI installs most dependencies automatically
 # If missing, install manually:
@@ -222,6 +231,7 @@ pnpm add @radix-ui/react-navigation-menu lucide-react
 ```
 
 #### Registry Not Found
+
 ```bash
 # Check components.json has correct registries section
 # Verify no JSON syntax errors

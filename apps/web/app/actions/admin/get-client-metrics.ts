@@ -1,6 +1,6 @@
-"use server";
+'use server';
 
-import type { ClientMetrics } from "@/types/admin";
+import type { ClientMetrics } from '@/types/admin';
 
 /**
  * Get client metrics for dashboard

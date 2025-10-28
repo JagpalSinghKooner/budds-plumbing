@@ -9,6 +9,7 @@
 ## ✅ COMPLETED & PRODUCTION READY
 
 ### Core Multi-Tenant Infrastructure
+
 1. ✅ Client Configuration Schema (Sanity)
 2. ✅ Dataset Routing Middleware
 3. ✅ Multi-Domain Infrastructure
@@ -27,6 +28,7 @@
 **Goal:** Verify everything works end-to-end
 
 **Tasks:**
+
 - [ ] Create a test client using provisioning script
 - [ ] Verify dataset created in Sanity
 - [ ] Add test domain to `domain-mapping.ts`
@@ -36,6 +38,7 @@
 - [ ] Test dataset isolation (no data leakage)
 
 **Commands:**
+
 ```bash
 # Create test client
 pnpm run provision:create
@@ -51,6 +54,7 @@ pnpm run provision:validate client-test
 **Goal:** Configure real domains for multi-tenant support
 
 **Tasks:**
+
 - [ ] Add production domains to `domain-mapping.ts`
 - [ ] Configure Vercel domain settings
 - [ ] Set up DNS records for subdomains
@@ -59,6 +63,7 @@ pnpm run provision:validate client-test
 - [ ] Test www redirects
 
 **Example domains:**
+
 - Main: `buddsplumbing.com`
 - Client 1: `client1.buddsplumbing.com`
 - Custom: `clientdomain.com`
@@ -74,6 +79,7 @@ pnpm run provision:validate client-test
 **Solution:** Create explicit route folders
 
 **Tasks:**
+
 - [ ] Create `/about` page
 - [ ] Create `/contact` page
 - [ ] Create `/privacy-policy` page
@@ -82,6 +88,7 @@ pnpm run provision:validate client-test
 - [ ] Test all pages load correctly
 
 **Example:**
+
 ```bash
 # Create folders
 mkdir -p apps/web/app/(main)/about
@@ -97,6 +104,7 @@ mkdir -p apps/web/app/(main)/contact
 **Goal:** Move existing content to new structure
 
 **Tasks:**
+
 - [ ] Identify existing pages that need migration
 - [ ] Export content from old structure
 - [ ] Import into blocks-based structure
@@ -111,6 +119,7 @@ mkdir -p apps/web/app/(main)/contact
 **Goal:** Test with multiple clients simultaneously
 
 **Tasks:**
+
 - [ ] Create 3 test clients with provisioning script
 - [ ] Configure unique domains for each
 - [ ] Create different content per client
@@ -126,6 +135,7 @@ mkdir -p apps/web/app/(main)/contact
 **Goal:** Ensure fast load times across all clients
 
 **Tasks:**
+
 - [ ] Enable ISR for all dynamic routes
 - [ ] Configure CDN caching
 - [ ] Optimize images (already using next/image)
@@ -138,18 +148,21 @@ mkdir -p apps/web/app/(main)/contact
 ## 📋 OPTIONAL ENHANCEMENTS
 
 ### Enhanced Provisioning (Optional)
+
 - [ ] Add more template presets (HVAC, Roofing, etc.)
 - [ ] Customize templates per industry
 - [ ] Add logo upload during provisioning
 - [ ] Pre-configure brand colors
 
 ### Advanced Routing (Optional)
+
 - [ ] Implement `/pages/[slug]` for CMS-driven generic pages
 - [ ] Add automatic redirects from old URLs
 - [ ] Create 404 page per client
 - [ ] Add sitemap per client
 
 ### Monitoring (Optional)
+
 - [ ] Set up error tracking (Sentry)
 - [ ] Add analytics per client
 - [ ] Create uptime monitoring
@@ -160,6 +173,7 @@ mkdir -p apps/web/app/(main)/contact
 ## ⏸️ DEFERRED TO END OF PROJECT
 
 ### Admin Dashboard
+
 - Client management UI
 - Database integration
 - Authentication (Clerk)
@@ -176,6 +190,7 @@ mkdir -p apps/web/app/(main)/contact
 ## 🧪 TESTING PRIORITIES
 
 ### Must Test Now
+
 - [x] Dev server starts without errors
 - [x] Sanity Studio loads without schema errors
 - [x] Browser loads without webpack errors
@@ -186,6 +201,7 @@ mkdir -p apps/web/app/(main)/contact
 - [ ] Dataset isolation (no data leakage)
 
 ### Can Test Later
+
 - Load testing (50+ clients)
 - Security penetration testing
 - Browser compatibility
@@ -197,6 +213,7 @@ mkdir -p apps/web/app/(main)/contact
 ## 🚀 DEPLOYMENT CHECKLIST (When Ready)
 
 ### Prerequisites
+
 - [x] Phase 2 core infrastructure complete
 - [ ] Essential pages created (about, contact)
 - [ ] Multi-tenant testing complete
@@ -205,6 +222,7 @@ mkdir -p apps/web/app/(main)/contact
 - [ ] DNS records updated
 
 ### Deployment Steps
+
 1. [ ] Test everything in staging environment
 2. [ ] Configure environment variables in Vercel
 3. [ ] Add all domains to Vercel project
@@ -219,6 +237,7 @@ mkdir -p apps/web/app/(main)/contact
 ## 📊 SUCCESS CRITERIA
 
 ### Core Functionality
+
 - ✅ Multiple clients can be provisioned in < 5 minutes
 - ✅ Each client has isolated dataset
 - ✅ Domain routing works correctly
@@ -227,6 +246,7 @@ mkdir -p apps/web/app/(main)/contact
 - ⏳ No data leakage between clients
 
 ### Ready for Next Phase
+
 - [ ] 2+ clients running in production
 - [ ] All essential pages created
 - [ ] Documentation complete
@@ -238,6 +258,7 @@ mkdir -p apps/web/app/(main)/contact
 ## 🛠️ QUICK REFERENCE
 
 ### Create New Client
+
 ```bash
 # Interactive mode
 pnpm run provision:create
@@ -248,7 +269,9 @@ pnpm run create-client "Business Name" "slug" "email@example.com" plumbing
 ```
 
 ### Add New Domain
+
 Edit `apps/web/lib/domain-mapping.ts`:
+
 ```typescript
 {
   domain: "client1.buddsplumbing.com",
@@ -261,12 +284,14 @@ Edit `apps/web/lib/domain-mapping.ts`:
 ```
 
 ### Create New Page
+
 ```bash
 mkdir -p apps/web/app/(main)/page-name
 # Create page.tsx inside folder
 ```
 
 ### Test Locally
+
 ```bash
 # Edit /etc/hosts
 127.0.0.1 client1.buddsplumbing.local
@@ -282,6 +307,7 @@ pnpm dev
 ## 📝 CURRENT STATUS
 
 ### What's Working
+
 ✅ Dev server running on port 3000
 ✅ Sanity Studio running on port 3333
 ✅ No console errors
@@ -289,12 +315,14 @@ pnpm dev
 ✅ Provisioning scripts ready
 
 ### What Needs Attention
+
 ⏳ Create essential pages (about, contact)
 ⏳ Test client provisioning
 ⏳ Configure production domains
 ⏳ Deploy to staging
 
 ### What's Deferred
+
 ⏸️ Admin dashboard (end of project)
 ⏸️ Database integration (end of project)
 ⏸️ Authentication (end of project)
@@ -322,6 +350,7 @@ pnpm dev
    - Verify everything works
 
 **After that's solid, then:**
+
 - Deploy to production
 - Onboard first real client
 - Monitor and iterate

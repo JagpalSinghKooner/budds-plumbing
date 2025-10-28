@@ -41,6 +41,7 @@ This directory contains all project-specific rules, guidelines, and standards th
 ## 🚨 Critical Rules to Always Follow
 
 ### Installation & Dependencies
+
 - ✅ Always use official shadcnblocks CLI (see [SHADCNBLOCKS-INSTALLATION-RULES.md](./SHADCNBLOCKS-INSTALLATION-RULES.md))
 - ✅ Verify `components.json` is valid JSON before installing
 - ✅ Set `SHADCNBLOCKS_API_KEY` in `.env.local`
@@ -48,6 +49,7 @@ This directory contains all project-specific rules, guidelines, and standards th
 - ✅ Use `pnpm` (not npm or yarn) for package management
 
 ### Code Quality
+
 - ✅ No `eslint-disable` comments
 - ✅ No `@ts-ignore` or `@ts-nocheck`
 - ✅ TypeScript strict mode enabled
@@ -55,6 +57,7 @@ This directory contains all project-specific rules, guidelines, and standards th
 - ✅ Run `pnpm typecheck` before committing
 
 ### Next.js Best Practices
+
 - ✅ Use `<Link>` instead of `<a>` tags
 - ✅ Use `<Image>` instead of `<img>` tags
 - ✅ Use server components by default
@@ -62,12 +65,14 @@ This directory contains all project-specific rules, guidelines, and standards th
 - ✅ Properly handle async/await in server components
 
 ### Sanity CMS Integration
+
 - ✅ All navigation and settings from Sanity
 - ✅ Use GROQ queries for data fetching
 - ✅ Type-safe with generated Sanity types
 - ✅ Never hardcode business information
 
 ### Styling & UI
+
 - ✅ Use Tailwind CSS utility classes
 - ✅ Follow shadcn/ui component patterns
 - ✅ Add proper z-index for overlays (header: z-[100], dropdowns: z-[200], modals: z-[300])

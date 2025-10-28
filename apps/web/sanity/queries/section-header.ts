@@ -1,5 +1,5 @@
-import { groq } from "next-sanity";
-import { linkQuery } from "./shared/link";
+import { groq } from 'next-sanity';
+import { linkQuery } from './shared/link';
 
 // @sanity-typegen-ignore
 export const sectionHeaderQuery = groq`

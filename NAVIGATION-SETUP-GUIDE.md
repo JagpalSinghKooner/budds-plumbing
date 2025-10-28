@@ -5,6 +5,7 @@
 The following pages have been created and are ready to use:
 
 ### Main Pages
+
 - **Home** - `/` (already exists as `index`)
 - **About** - `/about`
 - **Contact** - `/contact`
@@ -12,10 +13,12 @@ The following pages have been created and are ready to use:
 - **Locations** - `/locations` (landing page)
 
 ### Legal Pages
+
 - **Privacy Policy** - `/privacy-policy`
 - **Terms of Service** - `/terms-of-service`
 
 ### Dynamic Routes (Already Exist)
+
 - **Individual Service** - `/services/[serviceSlug]`
 - **Individual Location** - `/locations/[locationSlug]`
 - **Service in Location** - `/[serviceSlug]/in/[locationSlug]`
@@ -29,6 +32,7 @@ Navigation is managed through **Sanity Studio**, not in code. This allows non-te
 ### Navigation Structure
 
 Your navigation uses the `link` object which supports:
+
 - ✅ Internal links (references to pages in Sanity)
 - ✅ External links (URLs to other websites)
 - ✅ Dropdown menus (sub-links)
@@ -58,10 +62,12 @@ Before you can link to pages in navigation, you need to create them in Sanity:
 3. For each page you want to create:
 
 #### Home Page (Already Exists)
+
 - **Slug:** `index`
 - **Add blocks** as needed
 
 #### About Page
+
 - **Slug:** `about`
 - **Meta Title:** "About Us | Your Business Name"
 - **Meta Description:** Brief description of your about page
@@ -71,6 +77,7 @@ Before you can link to pages in navigation, you need to create them in Sanity:
   - CTA block
 
 #### Contact Page
+
 - **Slug:** `contact`
 - **Meta Title:** "Contact Us | Your Business Name"
 - **Meta Description:** "Get in touch with us"
@@ -80,6 +87,7 @@ Before you can link to pages in navigation, you need to create them in Sanity:
   - Section with contact details from settings
 
 #### Services Landing Page
+
 - **Slug:** `services`
 - **Meta Title:** "Our Services | Your Business Name"
 - **Meta Description:** "Browse all our professional services"
@@ -88,6 +96,7 @@ Before you can link to pages in navigation, you need to create them in Sanity:
   - Grid with service cards (you can manually add or query services)
 
 #### Locations Landing Page
+
 - **Slug:** `locations`
 - **Meta Title:** "Service Areas | Your Business Name"
 - **Meta Description:** "Areas we serve"
@@ -96,6 +105,7 @@ Before you can link to pages in navigation, you need to create them in Sanity:
   - Grid with location cards
 
 #### Privacy Policy
+
 - **Slug:** `privacy-policy`
 - **Meta Title:** "Privacy Policy | Your Business Name"
 - **Add blocks:**
@@ -103,6 +113,7 @@ Before you can link to pages in navigation, you need to create them in Sanity:
   - Multiple section blocks with your policy content
 
 #### Terms of Service
+
 - **Slug:** `terms-of-service`
 - **Meta Title:** "Terms of Service | Your Business Name"
 - **Add blocks:**
@@ -159,6 +170,7 @@ Navigation
 2. For each link, configure:
 
 #### For Internal Links (Pages in Your Site):
+
 - **Is External:** Toggle OFF (unchecked)
 - **Internal Link:** Click and select the page (e.g., "About")
 - **Title:** Text to display (e.g., "About Us")
@@ -166,13 +178,15 @@ Navigation
 - **Sub Links:** (optional) Click "Add item" to create dropdown menu
 
 #### For External Links (Other Websites):
+
 - **Is External:** Toggle ON (checked)
 - **href:** Enter full URL (e.g., `https://example.com`)
 - **Title:** Text to display
-- **Open in new tab:** Toggle ON if you want target="_blank"
+- **Open in new tab:** Toggle ON if you want target="\_blank"
 - **Button Variant:** (optional)
 
 #### For Dropdown Menus:
+
 - Create the main link as above
 - Under **Sub Links**, click "Add item"
 - Configure each sub-link with same options
@@ -199,6 +213,7 @@ Home | About | Services | Contact
 ```
 
 **Configuration:**
+
 - 4 links, all internal
 - No dropdowns
 - Contact link styled as button
@@ -214,6 +229,7 @@ Home | About | Services ▼ | Locations ▼ | Contact
 ```
 
 **Configuration:**
+
 - Services link has sub-links
 - Locations link has sub-links
 - Each sub-link can reference actual Service/Location documents
@@ -225,6 +241,7 @@ Home | About | Services | Contact (button) | Blog (external) ↗
 ```
 
 **Configuration:**
+
 - Most links are internal
 - Contact styled as button with `button-variant: primary`
 - Blog is external link with "open in new tab" enabled
@@ -252,6 +269,7 @@ Instead of creating "Services" as a generic page, you can reference actual Servi
    - Repeat for each location
 
 The system will automatically generate the correct URLs:
+
 - Services: `/services/emergency-plumbing`
 - Locations: `/locations/calgary`
 
@@ -295,6 +313,7 @@ Since legal pages rarely change, you can hardcode them in your footer:
 ### 2. Test Each Page Individually
 
 Visit each URL directly:
+
 - http://localhost:3000/
 - http://localhost:3000/about
 - http://localhost:3000/contact
@@ -306,6 +325,7 @@ Visit each URL directly:
 ### 3. Check Missing Pages
 
 If you see "This page is missing from Sanity", it means:
+
 - The page exists in code (route is correct)
 - But there's no matching page document in Sanity with that slug
 
@@ -328,35 +348,41 @@ This query returns all navigation links with resolved URLs, so the navbar compon
 ## Troubleshooting
 
 ### Navigation doesn't update
+
 - **Solution:** Wait 60 seconds (ISR revalidation) or restart dev server
 
 ### Link goes to wrong page
+
 - **Solution:** Check the slug in Sanity matches the route folder name
 
 ### Dropdown doesn't work
+
 - **Solution:** Ensure sub-links array has items and is not empty
 
 ### "Missing from Sanity" message appears
+
 - **Solution:** Create a page document in Sanity with the matching slug
 
 ### External link doesn't open in new tab
+
 - **Solution:** Toggle "Open in new tab" ON in the link configuration
 
 ---
 
 ## Quick Reference: Page Slugs
 
-| Page | Slug | URL |
-|------|------|-----|
-| Home | `index` | `/` |
-| About | `about` | `/about` |
-| Contact | `contact` | `/contact` |
-| Services (landing) | `services` | `/services` |
-| Locations (landing) | `locations` | `/locations` |
-| Privacy Policy | `privacy-policy` | `/privacy-policy` |
-| Terms of Service | `terms-of-service` | `/terms-of-service` |
+| Page                | Slug               | URL                 |
+| ------------------- | ------------------ | ------------------- |
+| Home                | `index`            | `/`                 |
+| About               | `about`            | `/about`            |
+| Contact             | `contact`          | `/contact`          |
+| Services (landing)  | `services`         | `/services`         |
+| Locations (landing) | `locations`        | `/locations`        |
+| Privacy Policy      | `privacy-policy`   | `/privacy-policy`   |
+| Terms of Service    | `terms-of-service` | `/terms-of-service` |
 
 **Dynamic Routes** (no page documents needed):
+
 - `/services/[slug]` - Individual services
 - `/locations/[slug]` - Individual locations
 - `/[serviceSlug]/in/[locationSlug]` - Service+Location combo

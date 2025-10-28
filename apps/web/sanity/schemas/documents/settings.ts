@@ -1,62 +1,62 @@
-import { defineField, defineType } from "sanity";
-import { Settings } from "lucide-react";
+import { defineField, defineType } from 'sanity';
+import { Settings } from 'lucide-react';
 
 export default defineType({
-  name: "settings",
-  title: "Settings",
-  type: "document",
+  name: 'settings',
+  title: 'Settings',
+  type: 'document',
   icon: Settings,
   fields: [
     defineField({
-      name: "logo",
-      type: "object",
+      name: 'logo',
+      type: 'object',
       fields: [
         defineField({
-          name: "dark",
-          type: "image",
+          name: 'dark',
+          type: 'image',
           options: { hotspot: true },
         }),
         defineField({
-          name: "light",
-          type: "image",
+          name: 'light',
+          type: 'image',
           options: { hotspot: true },
         }),
         defineField({
-          name: "width",
-          type: "number",
-          title: "Width",
+          name: 'width',
+          type: 'number',
+          title: 'Width',
           description:
-            "The width of the logo. Default is dimensions of the image.",
+            'The width of the logo. Default is dimensions of the image.',
         }),
         defineField({
-          name: "height",
-          type: "number",
-          title: "Height",
+          name: 'height',
+          type: 'number',
+          title: 'Height',
           description:
-            "The height of the logo. Default is dimensions of the image.",
+            'The height of the logo. Default is dimensions of the image.',
         }),
       ],
     }),
     defineField({
-      name: "siteName",
-      type: "string",
-      description: "The name of your site",
-      validation: (Rule) => Rule.required().error("Site name is required"),
+      name: 'siteName',
+      type: 'string',
+      description: 'The name of your site',
+      validation: (Rule) => Rule.required().error('Site name is required'),
     }),
     defineField({
-      name: "copyright",
-      type: "block-content",
-      description: "The copyright text to display in the footer",
+      name: 'copyright',
+      type: 'block-content',
+      description: 'The copyright text to display in the footer',
     }),
   ],
   preview: {
     select: {
-      title: "siteName",
-      media: "logo",
+      title: 'siteName',
+      media: 'logo',
     },
     prepare({ title, media }) {
       return {
-        title: title || "Site Settings",
+        title: title || 'Site Settings',
         media,
       };
     },

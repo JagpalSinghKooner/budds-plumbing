@@ -24,19 +24,19 @@ export const DOMAIN_MAPPINGS: DomainConfig[] = [
 
   // New client subdomain
   {
-    domain: "client1.buddsplumbing.com",
+    domain: 'client1.buddsplumbing.com',
     projectId: DEFAULT_PROJECT_ID, // Use same Sanity project
-    dataset: "client1-production", // Client-specific dataset
-    clientId: "client1",
+    dataset: 'client1-production', // Client-specific dataset
+    clientId: 'client1',
     enabled: true,
-    siteUrl: "https://client1.buddsplumbing.com",
+    siteUrl: 'https://client1.buddsplumbing.com',
     analytics: {
-      googleAnalyticsId: "G-CLIENT1XXX",
-      googleTagManagerId: "GTM-CLIENT1",
+      googleAnalyticsId: 'G-CLIENT1XXX',
+      googleTagManagerId: 'GTM-CLIENT1',
     },
     branding: {
-      name: "Client 1 Plumbing Services",
-      logo: "/clients/client1-logo.png",
+      name: 'Client 1 Plumbing Services',
+      logo: '/clients/client1-logo.png',
     },
   },
 ];
@@ -52,18 +52,18 @@ export const DOMAIN_MAPPINGS: DomainConfig[] = [
 
   // Custom domain for a white-label client
   {
-    domain: "acmeplumbing.com",
-    projectId: "different-project-id", // Different Sanity project
-    dataset: "acme-production",
-    clientId: "acme",
+    domain: 'acmeplumbing.com',
+    projectId: 'different-project-id', // Different Sanity project
+    dataset: 'acme-production',
+    clientId: 'acme',
     enabled: true,
-    siteUrl: "https://acmeplumbing.com",
+    siteUrl: 'https://acmeplumbing.com',
     analytics: {
-      googleAnalyticsId: "G-ACMEXXXXXX",
+      googleAnalyticsId: 'G-ACMEXXXXXX',
     },
     branding: {
-      name: "ACME Plumbing Co.",
-      logo: "/clients/acme-logo.png",
+      name: 'ACME Plumbing Co.',
+      logo: '/clients/acme-logo.png',
     },
   },
 ];
@@ -233,10 +233,7 @@ export async function POST(request: NextRequest) {
   const { success } = await rateLimiter.limit(context.clientId);
 
   if (!success) {
-    return NextResponse.json(
-      { error: 'Rate limit exceeded' },
-      { status: 429 }
-    );
+    return NextResponse.json({ error: 'Rate limit exceeded' }, { status: 429 });
   }
 
   // Process newsletter signup...
@@ -323,16 +320,20 @@ export default async function ContactPage() {
 ```typescript
 // lib/queries/services.ts
 
-import { createSanityClientForDomain, getDomainContext } from '@/lib/sanity-domain-helpers';
+import {
+  createSanityClientForDomain,
+  getDomainContext,
+} from '@/lib/sanity-domain-helpers';
 
 export async function getServices() {
   const { clientId } = await getDomainContext();
   const client = await createSanityClientForDomain();
 
   // Different query logic based on client
-  const query = clientId === 'budds-main'
-    ? `*[_type == "service"] | order(order asc, title asc)`
-    : `*[_type == "service" && !hideFromClients] | order(title asc)`;
+  const query =
+    clientId === 'budds-main'
+      ? `*[_type == "service"] | order(order asc, title asc)`
+      : `*[_type == "service" && !hideFromClients] | order(title asc)`;
 
   return await client.fetch(query);
 }
@@ -384,12 +385,18 @@ export function customDomainMiddleware(request: NextRequest) {
   }
 
   // Redirect specific paths for certain clients
-  if (config.clientId === 'client1' && request.nextUrl.pathname === '/old-path') {
+  if (
+    config.clientId === 'client1' &&
+    request.nextUrl.pathname === '/old-path'
+  ) {
     return NextResponse.redirect(new URL('/new-path', request.url));
   }
 
   // Block certain paths for specific clients
-  if (config.clientId !== 'budds-main' && request.nextUrl.pathname.startsWith('/admin')) {
+  if (
+    config.clientId !== 'budds-main' &&
+    request.nextUrl.pathname.startsWith('/admin')
+  ) {
     return NextResponse.redirect(new URL('/', request.url));
   }
 
@@ -498,22 +505,26 @@ describe('Domain Mapping', () => {
 ## Best Practices
 
 1. **Always use domain helpers in Server Components**
+
    ```typescript
    const client = await createSanityClientForDomain();
    ```
 
 2. **Pass domain context to Client Components**
+
    ```typescript
    const { clientId } = await getDomainContext();
    <ClientComponent clientId={clientId} />
    ```
 
 3. **Use environment overrides for testing**
+
    ```bash
    NEXT_PUBLIC_DOMAIN_OVERRIDE=client1.example.com npm run dev
    ```
 
 4. **Cache domain configs when possible**
+
    ```typescript
    const config = getDomainConfig(domain); // Already cached internally
    ```

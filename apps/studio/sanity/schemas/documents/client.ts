@@ -168,13 +168,15 @@ export default defineType({
           name: 'width',
           title: 'Display Width',
           type: 'number',
-          description: 'Display width in pixels (optional, defaults to image width)',
+          description:
+            'Display width in pixels (optional, defaults to image width)',
         }),
         defineField({
           name: 'height',
           title: 'Display Height',
           type: 'number',
-          description: 'Display height in pixels (optional, defaults to image height)',
+          description:
+            'Display height in pixels (optional, defaults to image height)',
         }),
       ],
     }),

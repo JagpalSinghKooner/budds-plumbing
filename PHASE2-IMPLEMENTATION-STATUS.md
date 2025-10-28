@@ -15,6 +15,7 @@
 **File:** `apps/studio/sanity/schemas/documents/client.ts`
 
 **Features:**
+
 - Client document type with full validation
 - Fields: `clientId`, `businessName`, `domain`, `dataset`, `status`, `plan`
 - Branding support: logo, brand colors (primary, secondary, accent)
@@ -34,11 +35,13 @@
 **Status:** ✅ Production Ready
 
 **Files:**
+
 - `apps/web/middleware.ts` - Request interceptor
 - `apps/web/lib/dataset-config.ts` - Dataset mapping configuration
 - `apps/web/lib/client-context.tsx` - React Context provider
 
 **Features:**
+
 - Automatic dataset selection based on hostname
 - Support for localhost, production, and staging datasets
 - Type-safe dataset names
@@ -53,6 +56,7 @@
   - `useIsMultiTenant()` - Check if multi-tenant enabled
 
 **Environment Variables:**
+
 - `NEXT_PUBLIC_SANITY_DATASET` - Default dataset (required)
 - `NEXT_PUBLIC_SANITY_PROJECT_ID` - Sanity project ID (required)
 - `NEXT_PUBLIC_SANITY_API_VERSION` - API version (required)
@@ -64,6 +68,7 @@
 **Status:** ✅ Production Ready
 
 **Files:**
+
 - `apps/web/lib/domain-mapping.ts` - Domain configuration
 - `apps/web/lib/domain-middleware.ts` - Domain handling logic
 - `apps/web/lib/domain-types.ts` - TypeScript definitions
@@ -71,6 +76,7 @@
 - `apps/web/next.config.mjs` - Security headers configured
 
 **Features:**
+
 - Subdomain support: `client1.buddsplumbing.com`
 - Custom domain support: `customdomain.com`
 - Domain validation and fallback logic
@@ -81,11 +87,13 @@
 - Per-domain branding (name, logo)
 
 **Default Domains Configured:**
+
 - `buddsplumbing.com` - Main domain
 - `www.buddsplumbing.com` - WWW redirect
 - `localhost:3000` - Development
 
 **Functions:**
+
 - `getDomainConfig(domain)` - Get domain configuration
 - `extractDomain(headers)` - Extract domain from request
 - `getSanityConfigForDomain(domain)` - Get Sanity client config
@@ -100,6 +108,7 @@
 **Directory:** `scripts/provisioning/`
 
 **Files:**
+
 - `create-client.ts` (558 lines) - Main provisioning script
 - `seed-templates.ts` (406 lines) - Content templates
 - `validate-client.ts` (322 lines) - Validation script
@@ -113,21 +122,25 @@
 **Features:**
 
 #### Interactive CLI Mode
+
 ```bash
 pnpm run provision:create
 ```
+
 - User-friendly prompts for all inputs
 - Template preset selection (general, plumbing, hvac, electrical)
 - Input validation and sanitization
 - Progress indicators and colored output
 
 #### Non-Interactive Mode
+
 ```bash
 cd scripts/provisioning
 pnpm run create-client "Client Name" "client-slug" "email@example.com" plumbing
 ```
 
 #### Automated Tasks
+
 - Creates isolated Sanity dataset with private ACL
 - Seeds initial content:
   - Settings document (NAP data)
@@ -139,15 +152,18 @@ pnpm run create-client "Client Name" "client-slug" "email@example.com" plumbing
 - Automatic rollback on failure
 
 #### Template Presets
+
 1. **General** - Generic professional services
 2. **Plumbing** - Emergency plumbing services
 3. **HVAC** - Heating, cooling, ventilation
 4. **Electrical** - Licensed electrical services
 
 #### Validation Script
+
 ```bash
 pnpm run provision:validate client-slug
 ```
+
 - Verifies dataset exists
 - Checks required documents (settings, navigation, pages)
 - Validates schema structure
@@ -156,6 +172,7 @@ pnpm run provision:validate client-slug
 - Exit codes for CI/CD integration
 
 **Error Handling:**
+
 - Multi-layered validation (config, environment, runtime)
 - Atomic transactions (all-or-nothing)
 - Automatic rollback system
@@ -172,12 +189,14 @@ pnpm run provision:validate client-slug
 **Directory:** `apps/web/app/(admin)/`
 
 **Pages:**
+
 - `/admin/dashboard` - Metrics overview
 - `/admin/clients` - Client list
 - `/admin/clients/[clientId]` - Client details
 - `/admin/clients/new` - Create new client
 
 **Server Actions:** `apps/web/app/actions/admin/`
+
 - `list-clients.ts` - Fetch all clients
 - `get-client.ts` - Fetch single client
 - `create-client.ts` - Create new client
@@ -185,6 +204,7 @@ pnpm run provision:validate client-slug
 - `get-client-metrics.ts` - Dashboard metrics
 
 **UI Components:** `apps/web/components/admin/`
+
 - `ClientList.tsx` - Client table
 - `ClientCard.tsx` - Client overview card
 - `ClientForm.tsx` - Create/edit form
@@ -192,6 +212,7 @@ pnpm run provision:validate client-slug
 - `index.ts` - Barrel exports
 
 **Type Definitions:** `apps/web/types/admin.ts`
+
 - `ClientStatus` - Status type
 - `ClientPlan` - Plan type
 - `Client` - Client interface
@@ -200,6 +221,7 @@ pnpm run provision:validate client-slug
 - `UpdateClientInput` - Update input
 
 **Features:**
+
 - Mock data for immediate testing
 - Full CRUD operations
 - Loading states with Suspense
@@ -209,6 +231,7 @@ pnpm run provision:validate client-slug
 - Dark mode support
 
 **Authentication:**
+
 - Layout includes authentication guard placeholder
 - Detailed Clerk integration instructions in code comments
 - Ready for production auth implementation
@@ -222,12 +245,14 @@ pnpm run provision:validate client-slug
 **File:** `apps/web/ROUTING-STRATEGY.md`
 
 **Resolution:**
+
 - Removed generic `[slug]` catch-all route
 - Preserved Phase 1 requirement: `/[serviceSlug]/in/[locationSlug]`
 - Fixed Next.js dynamic route conflicts
 - Documented strategy for adding new pages
 
 **Current Routes:**
+
 ```
 /                                        → Home
 /services/[serviceSlug]                  → Service pages
@@ -239,6 +264,7 @@ pnpm run provision:validate client-slug
 ```
 
 **For Generic Pages:**
+
 - Use explicit folders: `/about/page.tsx`, `/contact/page.tsx`
 - Alternative: Use `/pages/[slug]` prefix for CMS-driven pages
 - Redirects supported in `next.config.mjs`
@@ -250,6 +276,7 @@ pnpm run provision:validate client-slug
 **Status:** ✅ Production Ready
 
 **Files Modified:**
+
 - `apps/web/sanity/lib/client.ts` - Multi-tenant client support
 - `apps/web/sanity/env.ts` - Dynamic dataset getter
 - `apps/web/sanity/lib/live.ts` - Live preview support
@@ -268,6 +295,7 @@ const dataset = await getDataset();
 ```
 
 **Backward Compatibility:**
+
 - Legacy `client` export still works
 - Uses environment variable by default
 - No breaking changes to existing code
@@ -279,6 +307,7 @@ const dataset = await getDataset();
 **Status:** ✅ Complete
 
 **Files Created:**
+
 - `ROUTING-STRATEGY.md` (200+ lines) - Routing documentation
 - `apps/web/DATASET-ROUTING-README.md` (600+ lines) - Dataset routing guide
 - `apps/web/docs/MULTI-DOMAIN.md` (11 KB) - Multi-domain guide
@@ -295,27 +324,32 @@ const dataset = await getDataset();
 ## 🔧 FIXES APPLIED (NO PATCHES)
 
 ### 1. Circular Dependency Resolution
+
 **Issue:** Middleware importing `sanity/env.ts` caused circular dependency
 **Fix:** Defined `API_VERSION` constant directly in `domain-mapping.ts`
 **Status:** ✅ Permanent fix, no patch
 
 ### 2. React Key Prop Warnings
+
 **Issue:** Navbar2 component missing keys for dynamic children
 **Fix:** Added explicit keys to all conditional renders
 **File:** `apps/web/components/header/navbar2.tsx`
 **Status:** ✅ Permanent fix, no patch
 
 ### 3. Routing Conflicts
+
 **Issue:** `[slug]` and `[serviceSlug]` conflicting at same route level
 **Fix:** Removed `[slug]` catch-all, documented alternative approach
 **Status:** ✅ Permanent fix, architecture decision documented
 
 ### 4. Sanity Schema Loading
+
 **Issue:** Link schema referencing unknown document types
 **Fix:** Cleared Sanity cache, proper schema registration order
 **Status:** ✅ Permanent fix, no patch
 
 ### 5. Webpack Module Loading
+
 **Issue:** Browser cache containing old webpack chunks
 **Fix:** Cleared Next.js build cache, cleared browser cache
 **Status:** ✅ Environment issue, resolved
@@ -327,8 +361,10 @@ const dataset = await getDataset();
 ### High Priority
 
 #### 1. Database Integration (Admin Dashboard)
+
 **Current:** Mock data
 **Required:**
+
 - Set up Prisma ORM with PostgreSQL/Supabase
 - Create `Client` table schema
 - Replace mock data in server actions
@@ -338,13 +374,16 @@ const dataset = await getDataset();
 **Estimated Time:** 4-6 hours
 
 **Files to Update:**
+
 - `apps/web/app/actions/admin/*.ts` (5 files)
 - `prisma/schema.prisma` (new)
 - `apps/web/lib/db.ts` (new)
 
 #### 2. Authentication (Admin Dashboard)
+
 **Current:** Placeholder guard
 **Required:**
+
 - Install Clerk: `pnpm add @clerk/nextjs`
 - Configure environment variables
 - Wrap app in `ClerkProvider`
@@ -355,14 +394,17 @@ const dataset = await getDataset();
 **Estimated Time:** 2-3 hours
 
 **Files to Update:**
+
 - `apps/web/app/(admin)/layout.tsx`
 - `apps/web/app/layout.tsx`
 - `apps/web/middleware.ts`
 - `.env.local`
 
 #### 3. Form Validation
+
 **Current:** Basic HTML validation
 **Required:**
+
 - Add Zod validation schemas
 - Client-side validation with react-hook-form
 - Server-side validation in actions
@@ -371,6 +413,7 @@ const dataset = await getDataset();
 **Estimated Time:** 2-3 hours
 
 **Files to Update:**
+
 - `apps/web/lib/validation.ts` (new)
 - `apps/web/components/admin/ClientForm.tsx`
 - All admin server actions
@@ -380,7 +423,9 @@ const dataset = await getDataset();
 ### Medium Priority
 
 #### 4. Client Isolation & Security
+
 **Required:**
+
 - Implement API rate limiting per client
 - Client-specific API tokens
 - Storage isolation strategy
@@ -390,12 +435,15 @@ const dataset = await getDataset();
 **Estimated Time:** 6-8 hours
 
 **New Files:**
+
 - `apps/web/lib/rate-limit.ts`
 - `apps/web/lib/client-security.ts`
 - Documentation for security policies
 
 #### 5. Performance Monitoring
+
 **Required:**
+
 - Analytics per client (PostHog or similar)
 - Cost tracking per dataset
 - Performance metrics dashboard
@@ -405,12 +453,15 @@ const dataset = await getDataset();
 **Estimated Time:** 6-8 hours
 
 **New Files:**
+
 - `apps/web/lib/analytics.ts`
 - `apps/web/lib/monitoring.ts`
 - `apps/web/app/(admin)/admin/metrics/page.tsx`
 
 #### 6. Migration Tools
+
 **Required:**
+
 - Bulk client import script
 - Content migration between datasets
 - Dataset cloning utility
@@ -426,7 +477,9 @@ const dataset = await getDataset();
 ### Low Priority
 
 #### 7. Multi-Tenant Testing Framework
+
 **Required:**
+
 - Test suite for multi-tenant features
 - Client simulation tests
 - Load testing for 50+ clients
@@ -436,11 +489,14 @@ const dataset = await getDataset();
 **Estimated Time:** 6-8 hours
 
 **New Files:**
+
 - `apps/web/__tests__/multi-tenant/*.test.ts`
 - `scripts/load-test/`
 
 #### 8. Enhanced Provisioning Features
+
 **Optional Enhancements:**
+
 - Email notifications on client creation
 - Automated DNS setup via API
 - Template customization UI
@@ -450,7 +506,9 @@ const dataset = await getDataset();
 **Estimated Time:** 10-12 hours
 
 #### 9. Advanced Admin Features
+
 **Optional Enhancements:**
+
 - Activity logs and audit trail
 - Usage analytics and charts
 - Export functionality (CSV, PDF)
@@ -467,6 +525,7 @@ const dataset = await getDataset();
 ### Unit Tests (Not Started)
 
 #### Dataset Routing
+
 - [ ] Test `getDomainConfig()` with valid domains
 - [ ] Test `getDomainConfig()` with invalid domains
 - [ ] Test `extractDomain()` with different header formats
@@ -474,12 +533,14 @@ const dataset = await getDataset();
 - [ ] Test environment variable overrides
 
 #### Client Context
+
 - [ ] Test `useDataset()` hook
 - [ ] Test `useClientName()` hook
 - [ ] Test context provider with different configs
 - [ ] Test multi-tenant flag detection
 
 #### Domain Middleware
+
 - [ ] Test domain validation
 - [ ] Test security header application
 - [ ] Test caching header logic
@@ -491,6 +552,7 @@ const dataset = await getDataset();
 ### Integration Tests (Not Started)
 
 #### Provisioning System
+
 - [ ] Test client creation end-to-end
 - [ ] Test all template presets (general, plumbing, hvac, electrical)
 - [ ] Test validation script with valid dataset
@@ -500,6 +562,7 @@ const dataset = await getDataset();
 - [ ] Test dry-run mode
 
 #### Admin Dashboard
+
 - [ ] Test client list page renders
 - [ ] Test client detail page with valid ID
 - [ ] Test client detail page with invalid ID (404)
@@ -509,6 +572,7 @@ const dataset = await getDataset();
 - [ ] Test search functionality (when implemented)
 
 #### Multi-Domain
+
 - [ ] Test subdomain routing
 - [ ] Test custom domain routing
 - [ ] Test localhost routing
@@ -520,6 +584,7 @@ const dataset = await getDataset();
 ### End-to-End Tests (Not Started)
 
 #### Complete Workflows
+
 - [ ] Create new client via provisioning script
 - [ ] Verify client appears in admin dashboard
 - [ ] Access client-specific domain
@@ -530,6 +595,7 @@ const dataset = await getDataset();
 - [ ] Delete/suspend client
 
 #### Multi-Client Scenarios
+
 - [ ] Create 3 clients with different datasets
 - [ ] Access each client's domain
 - [ ] Verify dataset isolation (no data leakage)
@@ -541,6 +607,7 @@ const dataset = await getDataset();
 ### Performance Tests (Not Started)
 
 #### Load Testing
+
 - [ ] Test with 10 clients
 - [ ] Test with 25 clients
 - [ ] Test with 50 clients
@@ -550,6 +617,7 @@ const dataset = await getDataset();
 - [ ] Identify bottlenecks
 
 #### Caching
+
 - [ ] Verify ISR works per dataset
 - [ ] Test cache invalidation on content updates
 - [ ] Measure cache hit rates
@@ -560,6 +628,7 @@ const dataset = await getDataset();
 ### Security Tests (Not Started)
 
 #### Access Control
+
 - [ ] Verify dataset isolation (Client A cannot access Client B's data)
 - [ ] Test middleware authentication bypass attempts
 - [ ] Test admin dashboard without auth (should block)
@@ -567,6 +636,7 @@ const dataset = await getDataset();
 - [ ] Test XSS in client inputs
 
 #### Rate Limiting
+
 - [ ] Test API rate limits per client
 - [ ] Verify rate limit headers
 - [ ] Test rate limit bypass attempts
@@ -576,17 +646,20 @@ const dataset = await getDataset();
 ### Browser Compatibility Tests (Not Started)
 
 #### Desktop Browsers
+
 - [ ] Chrome (latest)
 - [ ] Firefox (latest)
 - [ ] Safari (latest)
 - [ ] Edge (latest)
 
 #### Mobile Browsers
+
 - [ ] iOS Safari
 - [ ] Chrome Android
 - [ ] Samsung Internet
 
 #### Specific Features to Test
+
 - [ ] Dark mode toggle
 - [ ] Responsive navigation
 - [ ] Admin dashboard tables
@@ -598,18 +671,23 @@ const dataset = await getDataset();
 ## 📊 DEPLOYMENT READINESS
 
 ### Core Infrastructure
+
 ✅ **Ready** - All core features are production-ready
 
 ### Admin Dashboard
+
 ⚠️ **Needs Auth** - Requires Clerk integration before production
 
 ### Client Provisioning
+
 ✅ **Ready** - Can be used in production
 
 ### Multi-Domain Support
+
 ⚠️ **Needs Vercel Config** - Requires domain setup in Vercel
 
 ### Documentation
+
 ✅ **Complete** - All features documented
 
 ---
@@ -617,6 +695,7 @@ const dataset = await getDataset();
 ## 🚀 DEPLOYMENT STEPS
 
 ### Prerequisites
+
 1. ✅ Phase 1 deployed to production
 2. ⏳ Authentication provider account (Clerk)
 3. ⏳ Database provisioned (PostgreSQL/Supabase)
@@ -624,6 +703,7 @@ const dataset = await getDataset();
 5. ⏳ Environment variables configured
 
 ### Deployment Checklist
+
 - [ ] Set up authentication (Clerk)
 - [ ] Set up database (Prisma + PostgreSQL)
 - [ ] Configure environment variables in Vercel
@@ -640,6 +720,7 @@ const dataset = await getDataset();
 ## 📈 SUCCESS METRICS (Phase 2 Goals)
 
 ### Target Metrics
+
 - [ ] Support 50+ clients without performance degradation
 - [ ] < 5 minute client provisioning time
 - [ ] 99.9% uptime per client
@@ -647,6 +728,7 @@ const dataset = await getDataset();
 - [ ] Automated billing ready
 
 ### Current Status
+
 - ✅ Infrastructure supports 50+ clients
 - ✅ Provisioning takes < 1 minute (local testing)
 - ⏳ Uptime monitoring not yet implemented
@@ -658,6 +740,7 @@ const dataset = await getDataset();
 ## 🛠️ DEVELOPMENT COMMANDS
 
 ### Start Development Servers
+
 ```bash
 # Web app
 pnpm dev
@@ -669,6 +752,7 @@ pnpm --filter @budds-plumbing/studio dev
 ```
 
 ### Provisioning
+
 ```bash
 # Create new client (interactive)
 pnpm run provision:create
@@ -682,6 +766,7 @@ pnpm run provision:validate client-slug
 ```
 
 ### Testing (When Implemented)
+
 ```bash
 # Run all tests
 pnpm test
@@ -787,6 +872,7 @@ pnpm lint
 ## 📞 SUPPORT
 
 For questions about this implementation:
+
 1. Review relevant documentation in `/apps/web/docs/`
 2. Check code comments in implementation files
 3. Consult Phase 2 plan: `project-rules/PHASE2-COMPLETE-PHASE2-PLAN.md`

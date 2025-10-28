@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import {
   Card,
   CardContent,
@@ -12,14 +12,14 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { createClient } from "@/app/actions/admin/create-client";
-import { updateClient } from "@/app/actions/admin/update-client";
-import type { Client, ClientStatus, ClientPlan } from "@/types/admin";
+} from '@/components/ui/card';
+import { createClient } from '@/app/actions/admin/create-client';
+import { updateClient } from '@/app/actions/admin/update-client';
+import type { Client, ClientStatus, ClientPlan } from '@/types/admin';
 
 interface ClientFormProps {
   client?: Client;
-  mode: "create" | "edit";
+  mode: 'create' | 'edit';
 }
 
 export function ClientForm({ client, mode }: ClientFormProps) {
@@ -34,24 +34,24 @@ export function ClientForm({ client, mode }: ClientFormProps) {
 
     const formData = new FormData(event.currentTarget);
     const data = {
-      name: formData.get("name") as string,
-      email: formData.get("email") as string,
-      status: formData.get("status") as ClientStatus,
-      plan: formData.get("plan") as ClientPlan,
-      websiteUrl: formData.get("websiteUrl") as string,
-      contactPerson: formData.get("contactPerson") as string,
-      phone: formData.get("phone") as string,
-      notes: formData.get("notes") as string,
+      name: formData.get('name') as string,
+      email: formData.get('email') as string,
+      status: formData.get('status') as ClientStatus,
+      plan: formData.get('plan') as ClientPlan,
+      websiteUrl: formData.get('websiteUrl') as string,
+      contactPerson: formData.get('contactPerson') as string,
+      phone: formData.get('phone') as string,
+      notes: formData.get('notes') as string,
     };
 
     try {
-      if (mode === "create") {
+      if (mode === 'create') {
         const result = await createClient(data);
         if (result.success) {
-          router.push("/admin/clients");
+          router.push('/admin/clients');
           router.refresh();
         } else {
-          setError(result.error || "Failed to create client");
+          setError(result.error || 'Failed to create client');
         }
       } else if (client) {
         const result = await updateClient({ id: client.id, ...data });
@@ -59,11 +59,11 @@ export function ClientForm({ client, mode }: ClientFormProps) {
           router.push(`/admin/clients/${client.id}`);
           router.refresh();
         } else {
-          setError(result.error || "Failed to update client");
+          setError(result.error || 'Failed to update client');
         }
       }
     } catch (err) {
-      setError("An unexpected error occurred");
+      setError('An unexpected error occurred');
       console.error(err);
     } finally {
       setIsSubmitting(false);
@@ -75,12 +75,12 @@ export function ClientForm({ client, mode }: ClientFormProps) {
       <Card>
         <CardHeader>
           <CardTitle>
-            {mode === "create" ? "Create New Client" : "Edit Client"}
+            {mode === 'create' ? 'Create New Client' : 'Edit Client'}
           </CardTitle>
           <CardDescription>
-            {mode === "create"
-              ? "Add a new client to the system"
-              : "Update client information"}
+            {mode === 'create'
+              ? 'Add a new client to the system'
+              : 'Update client information'}
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
@@ -125,7 +125,7 @@ export function ClientForm({ client, mode }: ClientFormProps) {
               <select
                 id="status"
                 name="status"
-                defaultValue={client?.status || "trial"}
+                defaultValue={client?.status || 'trial'}
                 required
                 className="border-input ring-ring/10 dark:ring-ring/20 dark:outline-ring/40 outline-ring/50 flex h-9 w-full rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] focus-visible:outline-1 focus-visible:ring-4 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
               >
@@ -143,7 +143,7 @@ export function ClientForm({ client, mode }: ClientFormProps) {
               <select
                 id="plan"
                 name="plan"
-                defaultValue={client?.plan || "free"}
+                defaultValue={client?.plan || 'free'}
                 required
                 className="border-input ring-ring/10 dark:ring-ring/20 dark:outline-ring/40 outline-ring/50 flex h-9 w-full rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] focus-visible:outline-1 focus-visible:ring-4 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
               >
@@ -210,12 +210,12 @@ export function ClientForm({ client, mode }: ClientFormProps) {
           </Button>
           <Button type="submit" disabled={isSubmitting}>
             {isSubmitting
-              ? mode === "create"
-                ? "Creating..."
-                : "Saving..."
-              : mode === "create"
-                ? "Create Client"
-                : "Save Changes"}
+              ? mode === 'create'
+                ? 'Creating...'
+                : 'Saving...'
+              : mode === 'create'
+                ? 'Create Client'
+                : 'Save Changes'}
           </Button>
         </CardFooter>
       </Card>

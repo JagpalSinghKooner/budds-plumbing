@@ -1,23 +1,23 @@
-import { cn } from "@/lib/utils";
-import SectionContainer from "@/components/ui/section-container";
-import { stegaClean } from "next-sanity";
-import { PAGE_QUERYResult } from "@/sanity.types";
-import GridCard from "./grid-card";
-import PricingCard from "./pricing-card";
-import GridPost from "./grid-post";
+import { cn } from '@/lib/utils';
+import SectionContainer from '@/components/ui/section-container';
+import { stegaClean } from 'next-sanity';
+import { PAGE_QUERYResult } from '@/sanity.types';
+import GridCard from './grid-card';
+import PricingCard from './pricing-card';
+import GridPost from './grid-post';
 
-type Block = NonNullable<NonNullable<PAGE_QUERYResult>["blocks"]>[number];
-type GridRow = Extract<Block, { _type: "grid-row" }>;
-type GridColumn = NonNullable<NonNullable<GridRow["columns"]>[number]>;
+type Block = NonNullable<NonNullable<PAGE_QUERYResult>['blocks']>[number];
+type GridRow = Extract<Block, { _type: 'grid-row' }>;
+type GridColumn = NonNullable<NonNullable<GridRow['columns']>[number]>;
 
 const componentMap: {
-  [K in GridColumn["_type"]]: React.ComponentType<
+  [K in GridColumn['_type']]: React.ComponentType<
     Extract<GridColumn, { _type: K }>
   >;
 } = {
-  "grid-card": GridCard,
-  "pricing-card": PricingCard,
-  "grid-post": GridPost,
+  'grid-card': GridCard,
+  'pricing-card': PricingCard,
+  'grid-post': GridPost,
 };
 
 export default function GridRow({

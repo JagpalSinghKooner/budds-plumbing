@@ -1,65 +1,65 @@
-import { defineField, defineType } from "sanity";
-import { GalleryHorizontal } from "lucide-react";
+import { defineField, defineType } from 'sanity';
+import { GalleryHorizontal } from 'lucide-react';
 
 export default defineType({
-  name: "carousel-1",
-  type: "object",
-  title: "Carousel 1",
+  name: 'carousel-1',
+  type: 'object',
+  title: 'Carousel 1',
   icon: GalleryHorizontal,
-  description: "A carousel of images",
+  description: 'A carousel of images',
   fields: [
     defineField({
-      name: "padding",
-      type: "section-padding",
+      name: 'padding',
+      type: 'section-padding',
     }),
     defineField({
-      name: "colorVariant",
-      type: "color-variant",
-      title: "Color Variant",
-      description: "Select a background color variant",
+      name: 'colorVariant',
+      type: 'color-variant',
+      title: 'Color Variant',
+      description: 'Select a background color variant',
     }),
     defineField({
-      name: "size",
-      type: "string",
-      title: "Size",
+      name: 'size',
+      type: 'string',
+      title: 'Size',
       options: {
         list: [
-          { title: "One", value: "one" },
-          { title: "Two", value: "two" },
-          { title: "Three", value: "three" },
+          { title: 'One', value: 'one' },
+          { title: 'Two', value: 'two' },
+          { title: 'Three', value: 'three' },
         ],
-        layout: "radio",
+        layout: 'radio',
       },
-      initialValue: "one",
+      initialValue: 'one',
     }),
     defineField({
-      name: "indicators",
-      type: "string",
-      title: "Slide Indicators",
+      name: 'indicators',
+      type: 'string',
+      title: 'Slide Indicators',
       options: {
         list: [
-          { title: "None", value: "none" },
-          { title: "Dots", value: "dots" },
-          { title: "Count", value: "count" },
+          { title: 'None', value: 'none' },
+          { title: 'Dots', value: 'dots' },
+          { title: 'Count', value: 'count' },
         ],
-        layout: "radio",
+        layout: 'radio',
       },
-      initialValue: "none",
-      description: "Choose how to indicate carousel progress and position",
+      initialValue: 'none',
+      description: 'Choose how to indicate carousel progress and position',
     }),
     defineField({
-      name: "images",
-      type: "array",
+      name: 'images',
+      type: 'array',
       of: [
         defineField({
-          name: "image",
-          title: "Image",
-          type: "image",
+          name: 'image',
+          title: 'Image',
+          type: 'image',
           fields: [
             {
-              name: "alt",
-              type: "string",
-              title: "Alternative Text",
+              name: 'alt',
+              type: 'string',
+              title: 'Alternative Text',
             },
           ],
         }),
@@ -68,11 +68,11 @@ export default defineType({
   ],
   preview: {
     select: {
-      title: "images.0.alt",
+      title: 'images.0.alt',
     },
     prepare({ title }) {
       return {
-        title: "Carousel",
+        title: 'Carousel',
         subtitle: title,
       };
     },

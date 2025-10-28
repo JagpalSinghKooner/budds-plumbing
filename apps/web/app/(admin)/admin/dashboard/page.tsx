@@ -1,12 +1,12 @@
-import { Suspense } from "react";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { MetricsCard } from "@/components/admin/MetricsCard";
-import { getClientMetrics } from "@/app/actions/admin/get-client-metrics";
+import { Suspense } from 'react';
+import Link from 'next/link';
+import { Button } from '@/components/ui/button';
+import { MetricsCard } from '@/components/admin/MetricsCard';
+import { getClientMetrics } from '@/app/actions/admin/get-client-metrics';
 
 export const metadata = {
-  title: "Admin Dashboard",
-  description: "Admin dashboard for client management",
+  title: 'Admin Dashboard',
+  description: 'Admin dashboard for client management',
 };
 
 function MetricsCardSkeleton() {
@@ -57,17 +57,21 @@ async function PlanDistribution() {
 
   const plans = [
     {
-      name: "Enterprise",
+      name: 'Enterprise',
       count: metrics.clientsByPlan.enterprise,
-      color: "bg-purple-500",
+      color: 'bg-purple-500',
     },
     {
-      name: "Professional",
+      name: 'Professional',
       count: metrics.clientsByPlan.professional,
-      color: "bg-blue-500",
+      color: 'bg-blue-500',
     },
-    { name: "Basic", count: metrics.clientsByPlan.basic, color: "bg-green-500" },
-    { name: "Free", count: metrics.clientsByPlan.free, color: "bg-slate-400" },
+    {
+      name: 'Basic',
+      count: metrics.clientsByPlan.basic,
+      color: 'bg-green-500',
+    },
+    { name: 'Free', count: metrics.clientsByPlan.free, color: 'bg-slate-400' },
   ];
 
   return (
@@ -102,24 +106,24 @@ async function StatusOverview() {
 
   const statuses = [
     {
-      name: "Active",
+      name: 'Active',
       count: metrics.activeClients,
-      color: "text-green-600 dark:text-green-400",
+      color: 'text-green-600 dark:text-green-400',
     },
     {
-      name: "Trial",
+      name: 'Trial',
       count: metrics.trialClients,
-      color: "text-blue-600 dark:text-blue-400",
+      color: 'text-blue-600 dark:text-blue-400',
     },
     {
-      name: "Inactive",
+      name: 'Inactive',
       count: metrics.inactiveClients,
-      color: "text-slate-600 dark:text-slate-400",
+      color: 'text-slate-600 dark:text-slate-400',
     },
     {
-      name: "Suspended",
+      name: 'Suspended',
       count: metrics.suspendedClients,
-      color: "text-red-600 dark:text-red-400",
+      color: 'text-red-600 dark:text-red-400',
     },
   ];
 

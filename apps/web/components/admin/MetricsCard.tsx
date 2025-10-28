@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import {
   Card,
@@ -6,7 +6,7 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
+} from '@/components/ui/card';
 
 interface MetricsCardProps {
   title: string;
@@ -40,11 +40,9 @@ export function MetricsCard({
         {trend && (
           <div className="mt-2 flex items-center text-xs">
             <span
-              className={
-                trend.isPositive ? "text-green-600" : "text-red-600"
-              }
+              className={trend.isPositive ? 'text-green-600' : 'text-red-600'}
             >
-              {trend.isPositive ? "+" : ""}
+              {trend.isPositive ? '+' : ''}
               {trend.value}%
             </span>
             <span className="text-muted-foreground ml-1">from last month</span>

@@ -190,10 +190,7 @@ export function createDefaultHomePage(config: ClientConfig) {
       _type: 'slug' as const,
       current: 'home',
     },
-    blocks: [
-      createDefaultHeroBlock(config.name),
-      createDefaultCTABlock(),
-    ],
+    blocks: [createDefaultHeroBlock(config.name), createDefaultCTABlock()],
     meta_title: `${config.name} - Professional Services`,
     meta_description: `Welcome to ${config.name}. Your trusted partner for professional services.`,
     noindex: false,

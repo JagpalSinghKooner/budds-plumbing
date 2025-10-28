@@ -14,6 +14,7 @@ Sanity Studio v3 for content management. Provides a user-friendly interface for 
 ## Content Models
 
 ### Documents
+
 - **service** - Service pages (name, slug, seo, blocks)
 - **location** - Location pages (name, slug, seo, blocks)
 - **service-location** - Combined pages (service ref, location ref, seo, blocks)
@@ -25,7 +26,9 @@ Sanity Studio v3 for content management. Provides a user-friendly interface for 
 - **category** - Blog categories
 
 ### Blocks (Sections)
+
 All content is delivered through reusable blocks with variants:
+
 - Hero (hero-1, hero-2)
 - CTA (cta-1, cta-2, cta-3)
 - FAQ (faq-1, faq-2, faq-3)

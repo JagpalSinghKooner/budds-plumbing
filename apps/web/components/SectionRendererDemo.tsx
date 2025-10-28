@@ -1,13 +1,6 @@
 import React from 'react';
 import SectionRenderer from './SectionRenderer';
-import {
-  Hero1,
-  Hero2,
-  Carousel2,
-  Faqs,
-  Cta1,
-  GridRow,
-} from '@/sanity.types';
+import { Hero1, Hero2, Carousel2, Faqs, Cta1, GridRow } from '@/sanity.types';
 
 /**
  * SectionRendererDemo - Test component to validate SectionRenderer functionality

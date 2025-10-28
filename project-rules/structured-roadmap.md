@@ -13,6 +13,7 @@
 **NO task may begin until the previous task is complete, tested, and merged to main.**
 
 ### Definition of "Complete":
+
 - ✅ Code written and working locally
 - ✅ All TypeScript errors resolved (`npm run typecheck`)
 - ✅ All ESLint errors resolved (`npm run lint`)
@@ -22,6 +23,7 @@
 - ✅ Documentation updated if needed
 
 ### Workflow Per Task:
+
 1. **Read the task requirements**
 2. **Plan the implementation** (use TodoWrite tool if multi-step)
 3. **Write the code** following Schema UI rules
@@ -45,12 +47,15 @@
 **Estimated Time:** 30 minutes
 
 ### Requirements:
+
 Create a new `service` document type that follows all Schema UI rules.
 
 ### File to Create:
+
 `/sanity/schemas/documents/service.ts`
 
 ### Schema UI Rules to Follow:
+
 - ✅ Use `defineType` and `defineField` helper functions
 - ✅ Include an appropriate icon from `lucide-react` (suggest: `Wrench` or `Tool`)
 - ✅ Include `preview` property with rich contextual details
@@ -61,6 +66,7 @@ Create a new `service` document type that follows all Schema UI rules.
 - ✅ Fields ordered from most important to least used
 
 ### Schema Structure:
+
 ```typescript
 {
   name: "service",
@@ -94,6 +100,7 @@ Create a new `service` document type that follows all Schema UI rules.
 ```
 
 ### Testing Checklist:
+
 - [ ] Schema file created in correct location
 - [ ] Imported in `/sanity/schema.ts`
 - [ ] TypeGen runs without errors: `npm run typegen`
@@ -104,6 +111,7 @@ Create a new `service` document type that follows all Schema UI rules.
 - [ ] Preview shows service name
 
 ### Validation:
+
 ```bash
 npm run typecheck  # Must pass
 npm run lint       # Must pass
@@ -111,6 +119,7 @@ npm run typegen    # Must generate new types
 ```
 
 ### Commit Message:
+
 ```
 Add service document schema
 
@@ -133,15 +142,19 @@ Co-Authored-By: Claude <noreply@anthropic.com>
 **Estimated Time:** 30 minutes
 
 ### Requirements:
+
 Create a new `location` document type for service areas/cities.
 
 ### File to Create:
+
 `/sanity/schemas/documents/location.ts`
 
 ### Schema UI Rules to Follow:
+
 - Same rules as Task 1
 
 ### Schema Structure:
+
 ```typescript
 {
   name: "location",
@@ -175,6 +188,7 @@ Create a new `location` document type for service areas/cities.
 ```
 
 ### Testing Checklist:
+
 - [ ] Schema file created
 - [ ] Imported in schema.ts
 - [ ] TypeGen runs successfully
@@ -184,6 +198,7 @@ Create a new `location` document type for service areas/cities.
 - [ ] Preview displays correctly
 
 ### Validation:
+
 Same as Task 1
 
 ---
@@ -195,12 +210,15 @@ Same as Task 1
 **Estimated Time:** 45 minutes
 
 ### Requirements:
+
 Create a `service-location` document that combines service + location with unique content.
 
 ### File to Create:
+
 `/sanity/schemas/documents/service-location.ts`
 
 ### Schema Structure:
+
 ```typescript
 {
   name: "service-location",
@@ -238,10 +256,12 @@ Create a `service-location` document that combines service + location with uniqu
 ```
 
 ### Special Requirements:
+
 - Add validation to ensure service + location combination is unique
 - Computed title in preview should dereference service and location
 
 ### Testing Checklist:
+
 - [ ] Schema created and registered
 - [ ] Can select service reference
 - [ ] Can select location reference
@@ -258,9 +278,11 @@ Create a `service-location` document that combines service + location with uniqu
 **Estimated Time:** 20 minutes
 
 ### Requirements:
+
 Extend existing `/sanity/schemas/documents/settings.ts` with business-specific fields.
 
 ### Fields to Add:
+
 ```typescript
 // Business Information group
 - businessName (string)
@@ -278,12 +300,14 @@ Extend existing `/sanity/schemas/documents/settings.ts` with business-specific f
 ```
 
 ### Schema UI Rules:
+
 - Use `groups` to organize (don't mix with existing groups)
 - Add icons to new groups
 - Use `fieldsets` with `options: {columns: 2}` for related fields like address
 - Avoid boolean fields - use string with options.list
 
 ### Testing:
+
 - [ ] Fields added to existing settings
 - [ ] Studio shows new groups
 - [ ] Can save and publish settings
@@ -298,14 +322,17 @@ Extend existing `/sanity/schemas/documents/settings.ts` with business-specific f
 **Estimated Time:** 30 minutes
 
 ### Requirements:
+
 Create GROQ queries for service documents following Schema UI query patterns.
 
 ### Files to Create:
+
 `/sanity/queries/service.ts`
 
 ### Query Pattern (Schema UI Rules lines 262-375):
+
 ```typescript
-import { groq } from "next-sanity";
+import { groq } from 'next-sanity';
 
 // Individual service query
 export const SERVICE_QUERY = groq`*[
@@ -368,6 +395,7 @@ export const SERVICES_SLUGS_QUERY = groq`*[
 ```
 
 ### Schema UI Query Rules:
+
 - ✅ SCREAMING_SNAKE_CASE for variable names
 - ✅ Import `groq` function from `next-sanity`
 - ✅ Each segment on its own line
@@ -376,6 +404,7 @@ export const SERVICES_SLUGS_QUERY = groq`*[
 - ✅ Compose sections from existing block query fragments
 
 ### Testing:
+
 - [ ] Queries file created
 - [ ] Can fetch service in Sanity Vision
 - [ ] Image metadata included
@@ -390,17 +419,21 @@ export const SERVICES_SLUGS_QUERY = groq`*[
 **Estimated Time:** 20 minutes
 
 ### Requirements:
+
 Create GROQ queries for location documents (same pattern as Task 5).
 
 ### Files to Create:
+
 `/sanity/queries/location.ts`
 
 ### Queries:
+
 - LOCATION_QUERY (single location by slug)
 - LOCATIONS_QUERY (all locations list)
 - LOCATIONS_SLUGS_QUERY (for static generation)
 
 ### Testing:
+
 Same as Task 5
 
 ---
@@ -412,12 +445,15 @@ Same as Task 5
 **Estimated Time:** 30 minutes
 
 ### Requirements:
+
 Query that fetches service-location with dereferenced service and location data.
 
 ### Files to Create:
+
 `/sanity/queries/service-location.ts`
 
 ### Special Query Requirements:
+
 ```typescript
 export const SERVICE_LOCATION_QUERY = groq`*[
   _type == "service-location" &&
@@ -461,6 +497,7 @@ export const SERVICE_LOCATION_QUERY = groq`*[
 ```
 
 ### Testing:
+
 - [ ] Query fetches service-location correctly
 - [ ] Service reference dereferenced
 - [ ] Location reference dereferenced
@@ -475,13 +512,17 @@ export const SERVICE_LOCATION_QUERY = groq`*[
 **Estimated Time:** 45 minutes
 
 ### Requirements:
+
 Create Next.js dynamic route for individual service pages.
 
 ### Files to Create:
+
 `/app/(main)/services/[serviceSlug]/page.tsx`
 
 ### Implementation Pattern:
+
 Follow the same pattern as `/app/(main)/[slug]/page.tsx` (existing page route):
+
 - Use `generateStaticParams` with SERVICES_SLUGS_QUERY
 - Fetch data with SERVICE_QUERY
 - Render sections with existing SectionRenderer
@@ -489,6 +530,7 @@ Follow the same pattern as `/app/(main)/[slug]/page.tsx` (existing page route):
 - Include LocalBusiness JSON-LD
 
 ### Code Structure:
+
 ```typescript
 import { notFound } from "next/navigation";
 import { client } from "@/sanity/client";
@@ -523,6 +565,7 @@ export default async function ServicePage({ params }) {
 ```
 
 ### Testing:
+
 - [ ] Route accessible at `/services/[slug]`
 - [ ] Static generation works
 - [ ] 404 for invalid slugs
@@ -539,12 +582,15 @@ export default async function ServicePage({ params }) {
 **Estimated Time:** 30 minutes
 
 ### Requirements:
+
 Create dynamic route for location pages (same pattern as Task 8).
 
 ### Files to Create:
+
 `/app/(main)/locations/[locationSlug]/page.tsx`
 
 ### Testing:
+
 Same as Task 8
 
 ---
@@ -556,26 +602,32 @@ Same as Task 8
 **Estimated Time:** 60 minutes
 
 ### Requirements:
+
 Create nested dynamic route for service + location combination pages.
 
 ### Files to Create:
+
 `/app/(main)/services/[serviceSlug]/in/[locationSlug]/page.tsx`
 
 ### Special Requirements:
+
 - Generate static params for all service-location combinations
 - Implement fallback logic: if field missing in service-location, use service default
 - Handle missing service-location gracefully
 
 ### Fallback Logic Example:
+
 ```typescript
 const headline = serviceLocation.headline || service.headline;
 const introCopy = serviceLocation.introCopy || service.introCopy;
-const sections = serviceLocation.sections?.length > 0
-  ? serviceLocation.sections
-  : service.sections;
+const sections =
+  serviceLocation.sections?.length > 0
+    ? serviceLocation.sections
+    : service.sections;
 ```
 
 ### Testing:
+
 - [ ] Route works at `/services/[service]/in/[location]`
 - [ ] Static generation for all combinations
 - [ ] Fallback logic works
@@ -591,12 +643,15 @@ const sections = serviceLocation.sections?.length > 0
 **Estimated Time:** 90 minutes
 
 ### Requirements:
+
 Create shared SEO utilities for metadata and JSON-LD.
 
 ### Files to Create:
+
 `/lib/seo.ts`
 
 ### Functions to Implement:
+
 ```typescript
 // Generate Next.js metadata
 export function generateSEOMetadata(config: {
@@ -620,13 +675,17 @@ export function generateLocalBusinessSchema(business: {
 export function generateFAQSchema(faqs: FAQ[]): WithContext<FAQPage>;
 
 // Generate Breadcrumbs JSON-LD
-export function generateBreadcrumbSchema(crumbs: Breadcrumb[]): WithContext<BreadcrumbList>;
+export function generateBreadcrumbSchema(
+  crumbs: Breadcrumb[]
+): WithContext<BreadcrumbList>;
 ```
 
 ### Schema.org Types:
+
 Use proper TypeScript types for all JSON-LD objects.
 
 ### Testing:
+
 - [ ] Functions export correctly
 - [ ] Metadata validates with Next.js
 - [ ] JSON-LD validates with Google Rich Results Test
@@ -641,13 +700,15 @@ Use proper TypeScript types for all JSON-LD objects.
 **Estimated Time:** 30 minutes
 
 ### Requirements:
+
 Extend existing `/app/sitemap.ts` to include service, location, and service-location routes.
 
 ### Implementation:
+
 ```typescript
-import { client } from "@/sanity/client";
-import { SERVICES_SLUGS_QUERY } from "@/sanity/queries/service";
-import { LOCATIONS_SLUGS_QUERY } from "@/sanity/queries/location";
+import { client } from '@/sanity/client';
+import { SERVICES_SLUGS_QUERY } from '@/sanity/queries/service';
+import { LOCATIONS_SLUGS_QUERY } from '@/sanity/queries/location';
 // Import service-location slugs query
 
 export default async function sitemap() {
@@ -683,6 +744,7 @@ export default async function sitemap() {
 ```
 
 ### Testing:
+
 - [ ] Sitemap accessible at `/sitemap.xml`
 - [ ] All routes included
 - [ ] Valid XML format
@@ -697,10 +759,13 @@ export default async function sitemap() {
 **Estimated Time:** 15 minutes
 
 ### Requirements:
+
 Ensure SEO utility respects `noindex` boolean in seo object.
 
 ### Implementation:
+
 Update `generateSEOMetadata` in `/lib/seo.ts`:
+
 ```typescript
 export function generateSEOMetadata(config) {
   const metadata: Metadata = {
@@ -721,6 +786,7 @@ export function generateSEOMetadata(config) {
 ```
 
 ### Testing:
+
 - [ ] noindex=true adds robots meta tag
 - [ ] noindex=false or undefined allows indexing
 - [ ] Verify in page source
@@ -734,12 +800,15 @@ export function generateSEOMetadata(config) {
 **Estimated Time:** 45 minutes
 
 ### Requirements:
+
 Set up CI/CD checks that block merges if checks fail.
 
 ### Files to Create:
+
 `.github/workflows/ci.yml`
 
 ### Checks to Include:
+
 ```yaml
 name: CI
 
@@ -782,6 +851,7 @@ jobs:
 ```
 
 ### Testing:
+
 - [ ] GitHub Actions workflow created
 - [ ] All checks run on push
 - [ ] Failures block merge
@@ -796,12 +866,15 @@ jobs:
 **Estimated Time:** 60 minutes
 
 ### Requirements:
+
 Create test content following Schema UI content writing rules (lines 246-259).
 
 ### Files to Create:
+
 `/test-content.ndjson`
 
 ### Content to Create:
+
 ```json
 // 3 services (e.g., drain cleaning, water heater, emergency plumbing)
 // 3 locations (e.g., Vancouver, Burnaby, Surrey)
@@ -811,21 +884,28 @@ Create test content following Schema UI content writing rules (lines 246-259).
 ```
 
 ### Schema UI Rules for Content:
+
 - ✅ Write as `.ndjson` file
 - ✅ Use existing schema types only
 - ✅ Never include `.` in `_id` unless private
 - ✅ Never include image references (use placeholder pattern)
 - ✅ Use placeholder images with document ID:
+
 ```json
-{"_type":"image","_sanityAsset":"image@https://picsum.photos/seed/DOCUMENT_ID/1920/1080"}
+{
+  "_type": "image",
+  "_sanityAsset": "image@https://picsum.photos/seed/DOCUMENT_ID/1920/1080"
+}
 ```
 
 ### Import Command:
+
 ```bash
 npx sanity dataset import test-content.ndjson production
 ```
 
 ### Testing:
+
 - [ ] NDJSON file validates
 - [ ] Import completes without errors
 - [ ] All documents visible in Studio
@@ -841,9 +921,11 @@ npx sanity dataset import test-content.ndjson production
 **Estimated Time:** 30 minutes
 
 ### Requirements:
+
 Deploy to Vercel with proper configuration.
 
 ### Steps:
+
 1. Push code to GitHub
 2. Connect repository to Vercel
 3. Configure environment variables from `.env.local`:
@@ -856,6 +938,7 @@ Deploy to Vercel with proper configuration.
 5. Configure Sanity CORS for production URL
 
 ### Testing:
+
 - [ ] Production build succeeds
 - [ ] All routes accessible
 - [ ] Static generation works
@@ -872,9 +955,11 @@ Deploy to Vercel with proper configuration.
 **Estimated Time:** 30 minutes
 
 ### Requirements:
+
 Non-technical user must be able to perform content operations.
 
 ### Test Scenarios:
+
 1. [ ] Create new service page
 2. [ ] Edit hero text on service page
 3. [ ] Add new section to service page
@@ -884,6 +969,7 @@ Non-technical user must be able to perform content operations.
 7. [ ] Verify changes appear on live site within 60 seconds
 
 ### Acceptance Criteria:
+
 - All operations possible without code changes
 - Intuitive Studio interface
 - No errors during operations
@@ -898,13 +984,16 @@ Non-technical user must be able to perform content operations.
 **Estimated Time:** 45 minutes
 
 ### Requirements:
+
 Update project documentation with new features.
 
 ### Files to Update:
+
 - `/README.md` - Add local business features section
 - `/project-rules/completed-tasks.md` - List completed tasks with dates
 
 ### Documentation to Include:
+
 - Service/Location/Service-Location schema overview
 - How to add new services
 - How to add new locations
@@ -921,9 +1010,11 @@ Update project documentation with new features.
 **Estimated Time:** 30 minutes
 
 ### Requirements:
+
 Run comprehensive performance audit and fix issues.
 
 ### Checks:
+
 - [ ] Lighthouse Performance score ≥ 90
 - [ ] Lighthouse SEO score = 100
 - [ ] Lighthouse Accessibility score ≥ 90
@@ -933,6 +1024,7 @@ Run comprehensive performance audit and fix issues.
 - [ ] No unused dependencies
 
 ### Tools:
+
 - Chrome DevTools Lighthouse
 - WebPageTest
 - Next.js Bundle Analyzer
@@ -946,23 +1038,26 @@ Run comprehensive performance audit and fix issues.
 **Estimated Time:** 60 minutes
 
 ### Requirements:
+
 Comprehensive testing of entire system.
 
 ### Test Matrix:
-| Feature | Desktop | Mobile | Status |
-|---------|---------|--------|--------|
-| Service pages load | | | |
-| Location pages load | | | |
-| Service-Location pages load | | | |
-| Sections render correctly | | | |
-| Forms work | | | |
-| Navigation works | | | |
-| SEO tags present | | | |
-| JSON-LD validates | | | |
-| Images load/optimized | | | |
-| Studio editing works | | | |
+
+| Feature                     | Desktop | Mobile | Status |
+| --------------------------- | ------- | ------ | ------ |
+| Service pages load          |         |        |        |
+| Location pages load         |         |        |        |
+| Service-Location pages load |         |        |        |
+| Sections render correctly   |         |        |        |
+| Forms work                  |         |        |        |
+| Navigation works            |         |        |        |
+| SEO tags present            |         |        |        |
+| JSON-LD validates           |         |        |        |
+| Images load/optimized       |         |        |        |
+| Studio editing works        |         |        |        |
 
 ### Final Checklist:
+
 - [ ] All routes working
 - [ ] All content editable
 - [ ] All checks passing
@@ -978,6 +1073,7 @@ Comprehensive testing of entire system.
 ## ✅ PHASE 1 COMPLETE CRITERIA
 
 **Phase 1 is complete when:**
+
 1. All 20 tasks marked complete
 2. Production-grade single business site deployed
 3. All services, locations, and service-location pages working
@@ -993,6 +1089,7 @@ Comprehensive testing of entire system.
 ## APPENDIX A: Schema UI Rules Reference
 
 ### Schema Type Best Practices:
+
 - Use `defineType`, `defineField`, `defineArrayMember`
 - Export named const matching filename
 - Include icon from `lucide-react`
@@ -1007,12 +1104,14 @@ Comprehensive testing of entire system.
 - Order fields: most important first, least used last
 
 ### Preview Best Practices:
+
 - Every document/object has customized `preview`
 - Show rich contextual details
 - Use `select` to pick relevant fields
 - Use `prepare` to format display
 
 ### GROQ Query Best Practices:
+
 - SCREAMING_SNAKE_CASE for variable names
 - Import `groq` from `next-sanity`
 - Each filter segment on own line
@@ -1023,6 +1122,7 @@ Comprehensive testing of entire system.
 - Annotate fragments with `@sanity-typegen-ignore` if needed
 
 ### Component Best Practices:
+
 - Create React component for each schema type
 - Use TypeScript for type safety
 - Extract types from Sanity query results
@@ -1034,26 +1134,31 @@ Comprehensive testing of entire system.
 ## APPENDIX B: Tech Stack
 
 **Frontend:**
+
 - Next.js 15.5.4
 - React 19.1.1
 - TypeScript 5.9.2
 - Tailwind CSS 4.1.13
 
 **CMS:**
+
 - Sanity v4.10.0
 - next-sanity 11.1.3
 - @portabletext/react 4.0.3
 
 **UI Components:**
+
 - Radix UI primitives
 - Shadcn UI patterns
 - Lucide React icons
 - class-variance-authority
 
 **Package Manager:**
+
 - pnpm
 
 **Deployment:**
+
 - Vercel (target platform)
 
 ---

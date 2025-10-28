@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import Link from "next/link";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import type { Client, ClientStatus, ClientPlan } from "@/types/admin";
-import { formatDate } from "@/lib/utils";
+import Link from 'next/link';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import type { Client, ClientStatus, ClientPlan } from '@/types/admin';
+import { formatDate } from '@/lib/utils';
 
 interface ClientListProps {
   clients: Client[];
@@ -12,33 +12,33 @@ interface ClientListProps {
 
 function getStatusVariant(
   status: ClientStatus
-): "default" | "secondary" | "destructive" | "outline" {
+): 'default' | 'secondary' | 'destructive' | 'outline' {
   switch (status) {
-    case "active":
-      return "default";
-    case "trial":
-      return "secondary";
-    case "inactive":
-      return "outline";
-    case "suspended":
-      return "destructive";
+    case 'active':
+      return 'default';
+    case 'trial':
+      return 'secondary';
+    case 'inactive':
+      return 'outline';
+    case 'suspended':
+      return 'destructive';
     default:
-      return "outline";
+      return 'outline';
   }
 }
 
 function getPlanColor(plan: ClientPlan): string {
   switch (plan) {
-    case "enterprise":
-      return "text-purple-600 dark:text-purple-400";
-    case "professional":
-      return "text-blue-600 dark:text-blue-400";
-    case "basic":
-      return "text-green-600 dark:text-green-400";
-    case "free":
-      return "text-slate-600 dark:text-slate-400";
+    case 'enterprise':
+      return 'text-purple-600 dark:text-purple-400';
+    case 'professional':
+      return 'text-blue-600 dark:text-blue-400';
+    case 'basic':
+      return 'text-green-600 dark:text-green-400';
+    case 'free':
+      return 'text-slate-600 dark:text-slate-400';
     default:
-      return "text-slate-600 dark:text-slate-400";
+      return 'text-slate-600 dark:text-slate-400';
   }
 }
 
@@ -114,7 +114,7 @@ export function ClientList({ clients }: ClientListProps) {
                 <td className="px-6 py-4 text-sm text-slate-600 dark:text-slate-400">
                   {client.lastLoginAt
                     ? formatDate(client.lastLoginAt)
-                    : "Never"}
+                    : 'Never'}
                 </td>
                 <td className="px-6 py-4 text-right">
                   <Button asChild variant="outline" size="sm">

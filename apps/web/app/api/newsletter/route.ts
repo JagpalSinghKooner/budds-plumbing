@@ -15,7 +15,10 @@ const NewsletterSchema = z.object({
 // Rate limiting setup (if Redis is available)
 let rateLimiter: Ratelimit | null = null;
 
-if (process.env.UPSTASH_REDIS_REST_URL && process.env.UPSTASH_REDIS_REST_TOKEN) {
+if (
+  process.env.UPSTASH_REDIS_REST_URL &&
+  process.env.UPSTASH_REDIS_REST_TOKEN
+) {
   const redis = new Redis({
     url: process.env.UPSTASH_REDIS_REST_URL,
     token: process.env.UPSTASH_REDIS_REST_TOKEN,
@@ -32,9 +35,10 @@ if (process.env.UPSTASH_REDIS_REST_URL && process.env.UPSTASH_REDIS_REST_TOKEN) 
 export const POST = async (request: Request) => {
   try {
     // Get client IP for rate limiting
-    const ip = request.headers.get('x-forwarded-for') ||
-               request.headers.get('x-real-ip') ||
-               'anonymous';
+    const ip =
+      request.headers.get('x-forwarded-for') ||
+      request.headers.get('x-real-ip') ||
+      'anonymous';
 
     // Apply rate limiting if available
     if (rateLimiter) {
@@ -49,7 +53,7 @@ export const POST = async (request: Request) => {
               'X-RateLimit-Limit': limit.toString(),
               'X-RateLimit-Remaining': remaining.toString(),
               'X-RateLimit-Reset': new Date(reset).toISOString(),
-            }
+            },
           }
         );
       }
@@ -63,7 +67,7 @@ export const POST = async (request: Request) => {
       return NextResponse.json(
         {
           error: 'Invalid email format',
-          details: validation.error.flatten().fieldErrors
+          details: validation.error.flatten().fieldErrors,
         },
         { status: 400 }
       );
@@ -86,7 +90,10 @@ export const POST = async (request: Request) => {
     }
 
     // Check if Resend is properly configured
-    if (!process.env.RESEND_API_KEY || process.env.RESEND_API_KEY === 're_placeholder') {
+    if (
+      !process.env.RESEND_API_KEY ||
+      process.env.RESEND_API_KEY === 're_placeholder'
+    ) {
       console.error('Newsletter signup: Resend API key not configured');
 
       // In development, return success to allow testing
@@ -94,7 +101,7 @@ export const POST = async (request: Request) => {
         console.log('Newsletter signup (dev mode):', email);
         return NextResponse.json({
           success: true,
-          message: 'Email saved (development mode)'
+          message: 'Email saved (development mode)',
         });
       }
 
@@ -123,7 +130,7 @@ export const POST = async (request: Request) => {
 
       return NextResponse.json({
         success: true,
-        message: 'Successfully subscribed to newsletter'
+        message: 'Successfully subscribed to newsletter',
       });
     } catch (resendError: any) {
       console.error('Resend API error:', resendError);
@@ -132,7 +139,7 @@ export const POST = async (request: Request) => {
       if (resendError?.message?.includes('already exists')) {
         return NextResponse.json({
           success: true,
-          message: 'Email already subscribed'
+          message: 'Email already subscribed',
         });
       }
 

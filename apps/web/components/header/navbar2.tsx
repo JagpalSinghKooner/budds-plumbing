@@ -96,7 +96,11 @@ const Navbar2 = ({
       };
 
       // Replace Services menu item with dynamic service categories
-      if (link.title?.toLowerCase() === 'services' && serviceCategories && serviceCategories.length > 0) {
+      if (
+        link.title?.toLowerCase() === 'services' &&
+        serviceCategories &&
+        serviceCategories.length > 0
+      ) {
         menuItem.items = serviceCategories.map((category) => {
           // Each category becomes a menu item with its services as sub-items
           const categoryMenuItem: MenuItem = {
@@ -196,7 +200,9 @@ const Navbar2 = ({
               )}
             </Link>
             <div className="flex items-center gap-2">
-              {rightContent && <div key="mobile-right-content">{rightContent}</div>}
+              {rightContent && (
+                <div key="mobile-right-content">{rightContent}</div>
+              )}
               <Sheet key="mobile-menu-sheet">
                 <SheetTrigger asChild>
                   <Button variant="outline" size="icon">
@@ -268,11 +274,15 @@ const renderMenuItem = (item: MenuItem) => {
 
     return (
       <NavigationMenuItem key={itemKey}>
-        <NavigationMenuTrigger className="bg-transparent hover:bg-accent/50 data-[state=open]:bg-accent/50">{item.title}</NavigationMenuTrigger>
-        <NavigationMenuContent className={cn(
-          "origin-top-center data-[motion=from-end]:slide-in-from-right-52 data-[motion=from-start]:slide-in-from-left-52 data-[motion=to-end]:slide-out-to-right-52 data-[motion=to-start]:slide-out-to-left-52 data-[motion^=from-]:animate-in data-[motion^=from-]:fade-in data-[motion^=to-]:animate-out data-[motion^=to-]:fade-out data-[state=closed]:animate-out data-[state=closed]:zoom-out-95 data-[state=open]:animate-in data-[state=open]:zoom-in-90 relative top-11 rounded-md border shadow md:absolute md:left-1/2 md:w-64 md:-translate-x-1/2 z-[200]",
-          hasNestedCategories ? "!overflow-visible" : ""
-        )}>
+        <NavigationMenuTrigger className="bg-transparent hover:bg-accent/50 data-[state=open]:bg-accent/50">
+          {item.title}
+        </NavigationMenuTrigger>
+        <NavigationMenuContent
+          className={cn(
+            'origin-top-center data-[motion=from-end]:slide-in-from-right-52 data-[motion=from-start]:slide-in-from-left-52 data-[motion=to-end]:slide-out-to-right-52 data-[motion=to-start]:slide-out-to-left-52 data-[motion^=from-]:animate-in data-[motion^=from-]:fade-in data-[motion^=to-]:animate-out data-[motion^=to-]:fade-out data-[state=closed]:animate-out data-[state=closed]:zoom-out-95 data-[state=open]:animate-in data-[state=open]:zoom-in-90 relative top-11 rounded-md border shadow md:absolute md:left-1/2 md:w-64 md:-translate-x-1/2 z-[200]',
+            hasNestedCategories ? '!overflow-visible' : ''
+          )}
+        >
           {hasNestedCategories ? (
             <CascadingCategoryMenu categories={item.items} />
           ) : (
@@ -344,27 +354,31 @@ const CascadingCategoryMenu = ({ categories }: { categories: MenuItem[] }) => {
           </div>
 
           {/* Flyout submenu - positioned outside parent with bridge area */}
-          {hoveredCategory === category.title && category.items && category.items.length > 0 && (
-            <div
-              className="absolute left-full top-0 pl-3"
-              onMouseEnter={() => handleMouseEnter(category.title || null)}
-              onMouseLeave={handleMouseLeave}
-            >
-              <div className="min-w-[240px] rounded-md border bg-popover text-popover-foreground shadow-lg p-2 animate-in fade-in slide-in-from-left-2 duration-200">
-                {category.items.map((service, serviceIdx) => (
-                  <Link
-                    key={`service-flyout-${serviceIdx}`}
-                    href={service.url}
-                    className="hover:bg-muted hover:text-accent-foreground flex select-none flex-row gap-4 rounded-md p-3 leading-none no-underline outline-none transition-colors"
-                  >
-                    <div>
-                      <div className="text-sm font-semibold">{service.title}</div>
-                    </div>
-                  </Link>
-                ))}
+          {hoveredCategory === category.title &&
+            category.items &&
+            category.items.length > 0 && (
+              <div
+                className="absolute left-full top-0 pl-3"
+                onMouseEnter={() => handleMouseEnter(category.title || null)}
+                onMouseLeave={handleMouseLeave}
+              >
+                <div className="min-w-[240px] rounded-md border bg-popover text-popover-foreground shadow-lg p-2 animate-in fade-in slide-in-from-left-2 duration-200">
+                  {category.items.map((service, serviceIdx) => (
+                    <Link
+                      key={`service-flyout-${serviceIdx}`}
+                      href={service.url}
+                      className="hover:bg-muted hover:text-accent-foreground flex select-none flex-row gap-4 rounded-md p-3 leading-none no-underline outline-none transition-colors"
+                    >
+                      <div>
+                        <div className="text-sm font-semibold">
+                          {service.title}
+                        </div>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
               </div>
-            </div>
-          )}
+            )}
         </div>
       ))}
     </div>

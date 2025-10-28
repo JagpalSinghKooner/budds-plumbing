@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import Link from "next/link";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import Link from 'next/link';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import {
   Card,
   CardContent,
@@ -10,9 +10,9 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import type { Client, ClientStatus } from "@/types/admin";
-import { formatDate } from "@/lib/utils";
+} from '@/components/ui/card';
+import type { Client, ClientStatus } from '@/types/admin';
+import { formatDate } from '@/lib/utils';
 
 interface ClientCardProps {
   client: Client;
@@ -21,18 +21,18 @@ interface ClientCardProps {
 
 function getStatusVariant(
   status: ClientStatus
-): "default" | "secondary" | "destructive" | "outline" {
+): 'default' | 'secondary' | 'destructive' | 'outline' {
   switch (status) {
-    case "active":
-      return "default";
-    case "trial":
-      return "secondary";
-    case "inactive":
-      return "outline";
-    case "suspended":
-      return "destructive";
+    case 'active':
+      return 'default';
+    case 'trial':
+      return 'secondary';
+    case 'inactive':
+      return 'outline';
+    case 'suspended':
+      return 'destructive';
     default:
-      return "outline";
+      return 'outline';
   }
 }
 

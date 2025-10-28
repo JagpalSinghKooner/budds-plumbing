@@ -27,8 +27,10 @@ const DATASET_MAP: Record<string, DatasetName> = {
   'staging.buddsplumbing.com': 'staging',
 
   // Development/localhost - uses environment variable or falls back to 'development'
-  'localhost': (process.env.NEXT_PUBLIC_SANITY_DATASET as DatasetName) || 'development',
-  '127.0.0.1': (process.env.NEXT_PUBLIC_SANITY_DATASET as DatasetName) || 'development',
+  localhost:
+    (process.env.NEXT_PUBLIC_SANITY_DATASET as DatasetName) || 'development',
+  '127.0.0.1':
+    (process.env.NEXT_PUBLIC_SANITY_DATASET as DatasetName) || 'development',
 };
 
 // Default dataset to use when hostname doesn't match any configured domain

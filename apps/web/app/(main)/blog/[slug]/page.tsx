@@ -1,13 +1,13 @@
-import { notFound } from "next/navigation";
-import Breadcrumbs from "@/components/ui/breadcrumbs";
-import PostHero from "@/components/blocks/post-hero";
-import { BreadcrumbLink } from "@/types";
-import PortableTextRenderer from "@/components/portable-text-renderer";
+import { notFound } from 'next/navigation';
+import Breadcrumbs from '@/components/ui/breadcrumbs';
+import PostHero from '@/components/blocks/post-hero';
+import { BreadcrumbLink } from '@/types';
+import PortableTextRenderer from '@/components/portable-text-renderer';
 import {
   fetchSanityPostBySlug,
   fetchSanityPostsStaticParams,
-} from "@/sanity/lib/fetch";
-import { generatePageMetadata } from "@/sanity/lib/metadata";
+} from '@/sanity/lib/fetch';
+import { generatePageMetadata } from '@/sanity/lib/metadata';
 
 export async function generateStaticParams() {
   const posts = await fetchSanityPostsStaticParams();
@@ -43,16 +43,16 @@ export default async function PostPage(props: {
   const links: BreadcrumbLink[] = post
     ? [
         {
-          label: "Home",
-          href: "/",
+          label: 'Home',
+          href: '/',
         },
         {
-          label: "Blog",
-          href: "/blog",
+          label: 'Blog',
+          href: '/blog',
         },
         {
           label: post.title as string,
-          href: "#",
+          href: '#',
         },
       ]
     : [];

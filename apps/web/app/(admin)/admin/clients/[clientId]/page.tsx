@@ -1,22 +1,22 @@
-import { notFound } from "next/navigation";
-import Link from "next/link";
-import { Suspense } from "react";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
+import { notFound } from 'next/navigation';
+import Link from 'next/link';
+import { Suspense } from 'react';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { getClient } from "@/app/actions/admin/get-client";
-import { formatDate } from "@/lib/utils";
-import type { ClientStatus } from "@/types/admin";
+} from '@/components/ui/card';
+import { getClient } from '@/app/actions/admin/get-client';
+import { formatDate } from '@/lib/utils';
+import type { ClientStatus } from '@/types/admin';
 
 export const metadata = {
-  title: "Client Details",
-  description: "View and manage client information",
+  title: 'Client Details',
+  description: 'View and manage client information',
 };
 
 interface ClientDetailPageProps {
@@ -27,18 +27,18 @@ interface ClientDetailPageProps {
 
 function getStatusVariant(
   status: ClientStatus
-): "default" | "secondary" | "destructive" | "outline" {
+): 'default' | 'secondary' | 'destructive' | 'outline' {
   switch (status) {
-    case "active":
-      return "default";
-    case "trial":
-      return "secondary";
-    case "inactive":
-      return "outline";
-    case "suspended":
-      return "destructive";
+    case 'active':
+      return 'default';
+    case 'trial':
+      return 'secondary';
+    case 'inactive':
+      return 'outline';
+    case 'suspended':
+      return 'destructive';
     default:
-      return "outline";
+      return 'outline';
   }
 }
 
@@ -94,7 +94,9 @@ async function ClientDetailContent({ clientId }: { clientId: string }) {
         <Card>
           <CardHeader>
             <CardTitle>Client Information</CardTitle>
-            <CardDescription>Basic details and contact information</CardDescription>
+            <CardDescription>
+              Basic details and contact information
+            </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="grid grid-cols-2 gap-2 text-sm">
@@ -111,7 +113,9 @@ async function ClientDetailContent({ clientId }: { clientId: string }) {
             )}
             {client.phone && (
               <div className="grid grid-cols-2 gap-2 text-sm">
-                <span className="text-slate-600 dark:text-slate-400">Phone:</span>
+                <span className="text-slate-600 dark:text-slate-400">
+                  Phone:
+                </span>
                 <span className="font-medium">{client.phone}</span>
               </div>
             )}
@@ -143,13 +147,17 @@ async function ClientDetailContent({ clientId }: { clientId: string }) {
               <span className="text-slate-600 dark:text-slate-400">
                 Created:
               </span>
-              <span className="font-medium">{formatDate(client.createdAt)}</span>
+              <span className="font-medium">
+                {formatDate(client.createdAt)}
+              </span>
             </div>
             <div className="grid grid-cols-2 gap-2 text-sm">
               <span className="text-slate-600 dark:text-slate-400">
                 Last Updated:
               </span>
-              <span className="font-medium">{formatDate(client.updatedAt)}</span>
+              <span className="font-medium">
+                {formatDate(client.updatedAt)}
+              </span>
             </div>
             {client.lastLoginAt && (
               <div className="grid grid-cols-2 gap-2 text-sm">
@@ -198,7 +206,9 @@ async function ClientDetailContent({ clientId }: { clientId: string }) {
       <Card>
         <CardHeader>
           <CardTitle>Danger Zone</CardTitle>
-          <CardDescription>Irreversible and destructive actions</CardDescription>
+          <CardDescription>
+            Irreversible and destructive actions
+          </CardDescription>
         </CardHeader>
         <CardContent>
           <div className="flex items-center justify-between rounded-lg border border-red-200 bg-red-50 p-4 dark:border-red-800 dark:bg-red-900/20">
@@ -220,7 +230,9 @@ async function ClientDetailContent({ clientId }: { clientId: string }) {
   );
 }
 
-export default async function ClientDetailPage({ params }: ClientDetailPageProps) {
+export default async function ClientDetailPage({
+  params,
+}: ClientDetailPageProps) {
   const { clientId } = await params;
 
   return (

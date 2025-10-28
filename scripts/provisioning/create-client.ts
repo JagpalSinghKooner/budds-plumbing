@@ -144,7 +144,9 @@ async function createDataset(
   client: SanityClient,
   datasetName: string
 ): Promise<void> {
-  console.log(`${colors.blue}Creating dataset: ${datasetName}...${colors.reset}`);
+  console.log(
+    `${colors.blue}Creating dataset: ${datasetName}...${colors.reset}`
+  );
 
   try {
     await client.datasets.create(datasetName, {
@@ -190,7 +192,9 @@ async function seedInitialData(
       seedData.sampleLocation,
     ].filter(Boolean);
 
-    console.log(`${colors.blue}Creating ${documents.length} documents...${colors.reset}`);
+    console.log(
+      `${colors.blue}Creating ${documents.length} documents...${colors.reset}`
+    );
 
     // Use transaction for atomic creation
     const transaction = client.transaction();
@@ -201,7 +205,9 @@ async function seedInitialData(
 
     await transaction.commit();
 
-    console.log(`${colors.green}✓ Initial data seeded successfully${colors.reset}`);
+    console.log(
+      `${colors.green}✓ Initial data seeded successfully${colors.reset}`
+    );
     console.log(`${colors.cyan}  - Settings document${colors.reset}`);
     console.log(`${colors.cyan}  - Navigation document${colors.reset}`);
     console.log(`${colors.cyan}  - Home page${colors.reset}`);
@@ -292,7 +298,9 @@ async function provisionClient(
     console.log('');
 
     if (dryRun) {
-      console.log(`${colors.yellow}DRY RUN MODE - No changes will be made${colors.reset}\n`);
+      console.log(
+        `${colors.yellow}DRY RUN MODE - No changes will be made${colors.reset}\n`
+      );
       return {
         success: true,
         message: 'Dry run completed successfully',
@@ -377,7 +385,9 @@ async function provisionClient(
 
     // Success
     console.log('\n' + '='.repeat(50));
-    console.log(`${colors.green}✓ Client provisioned successfully!${colors.reset}`);
+    console.log(
+      `${colors.green}✓ Client provisioned successfully!${colors.reset}`
+    );
     console.log('='.repeat(50) + '\n');
 
     console.log(`${colors.cyan}Next Steps:${colors.reset}`);
@@ -397,7 +407,9 @@ async function provisionClient(
       error instanceof Error ? error.message : 'Unknown error';
     errors.push(errorMessage);
 
-    console.error(`${colors.red}✗ Provisioning failed: ${errorMessage}${colors.reset}\n`);
+    console.error(
+      `${colors.red}✗ Provisioning failed: ${errorMessage}${colors.reset}\n`
+    );
 
     // Perform rollback if enabled
     if (rollback && rollbackActions.length > 0) {
@@ -420,7 +432,9 @@ async function interactiveProvisioning(): Promise<void> {
   const rl = createReadlineInterface();
 
   try {
-    console.log(`${colors.cyan}Welcome to the Client Provisioning System${colors.reset}\n`);
+    console.log(
+      `${colors.cyan}Welcome to the Client Provisioning System${colors.reset}\n`
+    );
 
     // Collect client information
     const name = await question(rl, 'Client name: ');
@@ -436,7 +450,10 @@ async function interactiveProvisioning(): Promise<void> {
     console.log('  3. HVAC');
     console.log('  4. Electrical');
 
-    const presetChoice = await question(rl, '\nChoose a preset (1-4, default: 1): ');
+    const presetChoice = await question(
+      rl,
+      '\nChoose a preset (1-4, default: 1): '
+    );
 
     const presetMap: Record<string, TemplatePreset> = {
       '1': 'general',
@@ -456,7 +473,10 @@ async function interactiveProvisioning(): Promise<void> {
     console.log(`  Website: ${website || 'N/A'}`);
     console.log(`  Preset: ${preset}`);
 
-    const confirm = await question(rl, '\nProceed with provisioning? (yes/no): ');
+    const confirm = await question(
+      rl,
+      '\nProceed with provisioning? (yes/no): '
+    );
 
     if (confirm.toLowerCase() !== 'yes' && confirm.toLowerCase() !== 'y') {
       console.log(`${colors.yellow}Provisioning cancelled${colors.reset}`);
@@ -504,10 +524,18 @@ async function cliProvisioning(args: string[]): Promise<void> {
   const [name, slug, email, preset] = args;
 
   if (!name || !slug || !email) {
-    console.error(`${colors.red}Error: Missing required arguments${colors.reset}`);
-    console.log(`\nUsage: ${colors.cyan}npm run create-client <name> <slug> <email> [preset]${colors.reset}`);
-    console.log(`Example: ${colors.cyan}npm run create-client "ACME Corp" "acme" "contact@acme.com" plumbing${colors.reset}`);
-    console.log(`\nOr run interactively: ${colors.cyan}npm run create-client${colors.reset}\n`);
+    console.error(
+      `${colors.red}Error: Missing required arguments${colors.reset}`
+    );
+    console.log(
+      `\nUsage: ${colors.cyan}npm run create-client <name> <slug> <email> [preset]${colors.reset}`
+    );
+    console.log(
+      `Example: ${colors.cyan}npm run create-client "ACME Corp" "acme" "contact@acme.com" plumbing${colors.reset}`
+    );
+    console.log(
+      `\nOr run interactively: ${colors.cyan}npm run create-client${colors.reset}\n`
+    );
     process.exit(1);
   }
 
@@ -522,7 +550,10 @@ async function cliProvisioning(args: string[]): Promise<void> {
   const result = await provisionClient(config, {}, templatePreset);
 
   if (!result.success) {
-    console.error(`${colors.red}Provisioning failed${colors.reset}`, result.errors);
+    console.error(
+      `${colors.red}Provisioning failed${colors.reset}`,
+      result.errors
+    );
     process.exit(1);
   }
 

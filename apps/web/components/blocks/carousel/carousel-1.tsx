@@ -1,5 +1,5 @@
-import SectionContainer from "@/components/ui/section-container";
-import { stegaClean } from "next-sanity";
+import SectionContainer from '@/components/ui/section-container';
+import { stegaClean } from 'next-sanity';
 import {
   Carousel,
   CarouselContent,
@@ -8,42 +8,42 @@ import {
   CarouselPrevious,
   CarouselDots,
   CarouselCounter,
-} from "@/components/ui/carousel";
-import Image from "next/image";
-import { urlFor } from "@/sanity/lib/image";
-import { cn } from "@/lib/utils";
-import { PAGE_QUERYResult } from "@/sanity.types";
+} from '@/components/ui/carousel';
+import Image from 'next/image';
+import { urlFor } from '@/sanity/lib/image';
+import { cn } from '@/lib/utils';
+import { PAGE_QUERYResult } from '@/sanity.types';
 
 const CAROUSEL_SIZES = {
-  one: "basis-full",
-  two: "basis-full md:basis-1/2",
-  three: "basis-full md:basis-1/2 lg:basis-1/3",
+  one: 'basis-full',
+  two: 'basis-full md:basis-1/2',
+  three: 'basis-full md:basis-1/2 lg:basis-1/3',
 } as const;
 
 const IMAGE_SIZES = {
-  one: "h-[30rem] sm:h-[40rem] lg:h-[31.25rem] xl:h-[35rem]",
-  two: "h-[30rem] md:h-[22rem] lg:h-[30rem] xl:h-[35rem]",
-  three: "h-[30rem] md:h-[20rem] xl:h-[25rem]",
+  one: 'h-[30rem] sm:h-[40rem] lg:h-[31.25rem] xl:h-[35rem]',
+  two: 'h-[30rem] md:h-[22rem] lg:h-[30rem] xl:h-[35rem]',
+  three: 'h-[30rem] md:h-[20rem] xl:h-[25rem]',
 } as const;
 
 type CarouselSize = keyof typeof CAROUSEL_SIZES;
 
 type Carousel1 = Extract<
-  NonNullable<NonNullable<PAGE_QUERYResult>["blocks"]>[number],
-  { _type: "carousel-1" }
+  NonNullable<NonNullable<PAGE_QUERYResult>['blocks']>[number],
+  { _type: 'carousel-1' }
 >;
 
 interface Carousel1Props
-  extends Omit<NonNullable<Carousel1>, "_type" | "_key"> {
+  extends Omit<NonNullable<Carousel1>, '_type' | '_key'> {
   size: CarouselSize | null;
-  indicators: "none" | "dots" | "count" | null;
+  indicators: 'none' | 'dots' | 'count' | null;
 }
 
 export default function Carousel1({
   padding,
   colorVariant,
-  size = "one",
-  indicators = "none",
+  size = 'one',
+  indicators = 'none',
   images,
 }: Carousel1Props) {
   const color = stegaClean(colorVariant);
@@ -63,20 +63,20 @@ export default function Carousel1({
                 {image && (
                   <div
                     className={cn(
-                      "relative mx-auto overflow-hidden rounded-2xl",
+                      'relative mx-auto overflow-hidden rounded-2xl',
                       IMAGE_SIZES[stegaSize],
-                      stegaSize === "one" ? "max-w-[35rem]" : undefined
+                      stegaSize === 'one' ? 'max-w-[35rem]' : undefined
                     )}
                   >
                     <Image
                       className="object-cover"
                       src={urlFor(image).url()}
-                      alt={image.alt || ""}
+                      alt={image.alt || ''}
                       fill
                       placeholder={
-                        image?.asset?.metadata?.lqip ? "blur" : undefined
+                        image?.asset?.metadata?.lqip ? 'blur' : undefined
                       }
-                      blurDataURL={image.asset?.metadata?.lqip || ""}
+                      blurDataURL={image.asset?.metadata?.lqip || ''}
                       sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
                       quality={100}
                     />
@@ -93,10 +93,10 @@ export default function Carousel1({
             variant="secondary"
             className="-right-3 md:-right-8 xl:-right-12"
           />
-          {stegaIndicators !== "none" && (
+          {stegaIndicators !== 'none' && (
             <div className="w-full flex justify-center">
-              {stegaIndicators === "dots" && <CarouselDots />}
-              {stegaIndicators === "count" && <CarouselCounter />}
+              {stegaIndicators === 'dots' && <CarouselDots />}
+              {stegaIndicators === 'count' && <CarouselCounter />}
             </div>
           )}
         </Carousel>

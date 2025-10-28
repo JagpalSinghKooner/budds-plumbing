@@ -13,17 +13,20 @@
 **File:** `apps/web/sanity/queries/navigation.ts`
 
 **Problem:**
+
 - Query wasn't properly dereferencing internal link references
 - Missing null checks caused links to default to `#`
 - No validation if referenced documents had slugs
 
 **Solution:**
+
 - Added proper `internalLink->{...}` dereferencing
 - Added null checks: `internalLink._ref != null && defined(internalLink->slug.current)`
 - Added special handling for home page (`index` slug → `/`)
 - Better error handling with explicit checks
 
 **Changes:**
+
 ```groq
 // OLD (broken)
 "resolvedLink": select(
@@ -62,14 +65,15 @@ Visit: **http://localhost:3333**
 
 Go to **"Page"** and create these pages:
 
-| Page | Slug | Purpose |
-|------|------|---------|
-| Services | `services` | Services landing page |
+| Page      | Slug        | Purpose                |
+| --------- | ----------- | ---------------------- |
+| Services  | `services`  | Services landing page  |
 | Locations | `locations` | Locations landing page |
-| About | `about` | About us page |
-| Contact | `contact` | Contact page |
+| About     | `about`     | About us page          |
+| Contact   | `contact`   | Contact page           |
 
 **For each page:**
+
 1. Click "Create" → Page
 2. Set the slug (e.g., `services`)
 3. Add a title
@@ -100,6 +104,7 @@ Go to **"Navigation"** in Sanity Studio:
 Visit: **http://localhost:3000/debug-nav**
 
 This page shows:
+
 - Raw navigation data from Sanity
 - Resolved links for each menu item
 - Internal link types and slugs
@@ -112,6 +117,7 @@ This page shows:
 See: **[NAVIGATION-TROUBLESHOOTING.md](NAVIGATION-TROUBLESHOOTING.md)**
 
 Covers:
+
 - All common causes of `#` links
 - Step-by-step fixes
 - How to use debug tools
@@ -126,6 +132,7 @@ Covers:
 Visit: http://localhost:3000/debug-nav
 
 **Look for:**
+
 - ✅ `"resolvedLink": "/services"` (good)
 - ❌ `"resolvedLink": "#"` (needs fixing)
 - ❌ `"internalLink": null` (link not set in Sanity)
@@ -133,6 +140,7 @@ Visit: http://localhost:3000/debug-nav
 ### 2. Test Each Link
 
 Click on each navigation link and verify:
+
 - Home → Should go to `/`
 - Services → Should go to `/services`
 - Locations → Should go to `/locations`
@@ -142,6 +150,7 @@ Click on each navigation link and verify:
 ### 3. Test Dropdowns (If You Have Them)
 
 If you added sub-links:
+
 - Hover over Services → Should show dropdown
 - Click sub-link → Should go to specific service
 - Same for Locations
@@ -203,6 +212,7 @@ Navigation
 ## 📋 Quick Checklist
 
 Before testing:
+
 - [ ] Pages created in Sanity with correct slugs
 - [ ] Navigation links configured in Sanity
 - [ ] Each link has `internalLink` set (not empty)

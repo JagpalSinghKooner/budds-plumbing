@@ -38,8 +38,7 @@ async function fixNavigationLinks() {
       // You can add logic here to keep buttonVariant for specific links
       // For example, if the link title is "Contact Us" and you want it styled as a button
       const shouldKeepButtonVariant =
-        link.title === 'Get Quote' ||
-        link.title === 'Book Now';
+        link.title === 'Get Quote' || link.title === 'Book Now';
 
       if (shouldKeepButtonVariant) {
         console.log(`  ℹ️  Keeping buttonVariant for: ${link.title}`);
@@ -51,15 +50,11 @@ async function fixNavigationLinks() {
     });
 
     // Update the navigation document
-    await client
-      .patch(navigation._id)
-      .set({ links: updatedLinks })
-      .commit();
+    await client.patch(navigation._id).set({ links: updatedLinks }).commit();
 
     console.log('\n✓ Navigation links updated successfully!');
     console.log('  Regular navigation links no longer have button styling');
     console.log('  CTA buttons (if any) retain their button variants\n');
-
   } catch (error) {
     console.error('❌ Error:', error.message);
     process.exit(1);

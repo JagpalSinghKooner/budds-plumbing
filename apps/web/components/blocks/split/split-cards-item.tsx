@@ -1,17 +1,17 @@
-"use client";
-import PortableTextRenderer from "@/components/portable-text-renderer";
-import { cn } from "@/lib/utils";
-import { motion, useInView } from "motion/react";
-import { useRef } from "react";
-import { PAGE_QUERYResult, ColorVariant } from "@/sanity.types";
+'use client';
+import PortableTextRenderer from '@/components/portable-text-renderer';
+import { cn } from '@/lib/utils';
+import { motion, useInView } from 'motion/react';
+import { useRef } from 'react';
+import { PAGE_QUERYResult, ColorVariant } from '@/sanity.types';
 
-type Block = NonNullable<NonNullable<PAGE_QUERYResult>["blocks"]>[number];
-type SplitRow = Extract<Block, { _type: "split-row" }>;
+type Block = NonNullable<NonNullable<PAGE_QUERYResult>['blocks']>[number];
+type SplitRow = Extract<Block, { _type: 'split-row' }>;
 type SplitCardsList = Extract<
-  NonNullable<SplitRow["splitColumns"]>[number],
-  { _type: "split-cards-list" }
+  NonNullable<SplitRow['splitColumns']>[number],
+  { _type: 'split-cards-list' }
 >;
-type SplitCardItem = NonNullable<NonNullable<SplitCardsList["list"]>[number]>;
+type SplitCardItem = NonNullable<NonNullable<SplitCardsList['list']>[number]>;
 
 interface SplitCardsItemProps extends SplitCardItem {
   color?: ColorVariant;
@@ -32,17 +32,17 @@ export default function SplitCardsItem({
     <motion.div
       ref={ref}
       className={cn(
-        "flex flex-col items-start border border-primary rounded-3xl px-6 lg:px-8 py-6 lg:py-8 transition-colors duration-1000 ease-in-out",
-        isInView ? "bg-foreground/85" : "bg-background",
-        color === "primary" ? "text-background" : undefined
+        'flex flex-col items-start border border-primary rounded-3xl px-6 lg:px-8 py-6 lg:py-8 transition-colors duration-1000 ease-in-out',
+        isInView ? 'bg-foreground/85' : 'bg-background',
+        color === 'primary' ? 'text-background' : undefined
       )}
     >
       {tagLine && (
         <div
           className={cn(
-            "font-bold text-2xl lg:text-3xl transition-colors duration-1000 ease-in-out",
-            isInView ? "text-background" : "text-foreground",
-            color === "primary" ? "text-background" : undefined
+            'font-bold text-2xl lg:text-3xl transition-colors duration-1000 ease-in-out',
+            isInView ? 'text-background' : 'text-foreground',
+            color === 'primary' ? 'text-background' : undefined
           )}
         >
           {tagLine}
@@ -51,9 +51,9 @@ export default function SplitCardsItem({
       {title && (
         <div
           className={cn(
-            "my-2 font-semibold text-xl transition-colors duration-1000 ease-in-out",
-            isInView ? "text-background" : "text-foreground",
-            color === "primary" ? "text-background" : undefined
+            'my-2 font-semibold text-xl transition-colors duration-1000 ease-in-out',
+            isInView ? 'text-background' : 'text-foreground',
+            color === 'primary' ? 'text-background' : undefined
           )}
         >
           {title}
@@ -62,8 +62,8 @@ export default function SplitCardsItem({
       {body && (
         <div
           className={cn(
-            "transition-colors duration-1000 ease-in-out",
-            isInView ? "text-background" : "text-foreground"
+            'transition-colors duration-1000 ease-in-out',
+            isInView ? 'text-background' : 'text-foreground'
           )}
         >
           <PortableTextRenderer value={body} />

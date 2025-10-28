@@ -9,15 +9,15 @@
  * - Request context enrichment
  */
 
-import { NextRequest, NextResponse } from "next/server";
-import {
-  extractDomain,
-  getDomainConfig,
-  getSiteUrl,
-} from "./domain-mapping";
-import type { DomainConfig, DomainValidationResult, DomainContext } from "./domain-types";
+import { NextRequest, NextResponse } from 'next/server';
+import { extractDomain, getDomainConfig, getSiteUrl } from './domain-mapping';
+import type {
+  DomainConfig,
+  DomainValidationResult,
+  DomainContext,
+} from './domain-types';
 
-export type { DomainValidationResult, DomainContext } from "./domain-types";
+export type { DomainValidationResult, DomainContext } from './domain-types';
 
 /**
  * Validate domain from request
@@ -34,12 +34,13 @@ export function validateDomain(request: NextRequest): DomainValidationResult {
       config: null,
       domain,
       shouldRedirect: true,
-      redirectUrl: process.env.NEXT_PUBLIC_SITE_URL || "https://buddsplumbing.com",
+      redirectUrl:
+        process.env.NEXT_PUBLIC_SITE_URL || 'https://buddsplumbing.com',
     };
   }
 
   // Check for www redirect (optional - configure based on preference)
-  if (config.domain.startsWith("www.") && !domain.startsWith("www.")) {
+  if (config.domain.startsWith('www.') && !domain.startsWith('www.')) {
     const baseUrl = getSiteUrl(config);
     return {
       isValid: true,
@@ -66,13 +67,13 @@ export function applySecurityHeaders(
   response: NextResponse,
   config: DomainConfig
 ): NextResponse {
-  const isProduction = process.env.NEXT_PUBLIC_SITE_ENV === "production";
+  const isProduction = process.env.NEXT_PUBLIC_SITE_ENV === 'production';
 
   // HSTS (HTTP Strict Transport Security)
-  if (isProduction && !config.domain.includes("localhost")) {
+  if (isProduction && !config.domain.includes('localhost')) {
     response.headers.set(
-      "Strict-Transport-Security",
-      "max-age=31536000; includeSubDomains; preload"
+      'Strict-Transport-Security',
+      'max-age=31536000; includeSubDomains; preload'
     );
   }
 
@@ -93,14 +94,17 @@ export function applySecurityHeaders(
     "frame-ancestors 'self'",
   ];
 
-  response.headers.set("Content-Security-Policy", cspDirectives.join("; "));
+  response.headers.set('Content-Security-Policy', cspDirectives.join('; '));
 
   // Additional security headers
-  response.headers.set("X-Frame-Options", "SAMEORIGIN");
-  response.headers.set("X-Content-Type-Options", "nosniff");
-  response.headers.set("X-XSS-Protection", "1; mode=block");
-  response.headers.set("Referrer-Policy", "strict-origin-when-cross-origin");
-  response.headers.set("Permissions-Policy", "camera=(), microphone=(), geolocation=()");
+  response.headers.set('X-Frame-Options', 'SAMEORIGIN');
+  response.headers.set('X-Content-Type-Options', 'nosniff');
+  response.headers.set('X-XSS-Protection', '1; mode=block');
+  response.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin');
+  response.headers.set(
+    'Permissions-Policy',
+    'camera=(), microphone=(), geolocation=()'
+  );
 
   return response;
 }
@@ -117,12 +121,10 @@ export function applyCachingHeaders(
   const { pathname } = request.nextUrl;
 
   // Static assets - long cache
-  if (
-    pathname.match(/\.(jpg|jpeg|png|gif|svg|webp|ico|woff|woff2|ttf|eot)$/)
-  ) {
+  if (pathname.match(/\.(jpg|jpeg|png|gif|svg|webp|ico|woff|woff2|ttf|eot)$/)) {
     response.headers.set(
-      "Cache-Control",
-      "public, max-age=31536000, immutable"
+      'Cache-Control',
+      'public, max-age=31536000, immutable'
     );
     return response;
   }
@@ -130,25 +132,25 @@ export function applyCachingHeaders(
   // JavaScript and CSS - cache with revalidation
   if (pathname.match(/\.(js|css)$/)) {
     response.headers.set(
-      "Cache-Control",
-      "public, max-age=3600, stale-while-revalidate=86400"
+      'Cache-Control',
+      'public, max-age=3600, stale-while-revalidate=86400'
     );
     return response;
   }
 
   // API routes - no cache by default
-  if (pathname.startsWith("/api")) {
+  if (pathname.startsWith('/api')) {
     response.headers.set(
-      "Cache-Control",
-      "private, no-cache, no-store, must-revalidate"
+      'Cache-Control',
+      'private, no-cache, no-store, must-revalidate'
     );
     return response;
   }
 
   // Pages - cache with revalidation
   response.headers.set(
-    "Cache-Control",
-    "public, max-age=60, stale-while-revalidate=3600"
+    'Cache-Control',
+    'public, max-age=60, stale-while-revalidate=3600'
   );
 
   return response;
@@ -163,12 +165,12 @@ export function addDomainContextHeaders(
   config: DomainConfig
 ): NextResponse {
   // Add custom headers for domain context
-  response.headers.set("x-domain", config.domain);
-  response.headers.set("x-client-id", config.clientId);
-  response.headers.set("x-dataset", config.dataset);
+  response.headers.set('x-domain', config.domain);
+  response.headers.set('x-client-id', config.clientId);
+  response.headers.set('x-dataset', config.dataset);
 
   if (config.projectId) {
-    response.headers.set("x-project-id", config.projectId);
+    response.headers.set('x-project-id', config.projectId);
   }
 
   return response;
@@ -191,7 +193,7 @@ export function domainMiddleware(request: NextRequest): NextResponse {
 
   if (!validation.isValid || !validation.config) {
     // Return 404 for invalid domains
-    return new NextResponse("Domain not found", { status: 404 });
+    return new NextResponse('Domain not found', { status: 404 });
   }
 
   // Create response
@@ -222,7 +224,7 @@ export const domainMiddlewareConfig = {
      * - favicon.ico (favicon file)
      * - public folder files (public/*)
      */
-    "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico|woff|woff2|ttf|eot)$).*)",
+    '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico|woff|woff2|ttf|eot)$).*)',
   ],
 };
 
@@ -232,9 +234,9 @@ export const domainMiddlewareConfig = {
  */
 export function getDomainConfigFromResponse(headers: Headers): DomainContext {
   return {
-    domain: headers.get("x-domain") || "localhost:3000",
-    clientId: headers.get("x-client-id") || "budds-dev",
-    dataset: headers.get("x-dataset") || "development",
-    projectId: headers.get("x-project-id") || undefined,
+    domain: headers.get('x-domain') || 'localhost:3000',
+    clientId: headers.get('x-client-id') || 'budds-dev',
+    dataset: headers.get('x-dataset') || 'development',
+    projectId: headers.get('x-project-id') || undefined,
   };
 }

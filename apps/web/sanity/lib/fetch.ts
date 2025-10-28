@@ -1,12 +1,15 @@
-import { sanityFetch } from "@/sanity/lib/live";
-import { PAGE_QUERY, PAGES_SLUGS_QUERY } from "@/sanity/queries/page";
-import { NAVIGATION_QUERY, SERVICE_CATEGORIES_QUERY } from "@/sanity/queries/navigation";
-import { SETTINGS_QUERY } from "@/sanity/queries/settings";
+import { sanityFetch } from '@/sanity/lib/live';
+import { PAGE_QUERY, PAGES_SLUGS_QUERY } from '@/sanity/queries/page';
+import {
+  NAVIGATION_QUERY,
+  SERVICE_CATEGORIES_QUERY,
+} from '@/sanity/queries/navigation';
+import { SETTINGS_QUERY } from '@/sanity/queries/settings';
 import {
   POST_QUERY,
   POSTS_QUERY,
   POSTS_SLUGS_QUERY,
-} from "@/sanity/queries/post";
+} from '@/sanity/queries/post';
 import {
   PAGE_QUERYResult,
   PAGES_SLUGS_QUERYResult,
@@ -15,7 +18,7 @@ import {
   POSTS_SLUGS_QUERYResult,
   NAVIGATION_QUERYResult,
   SETTINGS_QUERYResult,
-} from "@/sanity.types";
+} from '@/sanity.types';
 
 interface ServiceCategory {
   _id: string;
@@ -49,7 +52,7 @@ export const fetchSanityPagesStaticParams =
   async (): Promise<PAGES_SLUGS_QUERYResult> => {
     const { data } = await sanityFetch({
       query: PAGES_SLUGS_QUERY,
-      perspective: "published",
+      perspective: 'published',
       stega: false,
     });
 
@@ -81,7 +84,7 @@ export const fetchSanityPostsStaticParams =
   async (): Promise<POSTS_SLUGS_QUERYResult> => {
     const { data } = await sanityFetch({
       query: POSTS_SLUGS_QUERY,
-      perspective: "published",
+      perspective: 'published',
       stega: false,
     });
 
@@ -105,11 +108,12 @@ export const fetchSanitySettings = async (): Promise<SETTINGS_QUERYResult> => {
   return data;
 };
 
-export const fetchSanityServiceCategories =
-  async (): Promise<ServiceCategory[]> => {
-    const { data } = await sanityFetch({
-      query: SERVICE_CATEGORIES_QUERY,
-    });
+export const fetchSanityServiceCategories = async (): Promise<
+  ServiceCategory[]
+> => {
+  const { data } = await sanityFetch({
+    query: SERVICE_CATEGORIES_QUERY,
+  });
 
-    return data as ServiceCategory[];
-  };
+  return data as ServiceCategory[];
+};

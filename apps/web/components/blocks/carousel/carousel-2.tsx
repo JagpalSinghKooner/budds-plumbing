@@ -1,5 +1,5 @@
-import SectionContainer from "@/components/ui/section-container";
-import { stegaClean } from "next-sanity";
+import SectionContainer from '@/components/ui/section-container';
+import { stegaClean } from 'next-sanity';
 import {
   Carousel,
   CarouselContent,
@@ -7,17 +7,17 @@ import {
   CarouselNext,
   CarouselPrevious,
   CarouselDots,
-} from "@/components/ui/carousel";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Card, CardContent } from "@/components/ui/card";
-import { urlFor } from "@/sanity/lib/image";
-import { StarRating } from "@/components/ui/star-rating";
-import PortableTextRenderer from "@/components/portable-text-renderer";
-import { PAGE_QUERYResult } from "@/sanity.types";
+} from '@/components/ui/carousel';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Card, CardContent } from '@/components/ui/card';
+import { urlFor } from '@/sanity/lib/image';
+import { StarRating } from '@/components/ui/star-rating';
+import PortableTextRenderer from '@/components/portable-text-renderer';
+import { PAGE_QUERYResult } from '@/sanity.types';
 
 type Carousel2Props = Extract<
-  NonNullable<NonNullable<PAGE_QUERYResult>["blocks"]>[number],
-  { _type: "carousel-2" }
+  NonNullable<NonNullable<PAGE_QUERYResult>['blocks']>[number],
+  { _type: 'carousel-2' }
 >;
 
 export default function Carousel2({
@@ -45,7 +45,7 @@ export default function Carousel2({
                           {item.image && (
                             <AvatarImage
                               src={urlFor(item.image).url()}
-                              alt={item.name ?? ""}
+                              alt={item.name ?? ''}
                             />
                           )}
                           <AvatarFallback>

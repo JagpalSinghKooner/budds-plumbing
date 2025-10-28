@@ -1,6 +1,12 @@
 'use client';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { ArrowRight, Facebook, Linkedin, Twitter, Instagram } from 'lucide-react';
+import {
+  ArrowRight,
+  Facebook,
+  Linkedin,
+  Twitter,
+  Instagram,
+} from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import Link from 'next/link';
@@ -69,7 +75,9 @@ const NewsletterForm = () => {
       toast.success('Successfully subscribed to newsletter!');
       form.reset();
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : 'Failed to subscribe');
+      toast.error(
+        error instanceof Error ? error.message : 'Failed to subscribe'
+      );
     } finally {
       setIsLoading(false);
     }
@@ -136,24 +144,27 @@ const Footer15 = ({ settings, navigation, socialLinks }: Footer15Props) => {
   const displaySocialLinks = socialLinks || defaultSocialLinks;
 
   // Transform Sanity navigation into footer sections
-  const footerSections = navigation[0]?.links
-    ?.filter((link) => link.subLinks && link.subLinks.length > 0)
-    .map((link) => ({
-      title: link.title || '',
-      links: link.subLinks?.map((subLink) => ({
-        name: subLink.title || '',
-        href: (subLink as any).resolvedLink || '#',
-        target: subLink.target,
-      })) || [],
-    })) || [];
+  const footerSections =
+    navigation[0]?.links
+      ?.filter((link) => link.subLinks && link.subLinks.length > 0)
+      .map((link) => ({
+        title: link.title || '',
+        links:
+          link.subLinks?.map((subLink) => ({
+            name: subLink.title || '',
+            href: (subLink as any).resolvedLink || '#',
+            target: subLink.target,
+          })) || [],
+      })) || [];
 
   // If no sections with sublinks, create a simple section with all main links
   if (footerSections.length === 0) {
-    const mainLinks = navigation[0]?.links?.map((link) => ({
-      name: link.title || '',
-      href: (link as any).resolvedLink || '#',
-      target: link.target,
-    })) || [];
+    const mainLinks =
+      navigation[0]?.links?.map((link) => ({
+        name: link.title || '',
+        href: (link as any).resolvedLink || '#',
+        target: link.target,
+      })) || [];
 
     if (mainLinks.length > 0) {
       footerSections.push({
@@ -164,7 +175,8 @@ const Footer15 = ({ settings, navigation, socialLinks }: Footer15Props) => {
   }
 
   const currentYear = new Date().getFullYear();
-  const businessName = (settings as any)?.businessName || settings?.siteName || 'Company';
+  const businessName =
+    (settings as any)?.businessName || settings?.siteName || 'Company';
 
   return (
     <section className="bg-background py-16 md:py-24">

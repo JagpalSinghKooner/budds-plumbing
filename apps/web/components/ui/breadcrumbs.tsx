@@ -5,10 +5,10 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
-import Link from "next/link";
+} from '@/components/ui/breadcrumb';
+import Link from 'next/link';
 
-import { BreadcrumbLink as BreadcrumbLinkType } from "@/types";
+import { BreadcrumbLink as BreadcrumbLinkType } from '@/types';
 
 const BreadcrumbCustomItem = ({
   label,

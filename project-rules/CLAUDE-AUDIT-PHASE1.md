@@ -12,6 +12,7 @@ Claude must audit in this exact order. Stop if any section fails.
 ### 1.1 Repository Structure & Tooling
 
 1. Confirm monorepo structure:
+
    ```
    /apps/web
    /apps/studio
@@ -19,6 +20,7 @@ Claude must audit in this exact order. Stop if any section fails.
    /packages/schemas
    /scripts
    ```
+
    - All folders exist.
    - Each has a README.md explaining purpose.
    - `packages/ui` and `packages/schemas` imported via workspace alias.
@@ -64,11 +66,13 @@ Claude must audit in this exact order. Stop if any section fails.
 ### 2.3 Schema Architecture (Lean Contract — All Content via Blocks)
 
 **Core Rule**
+
 - All visible content delivered through `sections[]` (blocks[]).
 - Pages contain only identifiers and SEO.
 - No top-level body text or hardcoded JSX copy.
 
 #### A. service
+
 ```
 name (string, required)
 slug (slug, required)
@@ -77,21 +81,25 @@ sections[] (array, required)
 ```
 
 #### B. location
+
 ```
 name (string, required)
 slug (slug, required)
 seo (object, required)
 sections[] (array, required)
 ```
+
 - No phoneNumber (single NAP handled via siteSettings).
 
 #### C. serviceLocationPage
+
 ```
 service (reference, required)
 location (reference, required)
 seo (object, optional)
 sections[] (array, optional)
 ```
+
 - URL: `/[serviceSlug]/in/[locationSlug]`.
 - No slug field.
 - Computed title: `${service.name} in ${location.name}`.
@@ -99,6 +107,7 @@ sections[] (array, optional)
 - Must **never block rendering**.
 
 #### D. siteSettings
+
 ```
 businessName
 phoneNumber
@@ -108,6 +117,7 @@ emergencyAvailable
 defaultSeo
 logo / brand
 ```
+
 - Single NAP for all pages.
 - No hardcoded details in React.
 
@@ -115,13 +125,14 @@ logo / brand
 
 ## 3. ROUTING CONTRACT
 
-| Page | Path | Data Source | Description |
-|------|------|--------------|--------------|
-| Service | /services/[serviceSlug] | service | General service info |
-| Location | /locations/[locationSlug] | location | Coverage area info |
+| Page               | Path                             | Data Source                     | Description               |
+| ------------------ | -------------------------------- | ------------------------------- | ------------------------- |
+| Service            | /services/[serviceSlug]          | service                         | General service info      |
+| Location           | /locations/[locationSlug]        | location                        | Coverage area info        |
 | Service + Location | /[serviceSlug]/in/[locationSlug] | serviceLocationPage (+fallback) | Local SEO conversion page |
 
 Rules:
+
 - `/in/` is static (no standalone page).
 - Redirect legacy `/locations/[location]/services/[service]` → `/[service]/in/[location]`.
 - Sitemap outputs only these three URL types.
@@ -132,6 +143,7 @@ Rules:
 ## 4. PAGE RENDER CONTRACT
 
 ### /services/[serviceSlug]
+
 - Fetch service + siteSettings.
 - Render `SectionRenderer(service.sections)`.
 - SEO:
@@ -142,6 +154,7 @@ Rules:
 - JSON-LD: Service + LocalBusiness (NAP from siteSettings)
 
 ### /locations/[locationSlug]
+
 - Fetch location + siteSettings.
 - Render `SectionRenderer(location.sections)`.
 - SEO:
@@ -150,6 +163,7 @@ Rules:
 - JSON-LD: LocalBusiness (NAP from siteSettings), areaServed = location.name
 
 ### /[serviceSlug]/in/[locationSlug]
+
 - Fetch service, location, serviceLocationPage, siteSettings.
 - Render sections:
   - if serviceLocationPage.sections exist → render those.
@@ -166,7 +180,7 @@ Rules:
 ## 5. SECURITY & PERFORMANCE
 
 - `.env` never committed.
-- Only NEXT_PUBLIC_ vars exposed to client.
+- Only NEXT*PUBLIC* vars exposed to client.
 - API routes: Zod validation + rate limiting + CSRF check.
 - Await all async external calls.
 - No dangerouslySetInnerHTML without sanitisation.
@@ -178,14 +192,14 @@ Rules:
 
 ## 6. CI/CD REQUIREMENTS
 
-| Check | Location | Must Pass |
-|--------|-----------|-----------|
-| TypeScript | CI + Pre-commit | ✅ |
-| ESLint | CI + Pre-commit | ✅ |
-| Prettier | CI + Pre-commit | ✅ |
-| Lighthouse SEO 100 | CI | ✅ |
-| Bundle < 250KB | CI | ✅ |
-| Build | CI | ✅ |
+| Check              | Location        | Must Pass |
+| ------------------ | --------------- | --------- |
+| TypeScript         | CI + Pre-commit | ✅        |
+| ESLint             | CI + Pre-commit | ✅        |
+| Prettier           | CI + Pre-commit | ✅        |
+| Lighthouse SEO 100 | CI              | ✅        |
+| Bundle < 250KB     | CI              | ✅        |
+| Build              | CI              | ✅        |
 
 ---
 

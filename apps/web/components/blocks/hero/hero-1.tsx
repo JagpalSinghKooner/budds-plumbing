@@ -1,14 +1,14 @@
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
-import Image from "next/image";
-import { urlFor } from "@/sanity/lib/image";
-import { stegaClean } from "next-sanity";
-import PortableTextRenderer from "@/components/portable-text-renderer";
-import { PAGE_QUERYResult } from "@/sanity.types";
+import { Button } from '@/components/ui/button';
+import Link from 'next/link';
+import Image from 'next/image';
+import { urlFor } from '@/sanity/lib/image';
+import { stegaClean } from 'next-sanity';
+import PortableTextRenderer from '@/components/portable-text-renderer';
+import { PAGE_QUERYResult } from '@/sanity.types';
 
 type Hero1Props = Extract<
-  NonNullable<NonNullable<PAGE_QUERYResult>["blocks"]>[number],
-  { _type: "hero-1" }
+  NonNullable<NonNullable<PAGE_QUERYResult>['blocks']>[number],
+  { _type: 'hero-1' }
 >;
 
 export default function Hero1({
@@ -46,9 +46,9 @@ export default function Hero1({
                   asChild
                 >
                   <Link
-                    href={link.href || "#"}
-                    target={link.target ? "_blank" : undefined}
-                    rel={link.target ? "noopener" : undefined}
+                    href={link.href || '#'}
+                    target={link.target ? '_blank' : undefined}
+                    rel={link.target ? 'noopener' : undefined}
                   >
                     {link.title}
                   </Link>
@@ -62,11 +62,11 @@ export default function Hero1({
             <Image
               className="rounded-xl animate-fade-up [animation-delay:500ms] opacity-0"
               src={urlFor(image).url()}
-              alt={image.alt || ""}
+              alt={image.alt || ''}
               width={image.asset?.metadata?.dimensions?.width || 800}
               height={image.asset?.metadata?.dimensions?.height || 800}
-              placeholder={image?.asset?.metadata?.lqip ? "blur" : undefined}
-              blurDataURL={image?.asset?.metadata?.lqip || ""}
+              placeholder={image?.asset?.metadata?.lqip ? 'blur' : undefined}
+              blurDataURL={image?.asset?.metadata?.lqip || ''}
               quality={100}
             />
           )}

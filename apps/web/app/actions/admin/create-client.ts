@@ -1,7 +1,7 @@
-"use server";
+'use server';
 
-import { revalidatePath } from "next/cache";
-import type { Client, CreateClientInput } from "@/types/admin";
+import { revalidatePath } from 'next/cache';
+import type { Client, CreateClientInput } from '@/types/admin';
 
 /**
  * Create a new client
@@ -52,7 +52,7 @@ export async function createClient(
     await new Promise((resolve) => setTimeout(resolve, 500));
 
     // Revalidate the clients list page
-    revalidatePath("/admin/clients");
+    revalidatePath('/admin/clients');
 
     // TODO: Send welcome email
     // await sendWelcomeEmail(newClient.email, newClient.name);
@@ -62,10 +62,10 @@ export async function createClient(
 
     return { success: true, client: newClient };
   } catch (error) {
-    console.error("Error creating client:", error);
+    console.error('Error creating client:', error);
     return {
       success: false,
-      error: "Failed to create client. Please try again.",
+      error: 'Failed to create client. Please try again.',
     };
   }
 }

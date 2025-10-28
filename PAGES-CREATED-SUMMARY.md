@@ -70,6 +70,7 @@ return <Blocks blocks={page?.blocks ?? []} />;
 ```
 
 **Benefits:**
+
 - ✅ Content managed in Sanity Studio
 - ✅ No code changes needed for content updates
 - ✅ Block-based flexible layouts
@@ -122,6 +123,7 @@ You need to create matching page documents in Sanity Studio:
 ### Until you create these in Sanity:
 
 When you visit the URL, you'll see:
+
 ```
 ⚠️ This page is missing from Sanity
 
@@ -135,7 +137,9 @@ This is **intentional** - it tells you to create the content in Sanity.
 ## 🎨 Recommended Content for Each Page
 
 ### About Page
+
 **Blocks to add:**
+
 - Hero with company story headline
 - Section Header: "Our Story"
 - Split Row: Company history with image
@@ -144,28 +148,36 @@ This is **intentional** - it tells you to create the content in Sanity.
 - CTA: Contact us button
 
 ### Contact Page
+
 **Blocks to add:**
+
 - Hero: "Get in Touch"
 - Section with business hours and contact info
 - Newsletter form (for contact form placeholder)
 - CTA: "Call us now" with phone number
 
 ### Services Landing
+
 **Blocks to add:**
+
 - Hero: "Our Services"
 - Section Header: "What We Do"
 - Grid Row: Service cards (link to individual services)
 - CTA: "Need help choosing? Contact us"
 
 ### Locations Landing
+
 **Blocks to add:**
+
 - Hero: "Areas We Serve"
 - Section Header: "Service Locations"
 - Grid Row: Location cards (link to individual locations)
 - CTA: "Don't see your area? Call us"
 
 ### Privacy Policy
+
 **Blocks to add:**
+
 - Section Header: "Privacy Policy"
 - Multiple Section Headers + text blocks for each section:
   - Information We Collect
@@ -176,7 +188,9 @@ This is **intentional** - it tells you to create the content in Sanity.
   - Contact Us
 
 ### Terms of Service
+
 **Blocks to add:**
+
 - Section Header: "Terms of Service"
 - Multiple Section Headers + text blocks for:
   - Acceptance of Terms
@@ -222,6 +236,7 @@ pnpm dev
 ```
 
 Then visit:
+
 - http://localhost:3000/about
 - http://localhost:3000/contact
 - http://localhost:3000/services
@@ -230,6 +245,7 @@ Then visit:
 - http://localhost:3000/terms-of-service
 
 **Expected Result:**
+
 - ⚠️ Shows "Missing from Sanity" message (until you create pages in Studio)
 - ✅ No 404 errors
 - ✅ Page structure loads
@@ -237,6 +253,7 @@ Then visit:
 ### After Creating in Sanity
 
 Once you create the pages in Sanity:
+
 - ✅ Content appears
 - ✅ SEO metadata works
 - ✅ Blocks render correctly
@@ -246,15 +263,19 @@ Once you create the pages in Sanity:
 ## 🚀 Production Readiness
 
 ### Code Level
+
 ✅ **Complete** - All routes are properly configured
 
 ### Content Level
+
 ⏳ **Pending** - Needs content in Sanity Studio
 
 ### Navigation Level
+
 ⏳ **Pending** - Needs navigation setup in Sanity
 
 ### Estimated Time to Complete
+
 - Create pages in Sanity: **30 minutes**
 - Add content to each page: **2-3 hours**
 - Configure navigation: **15 minutes**
@@ -266,17 +287,17 @@ Once you create the pages in Sanity:
 
 ## 📊 Page Feature Comparison
 
-| Page | SEO | Blocks | Dynamic | Navigation |
-|------|-----|--------|---------|------------|
-| Home | ✅ | ✅ | ❌ | ✅ Main |
-| About | ✅ | ✅ | ❌ | ✅ Main |
-| Contact | ✅ | ✅ | ❌ | ✅ Main |
-| Services | ✅ | ✅ | ❌ | ✅ Main |
-| Locations | ✅ | ✅ | ❌ | ✅ Main |
-| Privacy | ✅ | ✅ | ❌ | ⏳ Footer |
-| Terms | ✅ | ✅ | ❌ | ⏳ Footer |
-| Service (dynamic) | ✅ | ✅ | ✅ | ✅ Sub |
-| Location (dynamic) | ✅ | ✅ | ✅ | ✅ Sub |
+| Page               | SEO | Blocks | Dynamic | Navigation |
+| ------------------ | --- | ------ | ------- | ---------- |
+| Home               | ✅  | ✅     | ❌      | ✅ Main    |
+| About              | ✅  | ✅     | ❌      | ✅ Main    |
+| Contact            | ✅  | ✅     | ❌      | ✅ Main    |
+| Services           | ✅  | ✅     | ❌      | ✅ Main    |
+| Locations          | ✅  | ✅     | ❌      | ✅ Main    |
+| Privacy            | ✅  | ✅     | ❌      | ⏳ Footer  |
+| Terms              | ✅  | ✅     | ❌      | ⏳ Footer  |
+| Service (dynamic)  | ✅  | ✅     | ✅      | ✅ Sub     |
+| Location (dynamic) | ✅  | ✅     | ✅      | ✅ Sub     |
 
 ---
 
@@ -293,6 +314,7 @@ Once you create the pages in Sanity:
 ### Alternative Approach
 
 If you want many generic pages, you can:
+
 1. Create `/pages/[slug]` route (see ROUTING-STRATEGY.md)
 2. Set up redirects from `/about` → `/pages/about`
 
@@ -314,6 +336,7 @@ But explicit routes are cleaner and avoid confusion.
 ---
 
 **See Also:**
+
 - [NAVIGATION-SETUP-GUIDE.md](NAVIGATION-SETUP-GUIDE.md) - Detailed navigation instructions
 - [ROUTING-STRATEGY.md](apps/web/ROUTING-STRATEGY.md) - Overall routing architecture
 - [PHASE2-PRIORITY-TASKS.md](PHASE2-PRIORITY-TASKS.md) - What to work on next

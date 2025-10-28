@@ -6,15 +6,15 @@ module.exports = {
       url: [
         'http://localhost:3000/',
         'http://localhost:3000/services/drain-cleaning',
-        'http://localhost:3000/locations/toronto'
+        'http://localhost:3000/locations/toronto',
       ],
       numberOfRuns: 3,
       settings: {
         preset: 'desktop',
         throttling: {
-          cpuSlowdownMultiplier: 1
-        }
-      }
+          cpuSlowdownMultiplier: 1,
+        },
+      },
     },
     assert: {
       assertions: {
@@ -51,13 +51,13 @@ module.exports = {
         'crawlable-anchors': 'error',
         'is-crawlable': 'error',
         'robots-txt': 'error',
-        'hreflang': 'warn',
-        'canonical': 'error',
-        'structured-data': 'warn'
-      }
+        hreflang: 'warn',
+        canonical: 'error',
+        'structured-data': 'warn',
+      },
     },
     upload: {
-      target: 'temporary-public-storage'
-    }
-  }
+      target: 'temporary-public-storage',
+    },
+  },
 };

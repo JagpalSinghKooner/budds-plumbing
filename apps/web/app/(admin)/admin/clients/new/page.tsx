@@ -1,8 +1,8 @@
-import { ClientForm } from "@/components/admin/ClientForm";
+import { ClientForm } from '@/components/admin/ClientForm';
 
 export const metadata = {
-  title: "Create Client",
-  description: "Add a new client to the system",
+  title: 'Create Client',
+  description: 'Add a new client to the system',
 };
 
 export default function NewClientPage() {

@@ -1,7 +1,7 @@
-"use server";
+'use server';
 
-import { revalidatePath } from "next/cache";
-import type { Client, UpdateClientInput } from "@/types/admin";
+import { revalidatePath } from 'next/cache';
+import type { Client, UpdateClientInput } from '@/types/admin';
 
 /**
  * Update an existing client
@@ -37,11 +37,11 @@ export async function updateClient(
     // Mock client update
     const updatedClient: Client = {
       id,
-      name: updates.name || "Mock Client",
-      email: updates.email || "mock@example.com",
-      status: updates.status || "active",
-      plan: updates.plan || "basic",
-      createdAt: new Date("2024-01-01").toISOString(),
+      name: updates.name || 'Mock Client',
+      email: updates.email || 'mock@example.com',
+      status: updates.status || 'active',
+      plan: updates.plan || 'basic',
+      createdAt: new Date('2024-01-01').toISOString(),
       updatedAt: new Date().toISOString(),
       websiteUrl: updates.websiteUrl,
       contactPerson: updates.contactPerson,
@@ -53,7 +53,7 @@ export async function updateClient(
     await new Promise((resolve) => setTimeout(resolve, 500));
 
     // Revalidate relevant pages
-    revalidatePath("/admin/clients");
+    revalidatePath('/admin/clients');
     revalidatePath(`/admin/clients/${id}`);
 
     // TODO: Send notification email on important changes
@@ -66,10 +66,10 @@ export async function updateClient(
 
     return { success: true, client: updatedClient };
   } catch (error) {
-    console.error("Error updating client:", error);
+    console.error('Error updating client:', error);
     return {
       success: false,
-      error: "Failed to update client. Please try again.",
+      error: 'Failed to update client. Please try again.',
     };
   }
 }

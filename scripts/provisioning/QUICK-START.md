@@ -19,6 +19,7 @@ pnpm run provision:create
 ```
 
 Follow the prompts:
+
 1. Enter client name (e.g., "ACME Plumbing")
 2. Enter slug (e.g., "acme") - lowercase, hyphens only
 3. Enter email (e.g., "contact@acme.com")
@@ -71,6 +72,7 @@ NEXT_PUBLIC_SANITY_DATASET=client-acme
 ## What Gets Created
 
 ### Documents
+
 - ✓ Settings (site name, copyright)
 - ✓ Navigation (main menu)
 - ✓ Home page (with hero and CTA)
@@ -78,6 +80,7 @@ NEXT_PUBLIC_SANITY_DATASET=client-acme
 - ✓ Sample location page
 
 ### Next Steps
+
 1. Update logo in Settings
 2. Customize hero content
 3. Add real services and locations
@@ -87,14 +90,17 @@ NEXT_PUBLIC_SANITY_DATASET=client-acme
 ## Common Issues
 
 ### "Dataset already exists"
+
 - Choose a different slug
 - Or delete existing dataset: `sanity dataset delete client-acme`
 
 ### "Token must have write permissions"
+
 - Generate a new token in Sanity dashboard
 - Ensure it has "Write" access level
 
 ### "Validation failed"
+
 - Check error messages
 - Verify all documents were created
 - Re-run validation: `pnpm run provision:validate <dataset-name>`

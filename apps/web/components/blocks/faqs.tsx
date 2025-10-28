@@ -1,17 +1,17 @@
-import SectionContainer from "@/components/ui/section-container";
-import { stegaClean } from "next-sanity";
+import SectionContainer from '@/components/ui/section-container';
+import { stegaClean } from 'next-sanity';
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
-} from "@/components/ui/accordion";
-import PortableTextRenderer from "@/components/portable-text-renderer";
-import { PAGE_QUERYResult } from "@/sanity.types";
+} from '@/components/ui/accordion';
+import PortableTextRenderer from '@/components/portable-text-renderer';
+import { PAGE_QUERYResult } from '@/sanity.types';
 
 type FAQProps = Extract<
-  NonNullable<NonNullable<PAGE_QUERYResult>["blocks"]>[number],
-  { _type: "faqs" }
+  NonNullable<NonNullable<PAGE_QUERYResult>['blocks']>[number],
+  { _type: 'faqs' }
 >;
 
 export default function FAQs({ padding, colorVariant, faqs }: FAQProps) {

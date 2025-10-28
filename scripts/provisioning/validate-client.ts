@@ -33,7 +33,9 @@ function validateEnvironment(): {
   const apiVersion = process.env.NEXT_PUBLIC_SANITY_API_VERSION || '2024-10-18';
 
   if (!projectId) {
-    throw new Error('NEXT_PUBLIC_SANITY_PROJECT_ID environment variable is required');
+    throw new Error(
+      'NEXT_PUBLIC_SANITY_PROJECT_ID environment variable is required'
+    );
   }
 
   if (!token) {
@@ -80,9 +82,7 @@ async function checkDatasetExists(
 /**
  * Checks if required documents exist
  */
-async function checkRequiredDocuments(
-  client: SanityClient
-): Promise<{
+async function checkRequiredDocuments(client: SanityClient): Promise<{
   settings: boolean;
   navigation: boolean;
   pages: number;
@@ -141,7 +141,9 @@ async function validateSchema(client: SanityClient): Promise<{
       errors,
     };
   } catch (error) {
-    errors.push(`Schema validation failed: ${error instanceof Error ? error.message : String(error)}`);
+    errors.push(
+      `Schema validation failed: ${error instanceof Error ? error.message : String(error)}`
+    );
     return {
       isValid: false,
       errors,
@@ -153,7 +155,9 @@ async function validateSchema(client: SanityClient): Promise<{
  * Performs comprehensive validation
  */
 async function validateClient(datasetName: string): Promise<ValidationResult> {
-  console.log(`${colors.cyan}Validating client dataset: ${datasetName}${colors.reset}\n`);
+  console.log(
+    `${colors.cyan}Validating client dataset: ${datasetName}${colors.reset}\n`
+  );
 
   const errors: string[] = [];
   const warnings: string[] = [];
@@ -163,7 +167,12 @@ async function validateClient(datasetName: string): Promise<ValidationResult> {
     const { projectId, token, apiVersion } = validateEnvironment();
 
     // Create client
-    const client = createDatasetClient(projectId, datasetName, token, apiVersion);
+    const client = createDatasetClient(
+      projectId,
+      datasetName,
+      token,
+      apiVersion
+    );
 
     // Check if dataset exists
     console.log(`${colors.blue}Checking dataset existence...${colors.reset}`);
@@ -188,7 +197,8 @@ async function validateClient(datasetName: string): Promise<ValidationResult> {
 
     // Check required documents
     console.log(`${colors.blue}Checking required documents...${colors.reset}`);
-    const { settings, navigation, pages } = await checkRequiredDocuments(client);
+    const { settings, navigation, pages } =
+      await checkRequiredDocuments(client);
 
     const settingsExists = settings;
     const navigationExists = navigation;
@@ -224,7 +234,9 @@ async function validateClient(datasetName: string): Promise<ValidationResult> {
     // Additional checks
     try {
       const documentCount = await client.fetch('count(*)');
-      console.log(`${colors.blue}Total documents: ${documentCount}${colors.reset}`);
+      console.log(
+        `${colors.blue}Total documents: ${documentCount}${colors.reset}`
+      );
 
       if (documentCount === 0) {
         warnings.push('Dataset is empty - no documents found');
@@ -272,7 +284,9 @@ async function validateClient(datasetName: string): Promise<ValidationResult> {
       error instanceof Error ? error.message : 'Unknown validation error';
     errors.push(errorMessage);
 
-    console.error(`${colors.red}Validation error: ${errorMessage}${colors.reset}\n`);
+    console.error(
+      `${colors.red}Validation error: ${errorMessage}${colors.reset}\n`
+    );
 
     return {
       isValid: false,
@@ -295,9 +309,15 @@ async function main() {
   const datasetName = process.argv[2];
 
   if (!datasetName) {
-    console.error(`${colors.red}Error: Dataset name is required${colors.reset}`);
-    console.log(`\nUsage: ${colors.cyan}npm run validate-client <dataset-name>${colors.reset}`);
-    console.log(`Example: ${colors.cyan}npm run validate-client client-acme${colors.reset}\n`);
+    console.error(
+      `${colors.red}Error: Dataset name is required${colors.reset}`
+    );
+    console.log(
+      `\nUsage: ${colors.cyan}npm run validate-client <dataset-name>${colors.reset}`
+    );
+    console.log(
+      `Example: ${colors.cyan}npm run validate-client client-acme${colors.reset}\n`
+    );
     process.exit(1);
   }
 
@@ -319,4 +339,9 @@ if (require.main === module) {
 }
 
 // Export for use as a module
-export { validateClient, checkDatasetExists, checkRequiredDocuments, validateSchema };
+export {
+  validateClient,
+  checkDatasetExists,
+  checkRequiredDocuments,
+  validateSchema,
+};

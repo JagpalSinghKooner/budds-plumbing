@@ -1,12 +1,12 @@
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
-import { stegaClean } from "next-sanity";
-import PortableTextRenderer from "@/components/portable-text-renderer";
-import { PAGE_QUERYResult } from "@/sanity.types";
+import { Button } from '@/components/ui/button';
+import Link from 'next/link';
+import { stegaClean } from 'next-sanity';
+import PortableTextRenderer from '@/components/portable-text-renderer';
+import { PAGE_QUERYResult } from '@/sanity.types';
 
 type Hero2Props = Extract<
-  NonNullable<NonNullable<PAGE_QUERYResult>["blocks"]>[number],
-  { _type: "hero-2" }
+  NonNullable<NonNullable<PAGE_QUERYResult>['blocks']>[number],
+  { _type: 'hero-2' }
 >;
 
 export default function Hero2({ tagLine, title, body, links }: Hero2Props) {
@@ -36,9 +36,9 @@ export default function Hero2({ tagLine, title, body, links }: Hero2Props) {
               asChild
             >
               <Link
-                href={link.href || "#"}
-                target={link.target ? "_blank" : undefined}
-                rel={link.target ? "noopener" : undefined}
+                href={link.href || '#'}
+                target={link.target ? '_blank' : undefined}
+                rel={link.target ? 'noopener' : undefined}
               >
                 {link.title}
               </Link>

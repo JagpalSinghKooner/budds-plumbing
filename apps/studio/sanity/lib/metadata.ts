@@ -1,6 +1,6 @@
-import { urlFor } from "@/sanity/lib/image";
-import { PAGE_QUERYResult, POST_QUERYResult } from "@/sanity.types";
-const isProduction = process.env.NEXT_PUBLIC_SITE_ENV === "production";
+import { urlFor } from '@/sanity/lib/image';
+import { PAGE_QUERYResult, POST_QUERYResult } from '@/sanity.types';
+const isProduction = process.env.NEXT_PUBLIC_SITE_ENV === 'production';
 
 export function generatePageMetadata({
   page,
@@ -22,17 +22,17 @@ export function generatePageMetadata({
           height: page?.ogImage?.asset?.metadata?.dimensions?.height || 630,
         },
       ],
-      locale: "en_US",
-      type: "website",
+      locale: 'en_US',
+      type: 'website',
     },
     robots: !isProduction
-      ? "noindex, nofollow"
+      ? 'noindex, nofollow'
       : page?.noindex
-        ? "noindex"
-        : "index, follow",
+        ? 'noindex'
+        : 'index, follow',
     alternates: {
       canonical:
-        process.env.NEXT_PUBLIC_SITE_URL + `/${slug === "index" ? "" : slug}`,
+        process.env.NEXT_PUBLIC_SITE_URL + `/${slug === 'index' ? '' : slug}`,
     },
   };
 }

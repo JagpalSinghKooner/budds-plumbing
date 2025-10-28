@@ -36,9 +36,11 @@ The admin dashboard uses Next.js route groups to isolate admin functionality:
 ### 1. Pages (4 files)
 
 #### Dashboard Page
+
 **Location:** `/apps/web/app/(admin)/admin/dashboard/page.tsx`
 
 Features:
+
 - Overview metrics (total clients, active clients, trials, new this month)
 - Plan distribution visualization
 - Status breakdown
@@ -46,18 +48,22 @@ Features:
 - Loading states with Suspense
 
 #### Client List Page
+
 **Location:** `/apps/web/app/(admin)/admin/clients/page.tsx`
 
 Features:
+
 - Table view of all clients
 - Shows client name, email, status, plan, created date, last login
 - Add new client button
 - Loading skeleton
 
 #### Client Detail Page
+
 **Location:** `/apps/web/app/(admin)/admin/clients/[clientId]/page.tsx`
 
 Features:
+
 - Comprehensive client information
 - Contact details
 - Account timeline
@@ -66,18 +72,22 @@ Features:
 - Edit and delete actions (delete disabled for safety)
 
 #### New Client Page
+
 **Location:** `/apps/web/app/(admin)/admin/clients/new/page.tsx`
 
 Features:
+
 - Client creation form
 - All required and optional fields
 - Form validation
 - Success/error handling
 
 #### Admin Layout
+
 **Location:** `/apps/web/app/(admin)/layout.tsx`
 
 Features:
+
 - Navigation header with Dashboard and Clients links
 - Authentication guard placeholder (see Authentication section below)
 - Consistent admin styling
@@ -88,16 +98,19 @@ Features:
 All server actions are located in `/apps/web/app/actions/admin/` and use the `"use server"` directive.
 
 #### `list-clients.ts`
+
 - Lists all clients
 - Returns mock data (ready to replace with database queries)
 - Includes pagination-ready structure
 
 #### `get-client.ts`
+
 - Retrieves a single client by ID
 - Returns null if not found
 - Includes mock data
 
 #### `create-client.ts`
+
 - Creates a new client
 - Input validation placeholder
 - Email uniqueness check placeholder
@@ -105,12 +118,14 @@ All server actions are located in `/apps/web/app/actions/admin/` and use the `"u
 - Revalidates client list cache
 
 #### `update-client.ts`
+
 - Updates existing client
 - Partial updates supported
 - Revalidates relevant pages
 - Returns success/error response
 
 #### `get-client-metrics.ts`
+
 - Calculates dashboard metrics
 - Aggregates client counts by status and plan
 - Tracks recent activity (this week/month)
@@ -121,6 +136,7 @@ All server actions are located in `/apps/web/app/actions/admin/` and use the `"u
 All components are located in `/apps/web/components/admin/`
 
 #### `ClientList.tsx`
+
 - Table component displaying all clients
 - Badge indicators for status
 - Color-coded plan types
@@ -129,6 +145,7 @@ All components are located in `/apps/web/components/admin/`
 - View action button per client
 
 #### `ClientCard.tsx`
+
 - Card-based client overview
 - Shows key information compactly
 - Status badge
@@ -136,6 +153,7 @@ All components are located in `/apps/web/components/admin/`
 - Useful for grid layouts
 
 #### `ClientForm.tsx`
+
 - Reusable form for create/edit modes
 - All client fields included
 - Client-side validation
@@ -144,6 +162,7 @@ All components are located in `/apps/web/components/admin/`
 - Uses Next.js router for navigation
 
 #### `MetricsCard.tsx`
+
 - Dashboard metric display component
 - Shows title, value, description
 - Optional trend indicator with percentage
@@ -151,7 +170,9 @@ All components are located in `/apps/web/components/admin/`
 - Reusable for various metrics
 
 #### Component Index
+
 **Location:** `/apps/web/components/admin/index.ts`
+
 - Barrel export for clean imports
 
 ### 4. Type Definitions
@@ -159,6 +180,7 @@ All components are located in `/apps/web/components/admin/`
 **Location:** `/apps/web/types/admin.ts`
 
 Types defined:
+
 - `ClientStatus`: "active" | "inactive" | "suspended" | "trial"
 - `ClientPlan`: "free" | "basic" | "professional" | "enterprise"
 - `Client`: Complete client interface with all fields
@@ -186,6 +208,7 @@ pnpm add @clerk/nextjs
 #### 2. Set up environment variables
 
 Add to `.env.local`:
+
 ```env
 NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_...
 CLERK_SECRET_KEY=sk_test_...
@@ -214,23 +237,23 @@ export default function RootLayout({ children }) {
 Replace the `checkAuth()` function in `/apps/web/app/(admin)/layout.tsx`:
 
 ```typescript
-import { auth } from "@clerk/nextjs/server";
-import { redirect } from "next/navigation";
+import { auth } from '@clerk/nextjs/server';
+import { redirect } from 'next/navigation';
 
 async function checkAuth() {
   const { userId, sessionClaims } = await auth();
 
   // Check if user is authenticated
   if (!userId) {
-    redirect("/sign-in");
+    redirect('/sign-in');
   }
 
   // Check if user has admin role
   // You can set this in Clerk Dashboard under Users > [User] > Metadata
-  const isAdmin = sessionClaims?.metadata?.role === "admin";
+  const isAdmin = sessionClaims?.metadata?.role === 'admin';
 
   if (!isAdmin) {
-    redirect("/unauthorized");
+    redirect('/unauthorized');
   }
 
   return { isAuthenticated: true, isAdmin: true };
@@ -253,6 +276,7 @@ import { UserButton } from "@clerk/nextjs";
 #### 6. Create sign-in and unauthorized pages
 
 Create `/apps/web/app/sign-in/[[...sign-in]]/page.tsx`:
+
 ```typescript
 import { SignIn } from "@clerk/nextjs";
 
@@ -266,6 +290,7 @@ export default function SignInPage() {
 ```
 
 Create `/apps/web/app/unauthorized/page.tsx`:
+
 ```typescript
 export default function UnauthorizedPage() {
   return (
@@ -293,30 +318,31 @@ export default function UnauthorizedPage() {
 You can also implement authentication in middleware for better performance:
 
 Create `/apps/web/middleware.ts`:
-```typescript
-import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
-import { NextResponse } from "next/server";
 
-const isAdminRoute = createRouteMatcher(["/admin(.*)"]);
+```typescript
+import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server';
+import { NextResponse } from 'next/server';
+
+const isAdminRoute = createRouteMatcher(['/admin(.*)']);
 
 export default clerkMiddleware(async (auth, req) => {
   if (isAdminRoute(req)) {
     const { userId, sessionClaims } = await auth();
 
     if (!userId) {
-      return NextResponse.redirect(new URL("/sign-in", req.url));
+      return NextResponse.redirect(new URL('/sign-in', req.url));
     }
 
-    if (sessionClaims?.metadata?.role !== "admin") {
-      return NextResponse.redirect(new URL("/unauthorized", req.url));
+    if (sessionClaims?.metadata?.role !== 'admin') {
+      return NextResponse.redirect(new URL('/unauthorized', req.url));
     }
   }
 });
 
 export const config = {
   matcher: [
-    "/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)",
-    "/(api|trpc)(.*)",
+    '/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)',
+    '/(api|trpc)(.*)',
   ],
 };
 ```
@@ -366,11 +392,11 @@ model Client {
 Example for `list-clients.ts`:
 
 ```typescript
-import { prisma } from "@/lib/prisma";
+import { prisma } from '@/lib/prisma';
 
 export async function listClients(): Promise<Client[]> {
   const clients = await prisma.client.findMany({
-    orderBy: { createdAt: 'desc' }
+    orderBy: { createdAt: 'desc' },
   });
   return clients;
 }
@@ -379,7 +405,7 @@ export async function listClients(): Promise<Client[]> {
 Example for `get-client-metrics.ts`:
 
 ```typescript
-import { prisma } from "@/lib/prisma";
+import { prisma } from '@/lib/prisma';
 
 export async function getClientMetrics(): Promise<ClientMetrics> {
   const [
@@ -417,10 +443,13 @@ export async function getClientMetrics(): Promise<ClientMetrics> {
     }),
   ]);
 
-  const clientsByPlan = planCounts.reduce((acc, { plan, _count }) => {
-    acc[plan] = _count;
-    return acc;
-  }, {} as ClientMetrics['clientsByPlan']);
+  const clientsByPlan = planCounts.reduce(
+    (acc, { plan, _count }) => {
+      acc[plan] = _count;
+      return acc;
+    },
+    {} as ClientMetrics['clientsByPlan']
+  );
 
   return {
     totalClients,
@@ -440,6 +469,7 @@ export async function getClientMetrics(): Promise<ClientMetrics> {
 ## Next Steps
 
 ### Phase 1: Core Functionality
+
 1. **Implement Authentication**
    - Install and configure Clerk
    - Update admin layout with proper auth guards
@@ -456,6 +486,7 @@ export async function getClientMetrics(): Promise<ClientMetrics> {
    - Add better error messages
 
 ### Phase 2: Enhanced Features
+
 1. **Client Management**
    - Implement edit functionality
    - Add soft delete with confirmation
@@ -473,6 +504,7 @@ export async function getClientMetrics(): Promise<ClientMetrics> {
    - Trial expiration reminders
 
 ### Phase 3: Advanced Features
+
 1. **Analytics Dashboard**
    - Revenue tracking
    - Churn rate calculations
@@ -497,12 +529,14 @@ export async function getClientMetrics(): Promise<ClientMetrics> {
 ## Code Quality
 
 ### TypeScript
+
 - All files use strict TypeScript
 - Proper type definitions in `/types/admin.ts`
 - No `any` types used
 - Exhaustive type checking
 
 ### Best Practices
+
 - Server Components by default
 - Client Components marked with "use client"
 - Server Actions marked with "use server"
@@ -511,6 +545,7 @@ export async function getClientMetrics(): Promise<ClientMetrics> {
 - Revalidation after mutations
 
 ### Styling
+
 - Tailwind CSS for all styling
 - Uses existing UI component library
 - Consistent with project design system
@@ -520,16 +555,19 @@ export async function getClientMetrics(): Promise<ClientMetrics> {
 ## Testing Recommendations
 
 ### Unit Tests
+
 - Test server actions with mock database
 - Test form validation logic
 - Test utility functions
 
 ### Integration Tests
+
 - Test complete user flows (create → view → edit)
 - Test authentication guards
 - Test authorization checks
 
 ### E2E Tests
+
 - Test full admin workflows
 - Test error scenarios
 - Test concurrent updates
@@ -568,12 +606,15 @@ export async function getClientMetrics(): Promise<ClientMetrics> {
 ## Support and Maintenance
 
 ### Documentation
+
 - All TODO comments in code mark areas needing implementation
 - Type definitions serve as API documentation
 - This README provides architectural overview
 
 ### Monitoring
+
 Consider adding:
+
 - Error tracking (Sentry)
 - Performance monitoring (Vercel Analytics)
 - Usage analytics
@@ -582,6 +623,7 @@ Consider adding:
 ## Summary
 
 The admin dashboard scaffolding is now complete with:
+
 - ✅ 4 fully functional pages (dashboard, client list, client detail, new client)
 - ✅ 5 server actions ready for database integration
 - ✅ 4 reusable UI components
@@ -592,6 +634,7 @@ The admin dashboard scaffolding is now complete with:
 - ✅ Mobile-responsive design
 
 The system is production-ready for scaffolding and requires:
+
 1. Clerk authentication integration (30 minutes)
 2. Database setup and integration (1-2 hours)
 3. Input validation with Zod (30 minutes)

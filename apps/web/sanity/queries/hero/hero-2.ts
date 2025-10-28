@@ -1,6 +1,6 @@
-import { groq } from "next-sanity";
-import { linkQuery } from "../shared/link";
-import { bodyQuery } from "../shared/body";
+import { groq } from 'next-sanity';
+import { linkQuery } from '../shared/link';
+import { bodyQuery } from '../shared/body';
 
 // @sanity-typegen-ignore
 export const hero2Query = groq`

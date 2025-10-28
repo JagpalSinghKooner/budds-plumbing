@@ -133,7 +133,7 @@ const DATASET_MAP = {
   'buddsplumbing.com': 'production',
   'www.buddsplumbing.com': 'production',
   'staging.buddsplumbing.com': 'staging',
-  'localhost': process.env.NEXT_PUBLIC_SANITY_DATASET || 'development',
+  localhost: process.env.NEXT_PUBLIC_SANITY_DATASET || 'development',
 };
 ```
 
@@ -153,6 +153,7 @@ pnpm dev
 ### 2. Test with Custom Hostnames
 
 Edit `/etc/hosts`:
+
 ```bash
 sudo nano /etc/hosts
 
@@ -162,15 +163,17 @@ sudo nano /etc/hosts
 ```
 
 Update `lib/dataset-config.ts`:
+
 ```typescript
 const DATASET_MAP = {
   'buddsplumbing.local': 'production',
   'staging.buddsplumbing.local': 'staging',
-  'localhost': 'development',
+  localhost: 'development',
 };
 ```
 
 Visit:
+
 - http://buddsplumbing.local:3000 → production dataset
 - http://staging.buddsplumbing.local:3000 → staging dataset
 - http://localhost:3000 → development dataset
@@ -178,11 +181,13 @@ Visit:
 ### 3. Verify Dataset Routing
 
 Visit the debug endpoint:
+
 ```bash
 curl http://localhost:3000/api/debug-dataset | jq
 ```
 
 Expected output:
+
 ```json
 {
   "success": true,
@@ -209,6 +214,7 @@ Expected output:
 ### 4. Check Browser Console/Server Logs
 
 In development, you'll see logs:
+
 ```
 [Dataset Routing] {
   hostname: 'localhost',
@@ -289,12 +295,14 @@ export async function GET() {
 ## Migration from Old Code
 
 ### Old Way
+
 ```typescript
 import { client } from '@/sanity/lib/client';
 const data = await client.fetch(query);
 ```
 
 ### New Way (Multi-Tenant)
+
 ```typescript
 import { getClientForRequest } from '@/sanity/lib/client';
 const client = await getClientForRequest();

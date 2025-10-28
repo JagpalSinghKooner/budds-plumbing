@@ -1,4 +1,4 @@
-import { LockKeyhole, ShieldCheck, Users } from "lucide-react";
+import { LockKeyhole, ShieldCheck, Users } from 'lucide-react';
 
 const Compliance6 = () => {
   return (

@@ -31,6 +31,7 @@ scripts/provisioning/
 **Purpose**: Automates the complete client provisioning process.
 
 **Features**:
+
 - Interactive CLI mode with user prompts
 - Non-interactive CLI mode for scripting
 - Creates isolated Sanity datasets
@@ -40,6 +41,7 @@ scripts/provisioning/
 - Template presets for different business types
 
 **Usage**:
+
 ```bash
 # Interactive mode
 pnpm run provision:create
@@ -50,6 +52,7 @@ pnpm run create-client "Client Name" "slug" "email@example.com" [preset]
 ```
 
 **Key Functions**:
+
 - `provisionClient()`: Main orchestration function
 - `createDataset()`: Creates new Sanity dataset
 - `seedInitialData()`: Populates dataset with templates
@@ -59,6 +62,7 @@ pnpm run create-client "Client Name" "slug" "email@example.com" [preset]
 - `cliProvisioning()`: Handles command-line provisioning
 
 **Error Handling**:
+
 - Configuration validation with detailed error messages
 - Environment variable verification
 - Dataset existence checking
@@ -71,12 +75,14 @@ pnpm run create-client "Client Name" "slug" "email@example.com" [preset]
 **Purpose**: Provides default content templates for new clients.
 
 **Features**:
+
 - Modular template generation
 - Template presets (general, plumbing, hvac, electrical)
 - Customizable content blocks
 - Type-safe template structure
 
 **Key Functions**:
+
 - `generateKey()`: Creates unique block keys
 - `createDefaultHeroBlock()`: Hero section template
 - `createDefaultCTABlock()`: Call-to-action template
@@ -89,6 +95,7 @@ pnpm run create-client "Client Name" "slug" "email@example.com" [preset]
 - `generatePresetSeedData()`: Preset-based generator
 
 **Content Templates**:
+
 1. **Settings Document**
    - Site name
    - Copyright text
@@ -114,6 +121,7 @@ pnpm run create-client "Client Name" "slug" "email@example.com" [preset]
    - SEO optimization
 
 **Template Presets**:
+
 - **General**: Generic professional services (default)
 - **Plumbing**: Emergency plumbing services
 - **HVAC**: Heating, cooling, and ventilation
@@ -124,6 +132,7 @@ pnpm run create-client "Client Name" "slug" "email@example.com" [preset]
 **Purpose**: Validates that client datasets are properly configured.
 
 **Features**:
+
 - Dataset existence verification
 - Required document checks
 - Schema validation
@@ -132,11 +141,13 @@ pnpm run create-client "Client Name" "slug" "email@example.com" [preset]
 - Color-coded terminal output
 
 **Usage**:
+
 ```bash
 pnpm run provision:validate <dataset-name>
 ```
 
 **Key Functions**:
+
 - `validateClient()`: Main validation orchestration
 - `checkDatasetExists()`: Verifies dataset presence
 - `checkRequiredDocuments()`: Checks critical documents
@@ -144,6 +155,7 @@ pnpm run provision:validate <dataset-name>
 - `validateEnvironment()`: Checks environment setup
 
 **Validation Checks**:
+
 1. Dataset exists in project
 2. Settings document present (required)
 3. Navigation document present (optional, warning)
@@ -152,6 +164,7 @@ pnpm run provision:validate <dataset-name>
 6. Document count (warning if empty)
 
 **Exit Codes**:
+
 - `0`: Validation passed
 - `1`: Validation failed
 
@@ -160,6 +173,7 @@ pnpm run provision:validate <dataset-name>
 **Purpose**: Provides comprehensive TypeScript interfaces for type safety.
 
 **Key Types**:
+
 - `ClientConfig`: Client configuration structure
 - `ProvisioningResult`: Operation result with errors/warnings
 - `ValidationResult`: Validation outcome with detailed checks
@@ -176,6 +190,7 @@ pnpm run provision:validate <dataset-name>
 **Purpose**: Reusable utility functions for all scripts.
 
 **Features**:
+
 - Terminal color formatting
 - Logging helpers (success, error, warning, info)
 - Duration formatting
@@ -197,6 +212,7 @@ pnpm run provision:create
 ```
 
 You'll be prompted for:
+
 1. Client name (e.g., "ACME Plumbing")
 2. Client slug (e.g., "acme")
 3. Client email (e.g., "contact@acme.com")
@@ -241,6 +257,7 @@ const result = await provisionClient(config, options, 'plumbing');
 When a client is provisioned, the following data is automatically created:
 
 #### 1. Settings Document (ID: `settings`)
+
 ```typescript
 {
   _type: 'settings',
@@ -251,6 +268,7 @@ When a client is provisioned, the following data is automatically created:
 ```
 
 #### 2. Navigation Document (ID: `main-navigation`)
+
 ```typescript
 {
   _type: 'navigation',
@@ -267,18 +285,21 @@ When a client is provisioned, the following data is automatically created:
 ```
 
 #### 3. Home Page (ID: `home-page`)
+
 - Hero block with welcome message
 - CTA block for contact
 - SEO metadata (title, description)
 - Slug: `/home`
 
 #### 4. Sample Service Page (ID: `service-{slug}`)
+
 - Service-specific hero block
 - CTA block
 - SEO metadata
 - Slug: `/services/{service-name}`
 
 #### 5. Sample Location Page (ID: `location-{slug}`)
+
 - Location-specific hero block
 - CTA block
 - SEO metadata
@@ -289,24 +310,28 @@ When a client is provisioned, the following data is automatically created:
 Each template preset customizes the content:
 
 **Plumbing Preset**:
+
 - Service: "Emergency Plumbing"
 - Location: "Downtown"
 - Hero tagline: "Professional Plumbing Services"
 - CTA: "Need a Plumber?"
 
 **HVAC Preset**:
+
 - Service: "HVAC Repair & Installation"
 - Location: "Metro Area"
 - Hero tagline: "Heating & Cooling Experts"
 - CTA: "Get HVAC Service"
 
 **Electrical Preset**:
+
 - Service: "Electrical Services"
 - Location: "City Center"
 - Hero tagline: "Licensed Electricians"
 - CTA: "Contact Our Electricians"
 
 **General Preset** (Default):
+
 - Service: "General Services"
 - Location: "Main Location"
 - Hero tagline: "Professional Services"
@@ -317,18 +342,21 @@ Each template preset customizes the content:
 ### 1. Multi-Layered Validation
 
 **Configuration Level**:
+
 - Validates required fields (name, slug, email)
 - Checks slug format (lowercase, alphanumeric, hyphens)
 - Validates email format
 - Errors prevent provisioning from starting
 
 **Environment Level**:
+
 - Verifies required environment variables
 - Checks token permissions
 - Validates API version
 - Errors thrown before any operations
 
 **Runtime Level**:
+
 - Checks dataset existence
 - Validates document creation
 - Monitors transaction success
@@ -337,13 +365,15 @@ Each template preset customizes the content:
 ### 2. Transaction-Based Operations
 
 All document creation uses Sanity transactions for atomicity:
+
 ```typescript
 const transaction = client.transaction();
-documents.forEach(doc => transaction.createOrReplace(doc));
+documents.forEach((doc) => transaction.createOrReplace(doc));
 await transaction.commit();
 ```
 
 Benefits:
+
 - All-or-nothing semantics
 - Prevents partial states
 - Automatic rollback on transaction failure
@@ -359,12 +389,14 @@ if (rollback && rollbackActions.length > 0) {
 ```
 
 **Rollback Actions**:
+
 1. Delete created dataset
 2. Clean up any created documents
 3. Log rollback operations
 4. Report final state
 
 **Rollback Prevention**:
+
 - Dry-run mode (no actual changes)
 - Explicit confirmation in interactive mode
 - Dataset existence check before creation
@@ -372,6 +404,7 @@ if (rollback && rollbackActions.length > 0) {
 ### 4. Comprehensive Error Logging
 
 **Color-Coded Output**:
+
 - Red: Errors (blocking issues)
 - Yellow: Warnings (non-blocking issues)
 - Green: Success messages
@@ -379,12 +412,14 @@ if (rollback && rollbackActions.length > 0) {
 - Cyan: Headers and sections
 
 **Error Details**:
+
 - Error type and message
 - Stack trace (in development)
 - Affected resources
 - Recovery suggestions
 
 **Warning Categories**:
+
 - Missing optional content
 - Empty datasets
 - Configuration suggestions
@@ -393,10 +428,12 @@ if (rollback && rollbackActions.length > 0) {
 ### 5. Exit Codes
 
 Scripts use standard exit codes:
+
 - `0`: Success
 - `1`: Failure
 
 Enables scripting and CI/CD integration:
+
 ```bash
 if pnpm run provision:create "Client" "slug" "email@test.com"; then
   echo "Provisioning succeeded"
@@ -409,20 +446,23 @@ fi
 ### 6. Error Recovery Patterns
 
 **Retry with Backoff** (in utils.ts):
+
 ```typescript
 await retryWithBackoff(
   async () => await client.fetch(query),
-  maxRetries = 3,
-  initialDelay = 1000
+  (maxRetries = 3),
+  (initialDelay = 1000)
 );
 ```
 
 **Graceful Degradation**:
+
 - Continue with warnings when possible
 - Report non-critical failures
 - Complete partial operations
 
 **State Preservation**:
+
 - Log all operations
 - Track rollback actions
 - Enable manual recovery
@@ -432,6 +472,7 @@ await retryWithBackoff(
 ### 1. Dry Run Mode
 
 Test provisioning without making changes:
+
 ```typescript
 const result = await provisionClient(config, { dryRun: true });
 ```
@@ -439,6 +480,7 @@ const result = await provisionClient(config, { dryRun: true });
 ### 2. Custom Templates
 
 Override default templates:
+
 ```typescript
 const customTemplates: Partial<SeedData> = {
   settings: {
@@ -454,6 +496,7 @@ const result = await provisionClient(config, {
 ### 3. Skip Validation
 
 For faster provisioning (not recommended):
+
 ```typescript
 const result = await provisionClient(config, { validate: false });
 ```
@@ -461,6 +504,7 @@ const result = await provisionClient(config, { validate: false });
 ### 4. Disable Rollback
 
 For debugging (not recommended):
+
 ```typescript
 const result = await provisionClient(config, { rollback: false });
 ```
@@ -470,6 +514,7 @@ const result = await provisionClient(config, { rollback: false });
 ### 1. NPM Scripts
 
 Added to root `package.json`:
+
 ```json
 {
   "scripts": {
@@ -482,6 +527,7 @@ Added to root `package.json`:
 ### 2. Environment Variables
 
 Required variables:
+
 - `NEXT_PUBLIC_SANITY_PROJECT_ID`: Sanity project ID
 - `SANITY_API_READ_TOKEN`: Token with write permissions
 - `NEXT_PUBLIC_SANITY_API_VERSION`: API version (defaults to 2024-10-18)
@@ -489,6 +535,7 @@ Required variables:
 ### 3. CI/CD Integration
 
 Example GitHub Actions workflow:
+
 ```yaml
 - name: Provision Client
   run: |
@@ -503,6 +550,7 @@ Example GitHub Actions workflow:
 ### 1. Parallel Operations
 
 Scripts use parallel execution where possible:
+
 ```typescript
 const [settings, navigation, pages] = await Promise.all([
   client.fetch('*[_type == "settings"][0]'),
@@ -514,9 +562,10 @@ const [settings, navigation, pages] = await Promise.all([
 ### 2. Transaction Batching
 
 All document creation in a single transaction:
+
 ```typescript
 const transaction = client.transaction();
-documents.forEach(doc => transaction.createOrReplace(doc));
+documents.forEach((doc) => transaction.createOrReplace(doc));
 await transaction.commit();
 ```
 
@@ -527,16 +576,19 @@ Efficient query design to minimize round trips.
 ## Security
 
 ### 1. Token Management
+
 - Tokens stored in environment variables
 - Never committed to version control
 - Write permissions required (validated at runtime)
 
 ### 2. Dataset Isolation
+
 - Each client gets private dataset
 - ACL mode set to 'private'
 - Cross-dataset queries prevented
 
 ### 3. Input Validation
+
 - Slug sanitization prevents injection
 - Email validation
 - URL validation
@@ -574,6 +626,7 @@ pnpm run provision:validate non-existent-dataset
 ## Future Enhancements
 
 ### Potential Improvements
+
 1. Multi-dataset migration tool
 2. Content import from external sources
 3. Automated backup before provisioning
@@ -586,6 +639,7 @@ pnpm run provision:validate non-existent-dataset
 10. Email notification on completion
 
 ### Extensibility
+
 - Plugin system for custom templates
 - Webhook integration
 - REST API wrapper

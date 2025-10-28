@@ -56,8 +56,9 @@ export async function generateMetadata({ params }: LocationPageProps) {
   const canonical = `${siteUrl}/locations/${locationSlug}`;
 
   // Title with fallback to siteSettings
-  const title = location.meta_title ||
-                `${siteSettings?.businessName || 'Budds Plumbing'} in ${location.name}`;
+  const title =
+    location.meta_title ||
+    `${siteSettings?.businessName || 'Budds Plumbing'} in ${location.name}`;
 
   return generateSEOMetadata({
     title,
@@ -103,23 +104,28 @@ export default async function LocationPage({ params }: LocationPageProps) {
   // Generate JSON-LD schemas using siteSettings data
   const businessSchema = generateLocalBusinessSchema({
     name: siteSettings?.businessName || 'Budds Plumbing',
-    description: location.meta_description || siteSettings?.meta_description || 'Professional plumbing services',
+    description:
+      location.meta_description ||
+      siteSettings?.meta_description ||
+      'Professional plumbing services',
     url: `${siteUrl}/locations/${locationSlug}`,
     telephone: siteSettings?.phoneNumber || '',
     email: siteSettings?.email,
-    address: siteSettings?.address ? {
-      streetAddress: siteSettings.address.street || '',
-      addressLocality: siteSettings.address.city || '',
-      addressRegion: siteSettings.address.state || '',
-      postalCode: siteSettings.address.zip || '',
-      addressCountry: 'US',
-    } : {
-      streetAddress: '',
-      addressLocality: location.name || '',
-      addressRegion: '',
-      postalCode: '',
-      addressCountry: 'US',
-    },
+    address: siteSettings?.address
+      ? {
+          streetAddress: siteSettings.address.street || '',
+          addressLocality: siteSettings.address.city || '',
+          addressRegion: siteSettings.address.state || '',
+          postalCode: siteSettings.address.zip || '',
+          addressCountry: 'US',
+        }
+      : {
+          streetAddress: '',
+          addressLocality: location.name || '',
+          addressRegion: '',
+          postalCode: '',
+          addressCountry: 'US',
+        },
     openingHours: siteSettings?.businessHours,
     areaServed: location.name ? [location.name] : [],
   });

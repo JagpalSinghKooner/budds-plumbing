@@ -5,6 +5,7 @@ Automated system for provisioning new clients in the Budds Plumbing multi-tenant
 ## Overview
 
 This provisioning system automates the creation of new client datasets, including:
+
 - Creating isolated Sanity datasets for each client
 - Seeding initial content (settings, navigation, pages)
 - Validating dataset setup
@@ -13,6 +14,7 @@ This provisioning system automates the creation of new client datasets, includin
 ## Prerequisites
 
 1. **Environment Variables**: Ensure these are set in your `.env.local`:
+
    ```env
    NEXT_PUBLIC_SANITY_PROJECT_ID=your-project-id
    NEXT_PUBLIC_SANITY_DATASET=production
@@ -33,6 +35,7 @@ This provisioning system automates the creation of new client datasets, includin
 Main provisioning script that creates a new client dataset and seeds initial content.
 
 **Features:**
+
 - Creates a new Sanity dataset
 - Seeds default settings, navigation, and pages
 - Optional sample service and location pages
@@ -43,11 +46,13 @@ Main provisioning script that creates a new client dataset and seeds initial con
 **Usage:**
 
 **Interactive Mode** (Recommended for first-time use):
+
 ```bash
 pnpm run provision:create
 ```
 
 This will prompt you for:
+
 - Client name
 - Client slug (used in dataset name)
 - Client email
@@ -56,6 +61,7 @@ This will prompt you for:
 - Template preset (general, plumbing, hvac, electrical)
 
 **CLI Mode** (For scripting):
+
 ```bash
 cd scripts/provisioning
 pnpm install
@@ -63,6 +69,7 @@ pnpm run create-client "Client Name" "client-slug" "email@example.com" [preset]
 ```
 
 **Examples:**
+
 ```bash
 # Interactive mode
 pnpm run provision:create
@@ -79,17 +86,20 @@ pnpm run provision:create "ACME Plumbing" "acme" "contact@acme.com" plumbing
 Validation script that checks if a client dataset is properly configured.
 
 **Features:**
+
 - Checks dataset existence
 - Validates required documents (settings, navigation)
 - Validates schema structure
 - Reports warnings for missing optional content
 
 **Usage:**
+
 ```bash
 pnpm run provision:validate <dataset-name>
 ```
 
 **Examples:**
+
 ```bash
 # Validate a specific dataset
 pnpm run provision:validate client-acme
@@ -101,6 +111,7 @@ pnpm run validate-client client-acme
 ```
 
 **Exit Codes:**
+
 - `0`: Validation passed
 - `1`: Validation failed
 
@@ -131,11 +142,13 @@ Module containing content templates and preset configurations.
 When a client is provisioned, the following content is automatically created:
 
 ### Settings Document
+
 - Site name
 - Copyright information
 - Logo placeholders (can be updated later)
 
 ### Navigation Document
+
 - Main navigation with default links:
   - Home
   - Services
@@ -144,17 +157,20 @@ When a client is provisioned, the following content is automatically created:
   - Contact
 
 ### Home Page
+
 - Hero block with welcome message
 - CTA block for contact
 - SEO metadata
 
 ### Sample Service Page (optional)
+
 - Hero block specific to the service
 - CTA block
 - SEO metadata
 - Customizable based on template preset
 
 ### Sample Location Page (optional)
+
 - Hero block for the location
 - CTA block
 - SEO metadata
@@ -173,13 +189,17 @@ You can override this by providing a custom `datasetName` in the configuration.
 The provisioning system includes comprehensive error handling:
 
 ### Automatic Rollback
+
 If provisioning fails after dataset creation, the system will automatically:
+
 1. Delete the partially created dataset
 2. Clean up any created documents
 3. Report detailed error messages
 
 ### Manual Rollback
+
 To manually delete a failed dataset:
+
 ```bash
 # Use Sanity CLI
 sanity dataset delete <dataset-name>
@@ -188,14 +208,17 @@ sanity dataset delete <dataset-name>
 ### Common Errors
 
 **"Dataset already exists"**
+
 - A dataset with this slug already exists
 - Choose a different slug or delete the existing dataset
 
 **"Token must have write permissions"**
+
 - Your SANITY_API_READ_TOKEN lacks write permissions
 - Generate a new token with appropriate permissions in Sanity dashboard
 
 **"Configuration validation failed"**
+
 - Invalid client configuration
 - Check slug format (lowercase, alphanumeric, hyphens only)
 - Verify email format
@@ -213,6 +236,7 @@ The validation script performs these checks:
 ## Development
 
 ### File Structure
+
 ```
 scripts/provisioning/
 ├── README.md                 # This file
@@ -229,6 +253,7 @@ scripts/provisioning/
 To add a new template preset:
 
 1. Add the preset to `TEMPLATE_PRESETS` in `seed-templates.ts`:
+
 ```typescript
 export const TEMPLATE_PRESETS = {
   // ... existing presets
@@ -264,6 +289,7 @@ To add additional content to seed data:
 ## Troubleshooting
 
 ### Script Won't Run
+
 ```bash
 # Ensure dependencies are installed
 cd scripts/provisioning
@@ -277,6 +303,7 @@ pnpm list tsx
 ```
 
 ### Permission Errors
+
 ```bash
 # Make scripts executable
 chmod +x scripts/provisioning/create-client.ts
@@ -284,11 +311,13 @@ chmod +x scripts/provisioning/validate-client.ts
 ```
 
 ### Dataset Creation Fails
+
 - Verify SANITY_API_READ_TOKEN has write permissions
 - Check if dataset name already exists
 - Ensure you have admin access to the project
 
 ### Validation Fails After Provisioning
+
 - Check error messages for specific issues
 - Verify all documents were created
 - Run validation manually: `pnpm run provision:validate <dataset-name>`
@@ -296,6 +325,7 @@ chmod +x scripts/provisioning/validate-client.ts
 ## Next Steps After Provisioning
 
 1. **Update Environment Variables**
+
    ```env
    NEXT_PUBLIC_SANITY_DATASET=client-yourslug
    ```
@@ -325,6 +355,7 @@ chmod +x scripts/provisioning/validate-client.ts
 ## Support
 
 For issues or questions:
+
 1. Check this README for common solutions
 2. Review error messages and logs
 3. Validate configuration and environment variables

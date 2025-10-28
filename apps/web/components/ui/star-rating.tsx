@@ -1,11 +1,11 @@
-import { Star, StarHalf } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { Star, StarHalf } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 export function StarRating({
-  size = "sm",
+  size = 'sm',
   rating,
 }: {
-  size?: "sm" | "lg";
+  size?: 'sm' | 'lg';
   rating: number;
 }) {
   const fullStars = Math.floor(rating);
@@ -19,8 +19,8 @@ export function StarRating({
             <Star
               key={i}
               className={cn(
-                "w-4 h-4 fill-yellow-400 text-yellow-400",
-                size === "lg" && "w-8 h-8"
+                'w-4 h-4 fill-yellow-400 text-yellow-400',
+                size === 'lg' && 'w-8 h-8'
               )}
             />
           );
@@ -30,8 +30,8 @@ export function StarRating({
             <StarHalf
               key={i}
               className={cn(
-                "w-4 h-4 fill-yellow-400 text-yellow-400",
-                size === "lg" && "w-8 h-8"
+                'w-4 h-4 fill-yellow-400 text-yellow-400',
+                size === 'lg' && 'w-8 h-8'
               )}
             />
           );

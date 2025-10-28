@@ -99,7 +99,7 @@ The middleware uses `dataset-config.ts` to map the hostname:
 const DATASET_MAP = {
   'buddsplumbing.com': 'production',
   'staging.buddsplumbing.com': 'staging',
-  'localhost': 'development',
+  localhost: 'development',
 };
 ```
 
@@ -180,11 +180,12 @@ const DATASET_MAP: Record<string, DatasetName> = {
   'buddsplumbing.local': 'production',
   'staging.buddsplumbing.local': 'staging',
   'client1.buddsplumbing.local': 'client1-production',
-  'localhost': 'development',
+  localhost: 'development',
 };
 ```
 
 Visit the test domains:
+
 - http://buddsplumbing.local:3000 → uses 'production' dataset
 - http://staging.buddsplumbing.local:3000 → uses 'staging' dataset
 - http://client1.buddsplumbing.local:3000 → uses 'client1-production' dataset
@@ -331,7 +332,11 @@ export async function getProductionData() {
 Edit `/apps/web/lib/dataset-config.ts`:
 
 ```typescript
-export type DatasetName = 'production' | 'staging' | 'development' | 'client1-production';
+export type DatasetName =
+  | 'production'
+  | 'staging'
+  | 'development'
+  | 'client1-production';
 
 const DATASET_MAP: Record<string, DatasetName> = {
   // ... existing mappings
@@ -383,6 +388,7 @@ curl http://client1.buddsplumbing.com
 ### Migrating Existing Server Components
 
 **Before:**
+
 ```typescript
 import { client } from '@/sanity/lib/client';
 
@@ -390,6 +396,7 @@ const data = await client.fetch(query);
 ```
 
 **After:**
+
 ```typescript
 import { getClientForRequest } from '@/sanity/lib/client';
 
@@ -400,6 +407,7 @@ const data = await client.fetch(query);
 ### Migrating Existing sanityFetch Calls
 
 **Before:**
+
 ```typescript
 import { sanityFetch } from '@/sanity/lib/live';
 
@@ -407,6 +415,7 @@ const { data } = await sanityFetch({ query });
 ```
 
 **After:**
+
 ```typescript
 import { getDefineLiveForRequest } from '@/sanity/lib/live';
 
@@ -493,6 +502,7 @@ export async function GET() {
 ### Issue: Wrong dataset is being used
 
 **Solution**: Check these in order:
+
 1. Verify hostname mapping in `dataset-config.ts`
 2. Check middleware is running (should see logs in dev)
 3. Verify headers are being set: visit `/api/debug-middleware`
@@ -501,6 +511,7 @@ export async function GET() {
 ### Issue: Headers not available
 
 **Solution**:
+
 - Ensure you're using `await headers()` (Next.js 15+ requirement)
 - Verify middleware is running on the route (check `matcher` config)
 - Check that route is not excluded in middleware config
@@ -508,6 +519,7 @@ export async function GET() {
 ### Issue: Type errors with async functions
 
 **Solution**:
+
 - All header-reading functions must be async in Next.js 15+
 - Use `await getClientForRequest()` instead of `getClientForRequest()`
 - Update function signatures to return `Promise<T>`
@@ -523,6 +535,7 @@ export async function GET() {
 ## Support
 
 For questions or issues, refer to:
+
 - [Next.js Middleware Documentation](https://nextjs.org/docs/app/building-your-application/routing/middleware)
 - [Sanity Multi-Dataset Guide](https://www.sanity.io/docs/datasets)
 - Internal documentation in `lib/dataset-routing-examples.ts`

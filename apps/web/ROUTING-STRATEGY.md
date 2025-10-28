@@ -141,6 +141,7 @@ export default async function GenericPage({
 ```
 
 This creates routes like:
+
 - `/pages/about`
 - `/pages/contact`
 - `/pages/privacy-policy`
@@ -192,5 +193,6 @@ If you previously had pages using the `[slug]` route:
 ## Questions?
 
 For questions about routing, consult:
+
 - [Next.js App Router docs](https://nextjs.org/docs/app)
 - Phase 1 requirements in `/project-rules/PHASE1-COMPLETE-PHASE2-PLAN.md`

@@ -1,6 +1,6 @@
-export type ClientStatus = "active" | "inactive" | "suspended" | "trial";
+export type ClientStatus = 'active' | 'inactive' | 'suspended' | 'trial';
 
-export type ClientPlan = "free" | "basic" | "professional" | "enterprise";
+export type ClientPlan = 'free' | 'basic' | 'professional' | 'enterprise';
 
 export interface Client {
   id: string;

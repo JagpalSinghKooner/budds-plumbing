@@ -1,5 +1,9 @@
 import { ModeToggle } from '@/components/menu-toggle';
-import { fetchSanitySettings, fetchSanityNavigation, fetchSanityServiceCategories } from '@/sanity/lib/fetch';
+import {
+  fetchSanitySettings,
+  fetchSanityNavigation,
+  fetchSanityServiceCategories,
+} from '@/sanity/lib/fetch';
 import { Navbar2 } from '@/components/header/navbar2';
 
 export default async function Header() {

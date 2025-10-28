@@ -1,13 +1,13 @@
-"use client";
-import { cn } from "@/lib/utils";
-import PortableTextRenderer from "@/components/portable-text-renderer";
-import { motion, useInView } from "motion/react";
-import { useRef } from "react";
-import { PAGE_QUERYResult, ColorVariant } from "@/sanity.types";
+'use client';
+import { cn } from '@/lib/utils';
+import PortableTextRenderer from '@/components/portable-text-renderer';
+import { motion, useInView } from 'motion/react';
+import { useRef } from 'react';
+import { PAGE_QUERYResult, ColorVariant } from '@/sanity.types';
 
-type Block = NonNullable<NonNullable<PAGE_QUERYResult>["blocks"]>[number];
-type TimelineRow = Extract<Block, { _type: "timeline-row" }>;
-type Timeline1 = NonNullable<NonNullable<TimelineRow["timelines"]>>[number];
+type Block = NonNullable<NonNullable<PAGE_QUERYResult>['blocks']>[number];
+type TimelineRow = Extract<Block, { _type: 'timeline-row' }>;
+type Timeline1 = NonNullable<NonNullable<TimelineRow['timelines']>>[number];
 
 interface Timeline1Props extends Timeline1 {
   color?: ColorVariant;
@@ -27,22 +27,22 @@ export default function Timeline1({
       <motion.div
         className="absolute w-8 h-8 rounded-full top-[3.5rem] lg:top-[3.75rem] left-[-1.1rem] border-8"
         initial={{
-          backgroundColor: "hsl(var(--background))",
+          backgroundColor: 'hsl(var(--background))',
           opacity: 0.3,
         }}
         animate={
           isInView && {
-            backgroundColor: "hsl(var(--muted-foreground))",
+            backgroundColor: 'hsl(var(--muted-foreground))',
             opacity: 1,
           }
         }
         transition={{
           duration: 1,
-          ease: "easeInOut",
+          ease: 'easeInOut',
           delay: 0.6,
         }}
       />
-      <div className={cn(color === "primary" ? "text-background" : undefined)}>
+      <div className={cn(color === 'primary' ? 'text-background' : undefined)}>
         <h3 className="flex justify-between items-center font-semibold mb-4">
           <motion.span
             initial={{ opacity: 0, y: 10 }}

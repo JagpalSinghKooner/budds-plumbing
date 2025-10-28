@@ -142,7 +142,12 @@ export default async function ServiceLocationPage({
       blocks: service.blocks,
     };
 
-    return renderPage(fallbackServiceLocation as any, siteSettings, serviceSlug, locationSlug);
+    return renderPage(
+      fallbackServiceLocation as any,
+      siteSettings,
+      serviceSlug,
+      locationSlug
+    );
   }
 
   return renderPage(serviceLocation, siteSettings, serviceSlug, locationSlug);
@@ -176,44 +181,56 @@ function renderPage(
       url: siteUrl,
     },
     serviceType: 'Plumbing Service',
-    areaServed: serviceLocation.location?.name ? [serviceLocation.location.name] : [],
+    areaServed: serviceLocation.location?.name
+      ? [serviceLocation.location.name]
+      : [],
   });
 
   const businessSchema = generateLocalBusinessSchema({
     name: siteSettings?.businessName || 'Budds Plumbing',
     description:
-      siteSettings?.meta_description ||
-      'Professional plumbing services',
+      siteSettings?.meta_description || 'Professional plumbing services',
     url: siteUrl,
     telephone: siteSettings?.phoneNumber || '',
     email: siteSettings?.email,
-    address: siteSettings?.address ? {
-      streetAddress: siteSettings.address.street || '',
-      addressLocality: siteSettings.address.city || '',
-      addressRegion: siteSettings.address.state || '',
-      postalCode: siteSettings.address.zip || '',
-      addressCountry: 'US',
-    } : {
-      streetAddress: '',
-      addressLocality: serviceLocation.location?.name || '',
-      addressRegion: '',
-      postalCode: '',
-      addressCountry: 'US',
-    },
+    address: siteSettings?.address
+      ? {
+          streetAddress: siteSettings.address.street || '',
+          addressLocality: siteSettings.address.city || '',
+          addressRegion: siteSettings.address.state || '',
+          postalCode: siteSettings.address.zip || '',
+          addressCountry: 'US',
+        }
+      : {
+          streetAddress: '',
+          addressLocality: serviceLocation.location?.name || '',
+          addressRegion: '',
+          postalCode: '',
+          addressCountry: 'US',
+        },
     openingHours: siteSettings?.businessHours,
-    areaServed: serviceLocation.location?.name ? [serviceLocation.location.name] : [],
+    areaServed: serviceLocation.location?.name
+      ? [serviceLocation.location.name]
+      : [],
   });
 
   const breadcrumbSchema = generateBreadcrumbSchema([
     { name: 'Home', url: siteUrl },
-    { name: serviceLocation.service?.name || 'Service', url: `${siteUrl}/services/${serviceSlug}` },
+    {
+      name: serviceLocation.service?.name || 'Service',
+      url: `${siteUrl}/services/${serviceSlug}`,
+    },
     {
       name: `${serviceLocation.service?.name} in ${serviceLocation.location?.name}`,
-      url: `${siteUrl}/${serviceSlug}/in/${locationSlug}`
+      url: `${siteUrl}/${serviceSlug}/in/${locationSlug}`,
     },
   ]);
 
-  const combinedSchema = combineSchemas(serviceSchema, businessSchema, breadcrumbSchema);
+  const combinedSchema = combineSchemas(
+    serviceSchema,
+    businessSchema,
+    breadcrumbSchema
+  );
 
   return (
     <>
@@ -236,7 +253,8 @@ function renderPage(
         {(!blocks || blocks.length === 0) && (
           <div className="container mx-auto px-4 py-16">
             <h1 className="text-4xl font-bold mb-4">
-              {serviceLocation.service?.name} in {serviceLocation.location?.name}
+              {serviceLocation.service?.name} in{' '}
+              {serviceLocation.location?.name}
             </h1>
             <p className="text-muted-foreground">
               Content coming soon. Please add blocks to this service-location in

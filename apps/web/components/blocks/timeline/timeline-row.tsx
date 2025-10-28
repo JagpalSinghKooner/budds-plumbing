@@ -1,11 +1,11 @@
-import SectionContainer from "@/components/ui/section-container";
-import { stegaClean } from "next-sanity";
-import Timeline1 from "@/components/blocks/timeline/timeline-1";
-import { PAGE_QUERYResult, ColorVariant } from "@/sanity.types";
+import SectionContainer from '@/components/ui/section-container';
+import { stegaClean } from 'next-sanity';
+import Timeline1 from '@/components/blocks/timeline/timeline-1';
+import { PAGE_QUERYResult, ColorVariant } from '@/sanity.types';
 
 type TimelineRow = Extract<
-  NonNullable<NonNullable<PAGE_QUERYResult>["blocks"]>[number],
-  { _type: "timeline-row" }
+  NonNullable<NonNullable<PAGE_QUERYResult>['blocks']>[number],
+  { _type: 'timeline-row' }
 >;
 
 export default function TimelineRow({

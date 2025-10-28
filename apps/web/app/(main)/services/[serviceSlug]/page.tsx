@@ -101,23 +101,26 @@ export default async function ServicePage({ params }: ServicePageProps) {
 
   const businessSchema = generateLocalBusinessSchema({
     name: siteSettings?.businessName || 'Budds Plumbing',
-    description: siteSettings?.meta_description || 'Professional plumbing services',
+    description:
+      siteSettings?.meta_description || 'Professional plumbing services',
     url: siteUrl,
     telephone: siteSettings?.phoneNumber || '',
     email: siteSettings?.email,
-    address: siteSettings?.address ? {
-      streetAddress: siteSettings.address.street || '',
-      addressLocality: siteSettings.address.city || '',
-      addressRegion: siteSettings.address.state || '',
-      postalCode: siteSettings.address.zip || '',
-      addressCountry: 'US',
-    } : {
-      streetAddress: '',
-      addressLocality: '',
-      addressRegion: '',
-      postalCode: '',
-      addressCountry: 'US',
-    },
+    address: siteSettings?.address
+      ? {
+          streetAddress: siteSettings.address.street || '',
+          addressLocality: siteSettings.address.city || '',
+          addressRegion: siteSettings.address.state || '',
+          postalCode: siteSettings.address.zip || '',
+          addressCountry: 'US',
+        }
+      : {
+          streetAddress: '',
+          addressLocality: '',
+          addressRegion: '',
+          postalCode: '',
+          addressCountry: 'US',
+        },
     openingHours: siteSettings?.businessHours,
   });
 

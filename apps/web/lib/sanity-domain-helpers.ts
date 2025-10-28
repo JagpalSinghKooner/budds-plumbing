@@ -5,10 +5,10 @@
  * Provides backward compatibility with the existing dataset-config system
  */
 
-import { createClient } from "next-sanity";
-import { apiVersion, useCdn } from "../sanity/env";
-import { getDomainConfigFromResponse } from "./domain-middleware";
-import type { DomainContext } from "./domain-types";
+import { createClient } from 'next-sanity';
+import { apiVersion, useCdn } from '../sanity/env';
+import { getDomainConfigFromResponse } from './domain-middleware';
+import type { DomainContext } from './domain-types';
 
 /**
  * Create a Sanity client configured for a specific domain context
@@ -21,18 +21,19 @@ import type { DomainContext } from "./domain-types";
  * const client = await createSanityClientForDomain();
  */
 export async function createSanityClientForDomain() {
-  const { headers } = await import("next/headers");
+  const { headers } = await import('next/headers');
   const headersList = await headers();
   const context = getDomainConfigFromResponse(headersList);
 
   return createClient({
-    projectId: context.projectId || process.env.NEXT_PUBLIC_SANITY_PROJECT_ID || "",
+    projectId:
+      context.projectId || process.env.NEXT_PUBLIC_SANITY_PROJECT_ID || '',
     dataset: context.dataset,
     apiVersion,
     useCdn,
-    perspective: "published" as const,
+    perspective: 'published' as const,
     stega: {
-      studioUrl: process.env.NEXT_PUBLIC_SITE_URL + "/studio",
+      studioUrl: process.env.NEXT_PUBLIC_SITE_URL + '/studio',
     },
   });
 }
@@ -48,7 +49,7 @@ export async function createSanityClientForDomain() {
  * console.log(context.clientId, context.dataset);
  */
 export async function getDomainContext(): Promise<DomainContext> {
-  const { headers } = await import("next/headers");
+  const { headers } = await import('next/headers');
   const headersList = await headers();
   return getDomainConfigFromResponse(headersList);
 }
@@ -82,13 +83,14 @@ export async function getDatasetFromDomain(): Promise<string> {
  */
 export function createSanityClientWithContext(context: DomainContext) {
   return createClient({
-    projectId: context.projectId || process.env.NEXT_PUBLIC_SANITY_PROJECT_ID || "",
+    projectId:
+      context.projectId || process.env.NEXT_PUBLIC_SANITY_PROJECT_ID || '',
     dataset: context.dataset,
     apiVersion,
     useCdn,
-    perspective: "published" as const,
+    perspective: 'published' as const,
     stega: {
-      studioUrl: process.env.NEXT_PUBLIC_SITE_URL + "/studio",
+      studioUrl: process.env.NEXT_PUBLIC_SITE_URL + '/studio',
     },
   });
 }

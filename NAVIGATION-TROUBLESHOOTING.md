@@ -13,12 +13,14 @@ If your navigation links are showing as `#` instead of proper URLs, follow this 
 Visit: **http://localhost:3000/debug-nav**
 
 This page shows:
+
 - Raw navigation data from Sanity
 - Resolved links for each menu item
 - Internal link types and slugs
 - Sub-links analysis
 
 **Look for:**
+
 - `"resolvedLink": "#"` - This is the problem
 - `"internalLink": null` - Link reference is missing
 - `"slug": { "current": null }` - Document has no slug
@@ -129,6 +131,7 @@ The page you're linking to doesn't exist in Sanity yet!
 ### Fix Locations Link
 
 Same process:
+
 1. Create page with slug `locations`
 2. Link it in Navigation
 3. Verify
@@ -240,6 +243,7 @@ If you want to test quickly, you can temporarily hardcode links in the navbar:
 **File:** `apps/web/components/header/navbar2.tsx`
 
 Find this line (around line 66-77):
+
 ```typescript
 const menu: MenuItem[] =
   navigation[0]?.links?.map((link) => ({
@@ -248,6 +252,7 @@ const menu: MenuItem[] =
 ```
 
 **Temporary fix:** Change to:
+
 ```typescript
 const menu: MenuItem[] =
   navigation[0]?.links?.map((link) => {
@@ -287,6 +292,7 @@ After fixing, debug page should show:
 ```
 
 And your navbar should have clickable links that go to:
+
 - `/services` ✅
 - `/locations` ✅
 - `/about` ✅
@@ -309,6 +315,7 @@ The navigation query uses a `select()` function with fallback logic:
 ```
 
 If `internalLink` is:
+
 - `null` → Falls back to `#`
 - Missing `slug.current` → Falls back to `#`
 - Wrong type → Falls back to `#`
@@ -316,6 +323,7 @@ If `internalLink` is:
 ### The Fix
 
 Ensure the query can find:
+
 1. `internalLink._ref` exists (reference is set)
 2. `internalLink->slug.current` is defined (document has slug)
 3. Document type matches one of the conditions

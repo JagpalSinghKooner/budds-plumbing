@@ -1,12 +1,12 @@
-import { Suspense } from "react";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { ClientList } from "@/components/admin/ClientList";
-import { listClients } from "@/app/actions/admin/list-clients";
+import { Suspense } from 'react';
+import Link from 'next/link';
+import { Button } from '@/components/ui/button';
+import { ClientList } from '@/components/admin/ClientList';
+import { listClients } from '@/app/actions/admin/list-clients';
 
 export const metadata = {
-  title: "Clients",
-  description: "Manage your clients",
+  title: 'Clients',
+  description: 'Manage your clients',
 };
 
 function ClientListSkeleton() {

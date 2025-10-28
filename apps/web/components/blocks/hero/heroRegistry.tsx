@@ -2,10 +2,7 @@ import React from 'react';
 import Hero1 from './hero-1';
 import Hero2 from './hero-2';
 import Hero3 from './Hero3';
-import {
-  Hero1 as Hero1Type,
-  Hero2 as Hero2Type,
-} from '@/sanity.types';
+import { Hero1 as Hero1Type, Hero2 as Hero2Type } from '@/sanity.types';
 
 // Type for hero variants
 export type HeroVariant = 'hero-1' | 'hero-2' | 'hero-3';

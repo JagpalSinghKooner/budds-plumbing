@@ -1,6 +1,6 @@
-import { redirect } from "next/navigation";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
+import { redirect } from 'next/navigation';
+import Link from 'next/link';
+import { Button } from '@/components/ui/button';
 
 /**
  * Admin Layout
@@ -45,11 +45,11 @@ async function checkAuth() {
   const isAdmin = true; // Replace with role check from Clerk session claims
 
   if (!isAuthenticated) {
-    redirect("/sign-in");
+    redirect('/sign-in');
   }
 
   if (!isAdmin) {
-    redirect("/unauthorized");
+    redirect('/unauthorized');
   }
 
   return { isAuthenticated, isAdmin };
@@ -93,9 +93,7 @@ export default async function AdminLayout({
           </div>
         </div>
       </header>
-      <main className="container mx-auto px-8 py-8">
-        {children}
-      </main>
+      <main className="container mx-auto px-8 py-8">{children}</main>
     </div>
   );
 }

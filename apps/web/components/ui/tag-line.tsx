@@ -1,12 +1,12 @@
-import { cn } from "@/lib/utils";
+import { cn } from '@/lib/utils';
 
 export default function TagLine({
   title,
-  element = "div",
+  element = 'div',
   className,
 }: {
   title: string;
-  element?: "div" | "h1" | "h2" | "h3";
+  element?: 'div' | 'h1' | 'h2' | 'h3';
   className?: string;
   large?: boolean;
 }) {
@@ -15,7 +15,7 @@ export default function TagLine({
   return (
     <TagElement
       className={cn(
-        "inline-block leading-[0] text-base font-semibold",
+        'inline-block leading-[0] text-base font-semibold',
         className
       )}
     >

@@ -1,15 +1,15 @@
-"use client";
-import SectionContainer from "@/components/ui/section-container";
-import { stegaClean } from "next-sanity";
-import Image from "next/image";
-import { urlFor } from "@/sanity/lib/image";
-import { Fragment } from "react";
-import { motion } from "motion/react";
-import { PAGE_QUERYResult } from "@/sanity.types";
+'use client';
+import SectionContainer from '@/components/ui/section-container';
+import { stegaClean } from 'next-sanity';
+import Image from 'next/image';
+import { urlFor } from '@/sanity/lib/image';
+import { Fragment } from 'react';
+import { motion } from 'motion/react';
+import { PAGE_QUERYResult } from '@/sanity.types';
 
 type LogoCloud1Props = Extract<
-  NonNullable<NonNullable<PAGE_QUERYResult>["blocks"]>[number],
-  { _type: "logo-cloud-1" }
+  NonNullable<NonNullable<PAGE_QUERYResult>['blocks']>[number],
+  { _type: 'logo-cloud-1' }
 >;
 
 export default function LogoCloud1({
@@ -35,11 +35,11 @@ export default function LogoCloud1({
         <motion.div
           transition={{
             duration: 20,
-            ease: "linear",
+            ease: 'linear',
             repeat: Infinity,
           }}
           animate={{
-            x: ["0%", "-50%"],
+            x: ['0%', '-50%'],
           }}
           className="flex w-max gap-24 pr-24"
         >
@@ -52,15 +52,15 @@ export default function LogoCloud1({
                 >
                   <Image
                     src={urlFor(image).url()}
-                    alt={image.alt || ""}
+                    alt={image.alt || ''}
                     priority={arrayIndex === 0 && index < 3}
                     placeholder={
                       image?.asset?.metadata?.lqip &&
-                      image?.asset?.mimeType !== "image/svg+xml"
-                        ? "blur"
+                      image?.asset?.mimeType !== 'image/svg+xml'
+                        ? 'blur'
                         : undefined
                     }
-                    blurDataURL={image?.asset?.metadata?.lqip || ""}
+                    blurDataURL={image?.asset?.metadata?.lqip || ''}
                     width={image.asset?.metadata?.dimensions?.width || 220}
                     height={image?.asset?.metadata?.dimensions?.height || 90}
                   />

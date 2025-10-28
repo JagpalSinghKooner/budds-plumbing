@@ -1,8 +1,6 @@
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
-import {
-  domainMiddleware,
-} from '@/lib/domain-middleware';
+import { domainMiddleware } from '@/lib/domain-middleware';
 
 /**
  * Next.js Middleware

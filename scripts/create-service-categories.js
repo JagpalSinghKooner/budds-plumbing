@@ -18,7 +18,8 @@ const categories = [
       _type: 'slug',
       current: 'hvac-heating',
     },
-    description: 'Heating, ventilation, air conditioning, and air quality services',
+    description:
+      'Heating, ventilation, air conditioning, and air quality services',
   },
   {
     _id: 'service-category-plumbing',

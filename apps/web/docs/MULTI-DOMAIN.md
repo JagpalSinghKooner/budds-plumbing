@@ -17,6 +17,7 @@ Request → Next.js Middleware → Domain Validation → Domain Config Lookup �
 ```
 
 Each request is processed through the middleware which:
+
 1. Extracts the domain from request headers
 2. Validates the domain against configured mappings
 3. Applies security headers (HSTS, CSP, etc.)
@@ -33,13 +34,13 @@ Domains are configured in `/apps/web/lib/domain-mapping.ts` in the `DOMAIN_MAPPI
 ```typescript
 export const DOMAIN_MAPPINGS: DomainConfig[] = [
   {
-    domain: "buddsplumbing.com",
+    domain: 'buddsplumbing.com',
     projectId: DEFAULT_PROJECT_ID,
-    dataset: "production",
-    clientId: "budds-main",
+    dataset: 'production',
+    clientId: 'budds-main',
     enabled: true,
     branding: {
-      name: "Budds Plumbing",
+      name: 'Budds Plumbing',
     },
   },
   // Add more domains here...
@@ -183,6 +184,7 @@ Edit your hosts file to map domains to localhost:
 **Windows**: `C:\Windows\System32\drivers\etc\hosts`
 
 Add entries:
+
 ```
 127.0.0.1 client1.buddsplumbing.local
 127.0.0.1 client2.buddsplumbing.local
@@ -214,6 +216,7 @@ NEXT_PUBLIC_SANITY_DATASET=client1-development
 ```
 
 Then run:
+
 ```bash
 npm run dev
 ```
@@ -314,6 +317,7 @@ The middleware applies different caching strategies based on content type:
 **Problem**: Request returns 404 "Domain not found"
 
 **Solution**:
+
 1. Check that domain is in `DOMAIN_MAPPINGS`
 2. Verify `enabled: true` is set
 3. Check domain spelling (case-sensitive)
@@ -324,6 +328,7 @@ The middleware applies different caching strategies based on content type:
 **Problem**: Page keeps redirecting
 
 **Solution**:
+
 1. Check that domain matches exactly in `DOMAIN_MAPPINGS`
 2. Verify redirect logic in `validateDomain` function
 3. Check that `shouldRedirect` is not always true
@@ -333,6 +338,7 @@ The middleware applies different caching strategies based on content type:
 **Problem**: Application shows wrong content
 
 **Solution**:
+
 1. Check `x-dataset` header in browser DevTools
 2. Verify domain mapping configuration
 3. Check Sanity Studio has data in the correct dataset
@@ -343,6 +349,7 @@ The middleware applies different caching strategies based on content type:
 **Problem**: Cannot access subdomain locally
 
 **Solution**:
+
 1. Verify hosts file entry is correct
 2. Add `.local` domains to `DOMAIN_MAPPINGS`
 3. Restart browser after hosts file change
@@ -353,6 +360,7 @@ The middleware applies different caching strategies based on content type:
 ### Edge Middleware
 
 The middleware runs at the edge on Vercel, providing:
+
 - Low latency domain resolution
 - Global distribution
 - Automatic failover
@@ -404,6 +412,7 @@ NEXT_PUBLIC_CLIENT_ID=client1
 ## Support
 
 For issues or questions:
+
 1. Check this documentation
 2. Review the code in `lib/domain-mapping.ts` and `lib/domain-middleware.ts`
 3. Check Vercel deployment logs

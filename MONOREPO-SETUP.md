@@ -22,6 +22,7 @@ budds-plumbing-2/
 ## Workspaces
 
 ### apps/web
+
 - **Name**: `@budds-plumbing/web`
 - **Purpose**: Next.js 15 frontend application
 - **Dependencies**: React 19, Next.js 15.5.4, Sanity integration
@@ -33,6 +34,7 @@ budds-plumbing-2/
   - `typecheck`: Run TypeScript type checking
 
 ### apps/studio
+
 - **Name**: `@budds-plumbing/studio`
 - **Purpose**: Sanity Studio CMS
 - **Dependencies**: Sanity 4.10.0, React 19
@@ -42,12 +44,14 @@ budds-plumbing-2/
   - `typegen`: Generate TypeScript types from Sanity schemas
 
 ### packages/ui
+
 - **Name**: `@budds-plumbing/ui`
 - **Purpose**: Shared UI components library
 - **Dependencies**: Radix UI, Lucide React, Tailwind utilities
 - **Type**: Component library (no build step required)
 
 ### packages/schemas
+
 - **Name**: `@budds-plumbing/schemas`
 - **Purpose**: Sanity schema definitions
 - **Dependencies**: Sanity schema tools
@@ -58,6 +62,7 @@ budds-plumbing-2/
 This project uses **pnpm** (v10.19.0) for package management with workspace support.
 
 ### Why pnpm?
+
 - Efficient disk space usage through content-addressable storage
 - Fast installation times
 - Strict dependency resolution
@@ -68,6 +73,7 @@ This project uses **pnpm** (v10.19.0) for package management with workspace supp
 This project uses **Turborepo** (v2.5.8) for build orchestration.
 
 ### Benefits:
+
 - Intelligent build caching
 - Parallel task execution
 - Dependency-aware task scheduling
@@ -108,6 +114,7 @@ pnpm clean              # Clean all build artifacts and node_modules
 ## Dependencies
 
 ### Workspace Dependencies
+
 Packages can depend on each other using the `workspace:*` protocol:
 
 ```json
@@ -120,6 +127,7 @@ Packages can depend on each other using the `workspace:*` protocol:
 ```
 
 This ensures:
+
 - Local packages are linked correctly
 - Version consistency across the monorepo
 - Proper build order is maintained by Turborepo
@@ -127,11 +135,13 @@ This ensures:
 ## Getting Started
 
 1. **Install dependencies**:
+
    ```bash
    pnpm install
    ```
 
 2. **Start development**:
+
    ```bash
    pnpm dev
    ```

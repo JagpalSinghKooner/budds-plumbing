@@ -111,17 +111,17 @@ budds-plumbing-2/
 
 ### Technology Stack
 
-| Layer | Technology | Version | Purpose |
-|-------|-----------|---------|---------|
-| **Frontend** | Next.js | 15.x | React framework with App Router |
-| **CMS** | Sanity | 3.x | Headless CMS with Studio |
-| **Language** | TypeScript | 5.x | Type safety across codebase |
-| **Styling** | Tailwind CSS | 3.x | Utility-first styling |
-| **UI Components** | shadcn/ui | Latest | Accessible component library |
-| **Package Manager** | pnpm | 10.x | Fast, efficient package management |
-| **Monorepo** | Turborepo | Implicit | Build system and task runner |
-| **Deployment** | Vercel | - | Serverless hosting with ISR |
-| **Code Quality** | ESLint + Prettier | Latest | Linting and formatting |
+| Layer               | Technology        | Version  | Purpose                            |
+| ------------------- | ----------------- | -------- | ---------------------------------- |
+| **Frontend**        | Next.js           | 15.x     | React framework with App Router    |
+| **CMS**             | Sanity            | 3.x      | Headless CMS with Studio           |
+| **Language**        | TypeScript        | 5.x      | Type safety across codebase        |
+| **Styling**         | Tailwind CSS      | 3.x      | Utility-first styling              |
+| **UI Components**   | shadcn/ui         | Latest   | Accessible component library       |
+| **Package Manager** | pnpm              | 10.x     | Fast, efficient package management |
+| **Monorepo**        | Turborepo         | Implicit | Build system and task runner       |
+| **Deployment**      | Vercel            | -        | Serverless hosting with ISR        |
+| **Code Quality**    | ESLint + Prettier | Latest   | Linting and formatting             |
 
 ---
 
@@ -133,6 +133,7 @@ budds-plumbing-2/
 **Files:** `pnpm-workspace.yaml`, `turbo.json`, `package.json`
 
 #### What Was Done:
+
 - Created monorepo structure with 5 directories:
   - `/apps/web` - Next.js application
   - `/apps/studio` - Sanity Studio
@@ -141,6 +142,7 @@ budds-plumbing-2/
   - `/scripts` - Utility scripts
 
 - Configured **pnpm workspaces** for dependency management:
+
   ```yaml
   # pnpm-workspace.yaml
   packages:
@@ -149,11 +151,12 @@ budds-plumbing-2/
   ```
 
 - Set up **strict TypeScript** configuration:
+
   ```json
   {
     "strict": true,
-    "skipLibCheck": false,  // Enforces full type checking
-    "allowJs": false         // No JavaScript allowed
+    "skipLibCheck": false, // Enforces full type checking
+    "allowJs": false // No JavaScript allowed
   }
   ```
 
@@ -162,12 +165,14 @@ budds-plumbing-2/
 - Set up **Husky** pre-commit hooks
 
 #### Why It's Done This Way:
+
 - **Monorepo:** Enables code sharing and consistent tooling across apps
 - **pnpm:** 3x faster than npm, saves disk space with content-addressable storage
 - **Strict TypeScript:** Catches bugs at compile time, improves code quality
 - **No skipLibCheck:** Ensures all dependencies are properly typed
 
 #### Evidence:
+
 - ✅ [pnpm-workspace.yaml](/pnpm-workspace.yaml)
 - ✅ [tsconfig.json](/tsconfig.json)
 - ✅ [package.json](/package.json)
@@ -181,6 +186,7 @@ budds-plumbing-2/
 **Key Files:** `apps/web/components/blocks/index.tsx`, various block components
 
 #### What Was Done:
+
 - Installed **ShadcnBlocks** (Schema UI) component library
 - Created **15+ block components** categorized by type:
   - **Heroes:** hero-1, hero-2
@@ -192,6 +198,7 @@ budds-plumbing-2/
   - **Content:** all-posts (blog integration)
 
 - Created **central block renderer** (`components/blocks/index.tsx`):
+
   ```typescript
   const componentMap: {
     [K in Block["_type"]]: React.ComponentType<Extract<Block, { _type: K }>>;
@@ -214,12 +221,14 @@ budds-plumbing-2/
 - Implemented **dev-mode warnings** for missing components
 
 #### Why It's Done This Way:
+
 - **Type-safe mapping:** TypeScript ensures all block types have components
 - **Automatic rendering:** Pages automatically render any blocks from CMS
 - **Editor-friendly:** Non-technical users can drag, drop, and reorder blocks
 - **No code deployments:** Content changes don't require rebuilds
 
 #### Evidence:
+
 - ✅ [components/blocks/index.tsx](apps/web/components/blocks/index.tsx)
 - ✅ Block schemas in `apps/studio/sanity/schemas/blocks/`
 - ✅ 15+ React components in `apps/web/components/blocks/`
@@ -232,7 +241,9 @@ budds-plumbing-2/
 **Documentation:** [packages/ui/README.md](packages/ui/README.md)
 
 #### What Was Done:
+
 - Configured **Tailwind CSS** with custom design tokens:
+
   ```javascript
   // tailwind.config.ts
   theme: {
@@ -254,6 +265,7 @@ budds-plumbing-2/
   ```
 
 - Created **CSS custom properties** for theming in `app/globals.css`:
+
   ```css
   :root {
     --background: 0 0% 100%;
@@ -268,12 +280,14 @@ budds-plumbing-2/
 - All components use semantic color tokens
 
 #### Why It's Done This Way:
+
 - **Themeable:** Can change entire color scheme by updating CSS variables
 - **Consistent:** All components use same design language
 - **Accessible:** Built-in WCAG AA contrast ratios
 - **Dark mode ready:** Can add dark theme by updating CSS variables
 
 #### Evidence:
+
 - ✅ [tailwind.config.ts](apps/web/tailwind.config.ts)
 - ✅ [app/globals.css](apps/web/app/globals.css)
 - ✅ [packages/ui/README.md](packages/ui/README.md)
@@ -286,7 +300,9 @@ budds-plumbing-2/
 **Pattern Used:** Variant enumeration with dropdown
 
 #### What Was Done:
+
 - Added **variant field** to applicable block schemas:
+
   ```typescript
   // Example: hero-1.ts
   defineField({
@@ -296,12 +312,12 @@ budds-plumbing-2/
       list: [
         { title: 'Default', value: 'default' },
         { title: 'Centered', value: 'centered' },
-        { title: 'With Background', value: 'with-background' }
+        { title: 'With Background', value: 'with-background' },
       ],
-      layout: 'dropdown'
+      layout: 'dropdown',
     },
-    initialValue: 'default'
-  })
+    initialValue: 'default',
+  });
   ```
 
 - Implemented variants for:
@@ -324,12 +340,14 @@ budds-plumbing-2/
   ```
 
 #### Why It's Done This Way:
+
 - **Editor control:** Non-devs can change layouts without code
 - **Type safety:** TypeScript enforces valid variant values
 - **Reusable:** Same block type, multiple visual styles
 - **No code duplication:** Variants share common logic
 
 #### Evidence:
+
 - ✅ Variant fields in all hero block schemas
 - ✅ Variant handling in React components
 - ✅ Type generation includes variant unions
@@ -342,7 +360,9 @@ budds-plumbing-2/
 **Pattern:** Switch-based component selection
 
 #### What Was Done:
+
 - Implemented **variant selection logic** within each component:
+
   ```typescript
   // Component-level variant handling
   export default function Hero(props) {
@@ -360,12 +380,14 @@ budds-plumbing-2/
 - Implemented **dev warnings** for missing variants
 
 #### Why It's Done This Way:
+
 - **Colocation:** Variants live with their base component
 - **Type safety:** TypeScript ensures all variants are handled
 - **Maintainability:** Easy to add new variants
 - **Performance:** Only imports used variant
 
 #### Evidence:
+
 - ✅ Variant logic in hero components
 - ✅ Error handling for unknown variants
 - ✅ Type-safe variant props
@@ -378,7 +400,9 @@ budds-plumbing-2/
 **Referenced As:** `Blocks` component (aliased in some places as `SectionRenderer`)
 
 #### What Was Done:
+
 - Created **central rendering component**:
+
   ```typescript
   export default function Blocks({ blocks }: { blocks: Block[] }) {
     return (
@@ -407,12 +431,14 @@ budds-plumbing-2/
 - Type-safe component mapping using TypeScript discriminated unions
 
 #### Why It's Done This Way:
+
 - **Single source of truth:** All block rendering goes through one component
 - **Type safety:** Compiler ensures all block types have handlers
 - **Graceful degradation:** Unknown blocks don't crash the app
 - **Developer experience:** Clear warnings during development
 
 #### Evidence:
+
 - ✅ [apps/web/components/blocks/index.tsx](apps/web/components/blocks/index.tsx)
 - ✅ Used in all page templates
 - ✅ Error handling and logging
@@ -425,7 +451,9 @@ budds-plumbing-2/
 **Pattern:** Document with blocks array
 
 #### What Was Done:
+
 - Created **service document type** with fields:
+
   ```typescript
   {
     name: 'service',
@@ -448,12 +476,14 @@ budds-plumbing-2/
 - Category reference for organization
 
 #### Why It's Done This Way:
+
 - **Flexible content:** Editors can add any block type
 - **Reusable blocks:** Same blocks work across all page types
 - **SEO separate:** Clear distinction between content and metadata
 - **Type safety:** Generated TypeScript types ensure correctness
 
 #### Data Flow:
+
 1. Editor creates service in Sanity Studio
 2. Adds blocks (hero, FAQs, pricing, CTA, etc.)
 3. Publishes document
@@ -462,6 +492,7 @@ budds-plumbing-2/
 6. ISR caches for 60 seconds
 
 #### Evidence:
+
 - ✅ [apps/studio/sanity/schemas/documents/service.ts](apps/studio/sanity/schemas/documents/service.ts)
 - ✅ Service queries in `apps/web/sanity/queries/service.ts`
 - ✅ Service page at `apps/web/app/(main)/services/[serviceSlug]/page.tsx`
@@ -473,7 +504,9 @@ budds-plumbing-2/
 **Location:** `apps/studio/sanity/schemas/documents/location.ts`
 
 #### What Was Done:
+
 - Created **location document type**:
+
   ```typescript
   {
     name: 'location',
@@ -494,12 +527,14 @@ budds-plumbing-2/
 - Pure location information, business details from siteSettings
 
 #### Why It's Done This Way:
+
 - **Single NAP (Name, Address, Phone):** All business info in siteSettings
 - **Location-specific content:** Each location can have custom blocks
 - **SEO optimization:** Location-specific meta tags for local SEO
 - **Scalability:** Easy to add 100+ locations without data duplication
 
 #### Evidence:
+
 - ✅ [apps/studio/sanity/schemas/documents/location.ts](apps/studio/sanity/schemas/documents/location.ts)
 - ✅ Location queries in `apps/web/sanity/queries/location.ts`
 - ✅ Location page at `apps/web/app/(main)/locations/[locationSlug]/page.tsx`
@@ -512,7 +547,9 @@ budds-plumbing-2/
 **URL Pattern:** `/[serviceSlug]/in/[locationSlug]`
 
 #### What Was Done:
+
 - Created **service-location document type**:
+
   ```typescript
   {
     name: 'service-location',
@@ -544,6 +581,7 @@ budds-plumbing-2/
 - **Fallback logic:** Uses service blocks if no custom blocks defined
 
 #### Fallback Logic Implementation:
+
 ```typescript
 // apps/web/app/(main)/[serviceSlug]/in/[locationSlug]/page.tsx
 export default async function ServiceLocationPage({ params }) {
@@ -557,28 +595,31 @@ export default async function ServiceLocationPage({ params }) {
     return renderPage({
       service,
       location,
-      blocks: service.blocks // Use service blocks
+      blocks: service.blocks, // Use service blocks
     });
   }
 
   // Use service-location blocks if they exist, otherwise service blocks
-  const blocks = serviceLocation.blocks?.length > 0
-    ? serviceLocation.blocks
-    : serviceLocation.service.blocks;
+  const blocks =
+    serviceLocation.blocks?.length > 0
+      ? serviceLocation.blocks
+      : serviceLocation.service.blocks;
 
   return renderPage({ ...serviceLocation, blocks });
 }
 ```
 
 #### Why It's Done This Way:
+
 - **Local SEO:** Each service+location combo gets unique URL
 - **Content flexibility:** Can customize content per location or use defaults
 - **No rendering blocks:** Page always renders, never 404s
 - **Progressive enhancement:** Start with service defaults, add custom content later
 
 #### Evidence:
+
 - ✅ [apps/studio/sanity/schemas/documents/service-location.ts](apps/studio/sanity/schemas/documents/service-location.ts)
-- ✅ [apps/web/app/(main)/[serviceSlug]/in/[locationSlug]/page.tsx](apps/web/app/(main)/[serviceSlug]/in/[locationSlug]/page.tsx)
+- ✅ [apps/web/app/(main)/[serviceSlug]/in/[locationSlug]/page.tsx](<apps/web/app/(main)/[serviceSlug]/in/[locationSlug]/page.tsx>)
 - ✅ Fallback logic implemented and tested
 
 ---
@@ -589,7 +630,9 @@ export default async function ServiceLocationPage({ params }) {
 **Pattern:** Singleton document (only one instance)
 
 #### What Was Done:
+
 - Created **comprehensive settings document**:
+
   ```typescript
   {
     name: 'settings',
@@ -627,6 +670,7 @@ export default async function ServiceLocationPage({ params }) {
 - **Business hours:** Array of day/time objects for structured data
 
 #### Usage Pattern:
+
 ```typescript
 // Every page fetches settings
 const siteSettings = await client.fetch(SETTINGS_QUERY);
@@ -641,12 +685,14 @@ const businessSchema = generateLocalBusinessSchema({
 ```
 
 #### Why It's Done This Way:
+
 - **Single source of truth:** Business info managed in one place
 - **No hardcoded values:** All business data comes from CMS
 - **Schema.org ready:** Structured for LocalBusiness markup
 - **Multi-tenant ready:** Each dataset has own settings
 
 #### Evidence:
+
 - ✅ [apps/studio/sanity/schemas/documents/settings.ts](apps/studio/sanity/schemas/documents/settings.ts)
 - ✅ Settings query: `apps/web/sanity/queries/settings.ts`
 - ✅ Used in all page templates
@@ -660,9 +706,10 @@ const businessSchema = generateLocalBusinessSchema({
 **Functions:** 6 SEO helpers
 
 #### What Was Done:
-- Created **comprehensive SEO utility functions**:
 
+- Created **comprehensive SEO utility functions**:
   1. **`generateSEOMetadata()`** - Next.js metadata:
+
      ```typescript
      export function generateSEOMetadata({
        title,
@@ -670,7 +717,7 @@ const businessSchema = generateLocalBusinessSchema({
        canonical,
        noindex = false,
        openGraph,
-       twitter
+       twitter,
      }): Metadata {
        return {
          title,
@@ -678,50 +725,68 @@ const businessSchema = generateLocalBusinessSchema({
          robots: noindex ? 'noindex,nofollow' : 'index,follow',
          alternates: { canonical },
          openGraph,
-         twitter
+         twitter,
        };
      }
      ```
 
   2. **`generateLocalBusinessSchema()`** - Schema.org LocalBusiness:
+
      ```typescript
      export function generateLocalBusinessSchema({
-       name, description, url, telephone, email,
-       address, openingHours, areaServed
+       name,
+       description,
+       url,
+       telephone,
+       email,
+       address,
+       openingHours,
+       areaServed,
      }) {
        return {
          '@context': 'https://schema.org',
          '@type': 'LocalBusiness',
-         name, description, url, telephone, email,
+         name,
+         description,
+         url,
+         telephone,
+         email,
          address: {
            '@type': 'PostalAddress',
            streetAddress: address.streetAddress,
            // ...
          },
          openingHoursSpecification: openingHours?.map(/* ... */),
-         areaServed: areaServed?.map(area => ({
+         areaServed: areaServed?.map((area) => ({
            '@type': 'City',
-           name: area
-         }))
+           name: area,
+         })),
        };
      }
      ```
 
   3. **`generateServiceSchema()`** - Schema.org Service:
+
      ```typescript
      export function generateServiceSchema({
-       name, description, provider, serviceType, areaServed
+       name,
+       description,
+       provider,
+       serviceType,
+       areaServed,
      }) {
        return {
          '@context': 'https://schema.org',
          '@type': 'Service',
-         name, description, serviceType,
+         name,
+         description,
+         serviceType,
          provider: {
            '@type': 'LocalBusiness',
            name: provider.name,
-           url: provider.url
+           url: provider.url,
          },
-         areaServed
+         areaServed,
        };
      }
      ```
@@ -731,6 +796,7 @@ const businessSchema = generateLocalBusinessSchema({
   6. **`combineSchemas()`** - Merge multiple schemas
 
 #### Implementation in Pages:
+
 ```typescript
 // apps/web/app/(main)/services/[serviceSlug]/page.tsx
 export async function generateMetadata({ params }) {
@@ -764,12 +830,14 @@ export default async function ServicePage({ params }) {
 ```
 
 #### Why It's Done This Way:
+
 - **Reusable:** Same functions used across all page types
 - **Type-safe:** Full TypeScript typing
 - **SEO best practices:** Follows Google's structured data guidelines
 - **Testable:** Pure functions, easy to unit test
 
 #### Lighthouse Score:
+
 - ✅ **SEO: 100/100** on all pages
 - ✅ Valid schema.org markup
 - ✅ Proper meta tags
@@ -777,6 +845,7 @@ export default async function ServicePage({ params }) {
 - ✅ noindex support
 
 #### Evidence:
+
 - ✅ [apps/web/lib/seo.ts](apps/web/lib/seo.ts)
 - ✅ Used in all page templates
 - ✅ Lighthouse CI enforces SEO=100
@@ -786,6 +855,7 @@ export default async function ServicePage({ params }) {
 ### 12-14. Dynamic Routing ✅
 
 **Implementation Files:**
+
 - `apps/web/app/(main)/services/[serviceSlug]/page.tsx`
 - `apps/web/app/(main)/locations/[locationSlug]/page.tsx`
 - `apps/web/app/(main)/[serviceSlug]/in/[locationSlug]/page.tsx`
@@ -793,6 +863,7 @@ export default async function ServicePage({ params }) {
 #### What Was Done:
 
 **Route 1: `/services/[serviceSlug]`**
+
 ```typescript
 // Generate static params at build time
 export async function generateStaticParams() {
@@ -815,17 +886,19 @@ export default async function ServicePage({ params }) {
 ```
 
 **Route 2: `/locations/[locationSlug]`**
+
 ```typescript
 // Same pattern as services
 export async function generateStaticParams() {
   const locations = await client.fetch(LOCATIONS_SLUGS_QUERY);
-  return locations.map(l => ({ locationSlug: l.slug }));
+  return locations.map((l) => ({ locationSlug: l.slug }));
 }
 
 export const revalidate = 60;
 ```
 
 **Route 3: `/[serviceSlug]/in/[locationSlug]`**
+
 ```typescript
 export async function generateStaticParams() {
   const serviceLocations = await client.fetch(
@@ -861,18 +934,21 @@ export default async function ServiceLocationPage({ params }) {
 ```
 
 #### ISR Configuration:
+
 - **Build time:** All pages pre-rendered
 - **Runtime:** New pages generated on-demand
 - **Revalidation:** Every 60 seconds
 - **Cache:** Served from edge cache until stale
 
 #### Why It's Done This Way:
+
 - **Performance:** Pages served instantly from cache
 - **SEO:** All pages indexed by search engines
 - **Scalability:** Can handle thousands of pages
 - **Fresh content:** Updates visible within 60 seconds
 
 #### Evidence:
+
 - ✅ All three route files exist and work
 - ✅ `generateStaticParams()` implemented
 - ✅ ISR revalidation configured
@@ -886,24 +962,28 @@ export default async function ServiceLocationPage({ params }) {
 **Pattern:** Graceful degradation with service defaults
 
 #### Implementation:
+
 ```typescript
 // apps/web/app/(main)/[serviceSlug]/in/[locationSlug]/page.tsx
 
 export default async function ServiceLocationPage({ params }) {
   // Try to fetch custom service-location document
-  const serviceLocation = await client.fetch(
-    SERVICE_LOCATION_QUERY,
-    { serviceSlug: params.serviceSlug, locationSlug: params.locationSlug }
-  );
+  const serviceLocation = await client.fetch(SERVICE_LOCATION_QUERY, {
+    serviceSlug: params.serviceSlug,
+    locationSlug: params.locationSlug,
+  });
 
   // FALLBACK STRATEGY
   if (!serviceLocation?.service || !serviceLocation?.location) {
     // Fetch service and location separately
     const [service, location] = await Promise.all([
-      client.fetch(`*[_type == 'service' && slug.current == $serviceSlug][0]`,
-        { serviceSlug: params.serviceSlug }),
-      client.fetch(`*[_type == 'location' && slug.current == $locationSlug][0]`,
-        { locationSlug: params.locationSlug })
+      client.fetch(`*[_type == 'service' && slug.current == $serviceSlug][0]`, {
+        serviceSlug: params.serviceSlug,
+      }),
+      client.fetch(
+        `*[_type == 'location' && slug.current == $locationSlug][0]`,
+        { locationSlug: params.locationSlug }
+      ),
     ]);
 
     // If either doesn't exist, show 404
@@ -917,7 +997,7 @@ export default async function ServiceLocationPage({ params }) {
       location,
       blocks: service.blocks, // Use service blocks
       meta_title: `${service.name} in ${location.name}`,
-      meta_description: service.meta_description
+      meta_description: service.meta_description,
     };
 
     return renderPage(fallbackServiceLocation);
@@ -934,17 +1014,20 @@ export default async function ServiceLocationPage({ params }) {
 ```
 
 #### Fallback Hierarchy:
+
 1. **First choice:** Custom service-location `blocks[]`
 2. **Second choice:** Service `blocks[]`
 3. **Never fails:** Page always renders if service + location exist
 
 #### Why It's Done This Way:
+
 - **Progressive enhancement:** Start basic, add custom content later
 - **No broken pages:** Never shows 404 for valid service+location combos
 - **Editor-friendly:** Can create 100s of pages without custom content
 - **SEO safe:** All service+location combos are indexable
 
 #### Test Cases:
+
 - ✅ Service-location document exists with custom blocks → Renders custom
 - ✅ Service-location document exists without blocks → Uses service blocks
 - ✅ No service-location document → Uses service blocks
@@ -959,6 +1042,7 @@ export default async function ServiceLocationPage({ params }) {
 **Implementation:** Boolean field + meta tag generation
 
 #### Schema Implementation:
+
 ```typescript
 // All schemas (service, location, service-location, page)
 defineField({
@@ -967,11 +1051,12 @@ defineField({
   type: 'boolean',
   initialValue: false,
   group: 'seo',
-  description: 'Prevent search engines from indexing this page'
-})
+  description: 'Prevent search engines from indexing this page',
+});
 ```
 
 #### SEO Utility Implementation:
+
 ```typescript
 // apps/web/lib/seo.ts
 export function generateSEOMetadata({
@@ -984,11 +1069,9 @@ export function generateSEOMetadata({
   return {
     title,
     description,
-    robots: noindex
-      ? 'noindex,nofollow'
-      : 'index,follow',
+    robots: noindex ? 'noindex,nofollow' : 'index,follow',
     alternates: {
-      canonical: noindex ? undefined : canonical
+      canonical: noindex ? undefined : canonical,
     },
     // ...
   };
@@ -996,6 +1079,7 @@ export function generateSEOMetadata({
 ```
 
 #### Page Template Usage:
+
 ```typescript
 // generateMetadata in any page
 export async function generateMetadata({ params }) {
@@ -1005,16 +1089,20 @@ export async function generateMetadata({ params }) {
     title: page.meta_title,
     description: page.meta_description,
     canonical: `${siteUrl}${pathname}`,
-    noindex: page.noindex || false // Default to indexable
+    noindex: page.noindex || false, // Default to indexable
   });
 }
 ```
 
 #### Generated HTML:
+
 ```html
 <!-- When noindex = false (default) -->
 <meta name="robots" content="index,follow" />
-<link rel="canonical" href="https://buddsplumbing.com/services/drain-cleaning" />
+<link
+  rel="canonical"
+  href="https://buddsplumbing.com/services/drain-cleaning"
+/>
 
 <!-- When noindex = true -->
 <meta name="robots" content="noindex,nofollow" />
@@ -1022,6 +1110,7 @@ export async function generateMetadata({ params }) {
 ```
 
 #### Use Cases:
+
 - ✅ Test pages during development
 - ✅ Duplicate content protection
 - ✅ Staging environments
@@ -1029,6 +1118,7 @@ export async function generateMetadata({ params }) {
 - ✅ Internal tools
 
 #### Evidence:
+
 - ✅ Field in all content schemas
 - ✅ SEO utility handles correctly
 - ✅ Verified in generated HTML
@@ -1042,6 +1132,7 @@ export async function generateMetadata({ params }) {
 **Pattern:** Dynamic sitemap from Sanity data
 
 #### Implementation:
+
 ```typescript
 // apps/web/app/sitemap.ts
 import { MetadataRoute } from 'next';
@@ -1060,7 +1151,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         'serviceSlug': service->slug.current,
         'locationSlug': location->slug.current
       }
-    `)
+    `),
   ]);
 
   return [
@@ -1073,7 +1164,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     },
 
     // Pages
-    ...pages.map(page => ({
+    ...pages.map((page) => ({
       url: `${siteUrl}/${page.slug.current === 'index' ? '' : page.slug.current}`,
       lastModified: new Date(),
       changeFrequency: 'weekly' as const,
@@ -1081,7 +1172,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     })),
 
     // Services
-    ...services.map(service => ({
+    ...services.map((service) => ({
       url: `${siteUrl}/services/${service.slug.current}`,
       lastModified: new Date(),
       changeFrequency: 'weekly' as const,
@@ -1089,7 +1180,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     })),
 
     // Locations
-    ...locations.map(location => ({
+    ...locations.map((location) => ({
       url: `${siteUrl}/locations/${location.slug.current}`,
       lastModified: new Date(),
       changeFrequency: 'weekly' as const,
@@ -1097,7 +1188,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     })),
 
     // Service+Location combos
-    ...serviceLocations.map(sl => ({
+    ...serviceLocations.map((sl) => ({
       url: `${siteUrl}/${sl.serviceSlug}/in/${sl.locationSlug}`,
       lastModified: new Date(),
       changeFrequency: 'weekly' as const,
@@ -1108,6 +1199,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 ```
 
 #### Features:
+
 - ✅ **Dynamic:** Generated from Sanity data
 - ✅ **Filtered:** Excludes noindex pages
 - ✅ **Prioritized:** Proper priority values
@@ -1115,10 +1207,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 - ✅ **Type-safe:** Uses Next.js MetadataRoute.Sitemap type
 
 #### Access:
+
 - Development: http://localhost:3000/sitemap.xml
 - Production: https://buddsplumbing.com/sitemap.xml
 
 #### Evidence:
+
 - ✅ [apps/web/app/sitemap.ts](apps/web/app/sitemap.ts)
 - ✅ Accessible at `/sitemap.xml`
 - ✅ Validates against sitemap schema
@@ -1130,6 +1224,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 **Location:** `.github/workflows/ci.yml`, `.husky/pre-commit`, `lighthouserc.js`
 
 #### CI/CD Pipeline:
+
 ```yaml
 # .github/workflows/ci.yml
 jobs:
@@ -1157,6 +1252,7 @@ jobs:
 ```
 
 #### Pre-commit Hooks:
+
 ```bash
 # .husky/pre-commit
 pnpm exec lint-staged  # Runs ESLint on staged files
@@ -1165,43 +1261,47 @@ pnpm format:check      # Prettier validation
 ```
 
 #### Lighthouse CI Configuration:
+
 ```javascript
 // lighthouserc.js
 module.exports = {
   ci: {
     collect: {
       numberOfRuns: 3,
-      url: ['http://localhost:3000/']
+      url: ['http://localhost:3000/'],
     },
     assert: {
       assertions: {
-        'categories:seo': ['error', { minScore: 1.0 }],        // SEO = 100
-        'categories:performance': ['warn', { minScore: 0.90 }], // Perf >= 90
-        'categories:accessibility': ['warn', { minScore: 0.90 }],
-        'categories:best-practices': ['warn', { minScore: 0.90 }]
-      }
-    }
-  }
+        'categories:seo': ['error', { minScore: 1.0 }], // SEO = 100
+        'categories:performance': ['warn', { minScore: 0.9 }], // Perf >= 90
+        'categories:accessibility': ['warn', { minScore: 0.9 }],
+        'categories:best-practices': ['warn', { minScore: 0.9 }],
+      },
+    },
+  },
 };
 ```
 
 #### Performance Metrics Enforced:
-| Metric | Target | Enforcement |
-|--------|--------|-------------|
-| SEO | 100/100 | ❌ Blocks merge |
-| Performance | ≥90/100 | ⚠️ Warning |
-| Accessibility | ≥90/100 | ⚠️ Warning |
-| Best Practices | ≥90/100 | ⚠️ Warning |
-| Bundle Size | <250KB | 🔍 Manual review |
-| LCP | <2.5s | 🔍 Manual review |
+
+| Metric         | Target  | Enforcement      |
+| -------------- | ------- | ---------------- |
+| SEO            | 100/100 | ❌ Blocks merge  |
+| Performance    | ≥90/100 | ⚠️ Warning       |
+| Accessibility  | ≥90/100 | ⚠️ Warning       |
+| Best Practices | ≥90/100 | ⚠️ Warning       |
+| Bundle Size    | <250KB  | 🔍 Manual review |
+| LCP            | <2.5s   | 🔍 Manual review |
 
 #### Why These Guardrails:
+
 - **SEO=100 required:** Core business requirement for local businesses
 - **Pre-commit checks:** Catch issues before they hit CI
 - **No merge on failure:** Enforces quality standards
 - **Multiple runs:** Reduces flaky test failures
 
 #### Evidence:
+
 - ✅ [.github/workflows/ci.yml](.github/workflows/ci.yml)
 - ✅ [.husky/pre-commit](.husky/pre-commit)
 - ✅ [lighthouserc.js](lighthouserc.js)
@@ -1216,6 +1316,7 @@ module.exports = {
 **Configuration:** Environment variables + ISR
 
 #### Vercel Configuration:
+
 ```bash
 # Production environment variables (set in Vercel dashboard)
 NEXT_PUBLIC_SANITY_PROJECT_ID=2x758fv1
@@ -1231,6 +1332,7 @@ NEXT_PUBLIC_BASE_DOMAIN=buddsplumbing.com
 ```
 
 #### Deployment Flow:
+
 1. Push to `main` branch
 2. Vercel detects change
 3. Builds Next.js app with all env vars
@@ -1239,6 +1341,7 @@ NEXT_PUBLIC_BASE_DOMAIN=buddsplumbing.com
 6. ISR cache prewarmed for static pages
 
 #### ISR Strategy:
+
 ```typescript
 // All dynamic routes use ISR
 export const revalidate = 60; // Revalidate every 60 seconds
@@ -1251,17 +1354,20 @@ export async function generateStaticParams() {
 ```
 
 #### Domain Configuration:
+
 - Primary: `buddsplumbing.com`
 - WWW: `www.buddsplumbing.com` (redirects to primary)
 - Preview: `[branch].budds-plumbing.vercel.app`
 
 #### Current Status:
+
 - ✅ Code ready for deployment
 - ⏳ Awaiting Vercel project setup
 - ⏳ Awaiting environment variable configuration
 - ⏳ Awaiting domain DNS configuration
 
 #### Evidence:
+
 - ✅ `vercel.json` configuration
 - ✅ All environment variables documented
 - ✅ ISR configured on all dynamic routes
@@ -1276,6 +1382,7 @@ export async function generateStaticParams() {
 #### Editor Capabilities:
 
 **1. Edit Hero Text**
+
 - Open Sanity Studio → Pages ��� Home
 - Click hero block
 - Edit headline, description, button text
@@ -1283,28 +1390,33 @@ export async function generateStaticParams() {
 - Wait 60 seconds → Changes live on website
 
 **2. Reorder Sections**
+
 - Drag and drop blocks in array
 - Blocks reorder immediately in Studio
 - Publish → New order appears on site within 60s
 
 **3. Change Block Variant**
+
 - Click block → Variant dropdown
 - Select different variant (e.g., "Centered" instead of "Default")
 - Preview shows new layout
 - Publish → New variant renders on site
 
 **4. Add New Section**
+
 - Click "+ Add item" in blocks array
 - Choose block type from menu (organized by category)
 - Fill in content
 - Publish → New section appears on site
 
 **5. Remove Section**
+
 - Click "..." menu on block
 - Click "Remove"
 - Publish → Section removed from site
 
 #### Non-Technical Features:
+
 - ✅ **Visual editor:** No code editing required
 - ✅ **Preview:** See changes before publishing
 - ✅ **Organized blocks:** Categorized in insert menu
@@ -1312,6 +1424,7 @@ export async function generateStaticParams() {
 - ✅ **Instant preview:** Draft changes visible in Studio
 
 #### Technical Implementation:
+
 ```typescript
 // ISR ensures updates appear quickly
 export const revalidate = 60;
@@ -1321,6 +1434,7 @@ export const revalidate = 60;
 ```
 
 #### Editor Training Checklist:
+
 - [ ] Access to Sanity Studio
 - [ ] Understanding of block types
 - [ ] Knowledge of SEO fields
@@ -1328,6 +1442,7 @@ export const revalidate = 60;
 - [ ] Understanding of 60s cache
 
 #### Evidence:
+
 - ✅ Sanity Studio accessible and functional
 - ✅ Block insert menu organized
 - ✅ ISR working (60s revalidation)
@@ -1340,6 +1455,7 @@ export const revalidate = 60;
 ### Overview
 
 Phase 2 transforms the single-client platform into a **multi-tenant SaaS** supporting 50+ clients with:
+
 - Separate Sanity datasets per client
 - Custom domains or subdomains
 - Isolated data and settings
@@ -1356,6 +1472,7 @@ Phase 2 transforms the single-client platform into a **multi-tenant SaaS** suppo
 #### What Was Done:
 
 **Client Schema:**
+
 ```typescript
 // apps/studio/sanity/schemas/documents/client.ts
 export default defineType({
@@ -1366,23 +1483,23 @@ export default defineType({
     {
       name: 'clientId',
       type: 'string',
-      validation: Rule => Rule.required().regex(/^[a-z0-9-]+$/)
+      validation: (Rule) => Rule.required().regex(/^[a-z0-9-]+$/),
     },
     {
       name: 'businessName',
       type: 'string',
-      validation: Rule => Rule.required()
+      validation: (Rule) => Rule.required(),
     },
     {
       name: 'domain',
       type: 'string',
-      description: 'Primary domain (e.g., buddsplumbing.com)'
+      description: 'Primary domain (e.g., buddsplumbing.com)',
     },
     {
       name: 'dataset',
       type: 'string',
       description: 'Sanity dataset name',
-      validation: Rule => Rule.required()
+      validation: (Rule) => Rule.required(),
     },
     {
       name: 'status',
@@ -1391,10 +1508,10 @@ export default defineType({
         list: [
           { title: 'Pending', value: 'pending' },
           { title: 'Active', value: 'active' },
-          { title: 'Suspended', value: 'suspended' }
-        ]
+          { title: 'Suspended', value: 'suspended' },
+        ],
       },
-      initialValue: 'pending'
+      initialValue: 'pending',
     },
     {
       name: 'plan',
@@ -1403,21 +1520,22 @@ export default defineType({
         list: [
           { title: 'Starter', value: 'starter' },
           { title: 'Pro', value: 'pro' },
-          { title: 'Enterprise', value: 'enterprise' }
-        ]
+          { title: 'Enterprise', value: 'enterprise' },
+        ],
       },
-      initialValue: 'starter'
+      initialValue: 'starter',
     },
     {
       name: 'createdAt',
       type: 'datetime',
-      initialValue: () => new Date().toISOString()
-    }
-  ]
+      initialValue: () => new Date().toISOString(),
+    },
+  ],
 });
 ```
 
 **Dataset Configuration:**
+
 ```typescript
 // apps/web/lib/dataset-config.ts
 export type DatasetName = 'production' | 'staging' | 'development';
@@ -1434,7 +1552,8 @@ const DATASET_MAP: Record<string, DatasetName> = {
   'buddsplumbing.com': 'production',
   'www.buddsplumbing.com': 'production',
   'staging.buddsplumbing.com': 'staging',
-  'localhost': process.env.NEXT_PUBLIC_SANITY_DATASET as DatasetName || 'development',
+  localhost:
+    (process.env.NEXT_PUBLIC_SANITY_DATASET as DatasetName) || 'development',
 };
 
 export function getClientConfig(hostname: string): ClientConfig | null {
@@ -1444,12 +1563,13 @@ export function getClientConfig(hostname: string): ClientConfig | null {
   return {
     dataset,
     clientName: 'Budds Plumbing',
-    domain: hostname
+    domain: hostname,
   };
 }
 ```
 
 #### Status:
+
 - ✅ **Complete:** Client schema defined
 - ✅ **Complete:** Dataset mapping configuration
 - ✅ **Complete:** TypeScript types
@@ -1465,6 +1585,7 @@ export function getClientConfig(hostname: string): ClientConfig | null {
 #### What Was Done:
 
 **Sanity Client with Dynamic Dataset:**
+
 ```typescript
 // apps/web/sanity/lib/client.ts
 import { createClient } from 'next-sanity';
@@ -1476,7 +1597,7 @@ export const client = createClient({
   dataset: process.env.NEXT_PUBLIC_SANITY_DATASET!,
   apiVersion: process.env.NEXT_PUBLIC_SANITY_API_VERSION!,
   useCdn: false,
-  token: process.env.SANITY_API_READ_TOKEN
+  token: process.env.SANITY_API_READ_TOKEN,
 });
 
 // Create client for specific dataset
@@ -1486,7 +1607,7 @@ export function createClientForDataset(datasetName: string) {
     dataset: datasetName,
     apiVersion: process.env.NEXT_PUBLIC_SANITY_API_VERSION!,
     useCdn: false,
-    token: process.env.SANITY_API_READ_TOKEN
+    token: process.env.SANITY_API_READ_TOKEN,
   });
 }
 
@@ -1498,6 +1619,7 @@ export async function getClientForRequest() {
 ```
 
 **Dataset from Middleware Headers:**
+
 ```typescript
 // apps/web/sanity/env.ts
 export async function getDataset(): Promise<string> {
@@ -1519,6 +1641,7 @@ export async function getDataset(): Promise<string> {
 ```
 
 **Middleware Sets Dataset:**
+
 ```typescript
 // apps/web/middleware.ts
 export function middleware(request: NextRequest) {
@@ -1532,6 +1655,7 @@ export function middleware(request: NextRequest) {
 ```
 
 #### Usage Pattern:
+
 ```typescript
 // Server Component
 import { getClientForRequest } from '@/sanity/lib/client';
@@ -1544,6 +1668,7 @@ export default async function Page() {
 ```
 
 #### Status:
+
 - ✅ **Complete:** Dynamic client creation
 - ✅ **Complete:** Header-based dataset selection
 - ✅ **Complete:** Fallback to environment variable
@@ -1559,6 +1684,7 @@ export default async function Page() {
 #### What Was Done:
 
 **React Context for Client Data:**
+
 ```typescript
 // apps/web/lib/client-context.tsx
 'use client';
@@ -1605,6 +1731,7 @@ export function useIsMultiTenant(): boolean {
 ```
 
 **Root Layout Integration:**
+
 ```typescript
 // apps/web/app/layout.tsx
 import { ClientContextProvider } from '@/lib/client-context';
@@ -1636,6 +1763,7 @@ export default async function RootLayout({ children }) {
 ```
 
 #### Usage in Components:
+
 ```typescript
 'use client';
 
@@ -1657,6 +1785,7 @@ export function ClientInfo() {
 ```
 
 #### Status:
+
 - ✅ **Complete:** React Context implementation
 - ✅ **Complete:** Custom hooks
 - ✅ **Complete:** Root layout integration
@@ -1672,6 +1801,7 @@ export function ClientInfo() {
 #### What Was Done:
 
 **Domain Validation & Routing:**
+
 ```typescript
 // apps/web/lib/domain-middleware.ts
 export function domainMiddleware(request: NextRequest): NextResponse {
@@ -1707,6 +1837,7 @@ export function domainMiddleware(request: NextRequest): NextResponse {
 ```
 
 **Domain Configuration:**
+
 ```typescript
 // apps/web/lib/domain-mapping.ts
 export interface DomainConfig {
@@ -1724,15 +1855,15 @@ const DOMAIN_CONFIGS: Record<string, DomainConfig> = {
     dataset: 'production',
     clientId: 'budds-plumbing',
     clientName: 'Budds Plumbing',
-    isProduction: true
+    isProduction: true,
   },
-  'localhost': {
+  localhost: {
     domain: 'localhost',
     dataset: process.env.NEXT_PUBLIC_SANITY_DATASET || 'development',
     clientId: 'budds-plumbing-dev',
     clientName: 'Budds Plumbing (Dev)',
-    isProduction: false
-  }
+    isProduction: false,
+  },
 };
 
 export function getDomainConfig(domain: string): DomainConfig | null {
@@ -1741,6 +1872,7 @@ export function getDomainConfig(domain: string): DomainConfig | null {
 ```
 
 **Security Headers:**
+
 ```typescript
 export function applySecurityHeaders(
   response: NextResponse,
@@ -1772,6 +1904,7 @@ export function applySecurityHeaders(
 ```
 
 #### Status:
+
 - ✅ **Complete:** Domain extraction and validation
 - ✅ **Complete:** Dataset mapping
 - ✅ **Complete:** Header propagation
@@ -1797,30 +1930,32 @@ export async function GET() {
     routing: {
       dataset: headersList.get('x-sanity-dataset'),
       hostname: headersList.get('x-client-hostname'),
-      clientId: headersList.get('x-client-id')
+      clientId: headersList.get('x-client-id'),
     },
     environment: {
       NEXT_PUBLIC_SANITY_DATASET: process.env.NEXT_PUBLIC_SANITY_DATASET,
       NEXT_PUBLIC_SITE_URL: process.env.NEXT_PUBLIC_SITE_URL,
-      NODE_ENV: process.env.NODE_ENV
+      NODE_ENV: process.env.NODE_ENV,
     },
     customHeaders: {
       'x-sanity-dataset': headersList.get('x-sanity-dataset'),
       'x-dataset': headersList.get('x-dataset'),
       'x-client-hostname': headersList.get('x-client-hostname'),
       'x-domain': headersList.get('x-domain'),
-      'x-client-id': headersList.get('x-client-id')
-    }
+      'x-client-id': headersList.get('x-client-id'),
+    },
   });
 }
 ```
 
 #### Usage:
+
 ```bash
 curl http://localhost:3000/api/debug-dataset | jq
 ```
 
 #### Status:
+
 - ✅ **Complete:** Debug endpoint functional
 - ✅ **Complete:** Shows all routing information
 - ✅ **Complete:** Environment variable display
@@ -1832,6 +1967,7 @@ curl http://localhost:3000/api/debug-dataset | jq
 The following Phase 2 items are **planned but not yet implemented**:
 
 #### 6. Client Provisioning Automation ⏳
+
 - [ ] Automated Sanity dataset creation
 - [ ] Initial data seeding script
 - [ ] Default content templates
@@ -1841,6 +1977,7 @@ The following Phase 2 items are **planned but not yet implemented**:
 **Status:** Placeholder scripts exist
 
 #### 7. Admin Dashboard ⏳
+
 - [ ] Super admin panel
 - [ ] Client management interface
 - [ ] Usage analytics
@@ -1850,6 +1987,7 @@ The following Phase 2 items are **planned but not yet implemented**:
 **Status:** Route structure created, components pending
 
 #### 8. Multi-Domain Support (Production) ⏳
+
 - [x] Domain mapping logic (complete)
 - [x] Middleware implementation (complete)
 - [ ] Vercel wildcard domain configuration
@@ -1859,6 +1997,7 @@ The following Phase 2 items are **planned but not yet implemented**:
 **Status:** Infrastructure ready, awaiting production clients
 
 #### 9. Performance at Scale ⏳
+
 - [ ] CDN strategy for multi-client
 - [ ] Database connection pooling
 - [ ] Queue system for heavy operations
@@ -1868,6 +2007,7 @@ The following Phase 2 items are **planned but not yet implemented**:
 **Status:** Not yet started
 
 #### 10. Testing & Deployment ⏳
+
 - [ ] Multi-tenant testing framework
 - [ ] Client simulation tests
 - [ ] Load testing for 50+ clients
@@ -1920,6 +2060,7 @@ Sanity CMS Documents
 ### Schema Details
 
 #### Service Schema
+
 ```typescript
 service {
   name: string              // "Drain Cleaning"
@@ -1934,6 +2075,7 @@ service {
 ```
 
 #### Location Schema
+
 ```typescript
 location {
   name: string              // "Calgary"
@@ -1947,6 +2089,7 @@ location {
 ```
 
 #### Service-Location Schema
+
 ```typescript
 service-location {
   service: reference        // → service
@@ -1961,6 +2104,7 @@ service-location {
 ```
 
 #### Settings Schema (Singleton)
+
 ```typescript
 settings {
   // General
@@ -2162,20 +2306,20 @@ apps/web/components/blocks/
 ```typescript
 // apps/web/components/blocks/index.tsx
 const componentMap = {
-  "hero-1": Hero1,
-  "hero-2": Hero2,
-  "section-header": SectionHeader,
-  "split-row": SplitRow,
-  "grid-row": GridRow,
-  "carousel-1": Carousel1,
-  "carousel-2": Carousel2,
-  "timeline-row": TimelineRow,
-  "cta-1": Cta1,
-  "logo-cloud-1": LogoCloud1,
-  "faqs": FAQs,
-  "form-newsletter": FormNewsletter,
-  "all-posts": AllPosts,
-  "compliance-1": Compliance1,
+  'hero-1': Hero1,
+  'hero-2': Hero2,
+  'section-header': SectionHeader,
+  'split-row': SplitRow,
+  'grid-row': GridRow,
+  'carousel-1': Carousel1,
+  'carousel-2': Carousel2,
+  'timeline-row': TimelineRow,
+  'cta-1': Cta1,
+  'logo-cloud-1': LogoCloud1,
+  faqs: FAQs,
+  'form-newsletter': FormNewsletter,
+  'all-posts': AllPosts,
+  'compliance-1': Compliance1,
 };
 ```
 
@@ -2201,8 +2345,8 @@ defineField({
     { type: 'logo-cloud-1' },
     { type: 'faqs' },
     { type: 'form-newsletter' },
-  ]
-})
+  ],
+});
 ```
 
 Editors can add any combination of blocks to any page.
@@ -2250,6 +2394,7 @@ pnpm format:check      # Prettier format check
 ```
 
 **lint-staged Configuration:**
+
 ```javascript
 // package.json
 {
@@ -2262,14 +2407,14 @@ pnpm format:check      # Prettier format check
 
 ### Quality Gates
 
-| Gate | Tool | Enforcement | Threshold |
-|------|------|-------------|-----------|
-| TypeScript | tsc | ❌ Blocks commit | Zero errors |
-| ESLint | eslint | ❌ Blocks commit | Zero errors |
-| Prettier | prettier | ❌ Blocks commit | All files formatted |
-| Build | next build | ❌ Blocks merge | Must succeed |
-| SEO | Lighthouse | ❌ Blocks merge | 100/100 |
-| Performance | Lighthouse | ⚠️ Warning | 90/100 |
+| Gate        | Tool       | Enforcement      | Threshold           |
+| ----------- | ---------- | ---------------- | ------------------- |
+| TypeScript  | tsc        | ❌ Blocks commit | Zero errors         |
+| ESLint      | eslint     | ❌ Blocks commit | Zero errors         |
+| Prettier    | prettier   | ❌ Blocks commit | All files formatted |
+| Build       | next build | ❌ Blocks merge  | Must succeed        |
+| SEO         | Lighthouse | ❌ Blocks merge  | 100/100             |
+| Performance | Lighthouse | ⚠️ Warning       | 90/100              |
 
 ---
 
@@ -2286,6 +2431,7 @@ pnpm format:check      # Prettier format check
 ### Schema.org Types Implemented
 
 #### LocalBusiness
+
 ```json
 {
   "@context": "https://schema.org",
@@ -2311,13 +2457,12 @@ pnpm format:check      # Prettier format check
       "closes": "17:00"
     }
   ],
-  "areaServed": [
-    { "@type": "City", "name": "Calgary" }
-  ]
+  "areaServed": [{ "@type": "City", "name": "Calgary" }]
 }
 ```
 
 #### Service
+
 ```json
 {
   "@context": "https://schema.org",
@@ -2330,13 +2475,12 @@ pnpm format:check      # Prettier format check
     "name": "Budds Plumbing",
     "url": "https://buddsplumbing.com"
   },
-  "areaServed": [
-    { "@type": "City", "name": "Calgary" }
-  ]
+  "areaServed": [{ "@type": "City", "name": "Calgary" }]
 }
 ```
 
 #### BreadcrumbList
+
 ```json
 {
   "@context": "https://schema.org",
@@ -2387,19 +2531,21 @@ pnpm format:check      # Prettier format check
 ### Security Measures
 
 #### 1. Environment Variables
+
 - ✅ No secrets in codebase
 - ✅ `.env.local` in `.gitignore`
 - ✅ Only `NEXT_PUBLIC_*` exposed to client
 - ✅ Server-side env vars hidden from browser
 
 #### 2. API Route Security
+
 ```typescript
 // apps/web/app/api/newsletter/route.ts
 import { z } from 'zod';
 
 // Zod validation
 const schema = z.object({
-  email: z.string().email()
+  email: z.string().email(),
 });
 
 export async function POST(request: Request) {
@@ -2408,19 +2554,13 @@ export async function POST(request: Request) {
   const result = schema.safeParse(body);
 
   if (!result.success) {
-    return Response.json(
-      { error: 'Invalid email' },
-      { status: 400 }
-    );
+    return Response.json({ error: 'Invalid email' }, { status: 400 });
   }
 
   // CSRF check (basic - Phase 2 will enhance)
   const origin = request.headers.get('origin');
   if (!origin?.includes(process.env.NEXT_PUBLIC_SITE_URL)) {
-    return Response.json(
-      { error: 'Invalid origin' },
-      { status: 403 }
-    );
+    return Response.json({ error: 'Invalid origin' }, { status: 403 });
   }
 
   // Rate limiting (optional - uses Upstash if configured)
@@ -2431,6 +2571,7 @@ export async function POST(request: Request) {
 ```
 
 #### 3. Security Headers (Middleware)
+
 ```typescript
 // apps/web/lib/domain-middleware.ts
 export function applySecurityHeaders(response: NextResponse) {
@@ -2453,16 +2594,14 @@ export function applySecurityHeaders(response: NextResponse) {
   response.headers.set('X-Content-Type-Options', 'nosniff');
 
   // Referrer policy
-  response.headers.set(
-    'Referrer-Policy',
-    'strict-origin-when-cross-origin'
-  );
+  response.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin');
 
   return response;
 }
 ```
 
 #### 4. Content Sanitization
+
 - ✅ No `dangerouslySetInnerHTML` without sanitization
 - ✅ Sanity Portable Text handles sanitization
 - ✅ User input validated with Zod
@@ -2470,12 +2609,14 @@ export function applySecurityHeaders(response: NextResponse) {
 ### Performance Optimizations
 
 #### 1. ISR (Incremental Static Regeneration)
+
 - All dynamic routes use `revalidate = 60`
 - Pages pre-rendered at build time
 - Background revalidation every 60 seconds
 - Instant page loads from edge cache
 
 #### 2. Image Optimization
+
 ```typescript
 import Image from 'next/image';
 
@@ -2491,17 +2632,20 @@ import Image from 'next/image';
 ```
 
 #### 3. Code Splitting
+
 - Automatic route-based code splitting
 - Dynamic imports for heavy components
 - Separate bundles for each route
 
 #### 4. Bundle Size
+
 - Target: <250KB initial bundle
 - Tree-shaking enabled
 - No unnecessary dependencies
 - Shared chunks for common code
 
 #### 5. Database Queries
+
 - Parallel queries with `Promise.all()`
 - Minimal data fetching (only required fields)
 - No N+1 query problems
@@ -2509,15 +2653,15 @@ import Image from 'next/image';
 
 ### Performance Metrics
 
-| Metric | Target | Current |
-|--------|--------|---------|
-| Lighthouse SEO | 100 | ✅ 100 |
-| Lighthouse Performance | 90+ | 🔍 Varies by content |
-| LCP (Largest Contentful Paint) | <2.5s | ✅ ~1.8s avg |
-| FID (First Input Delay) | <100ms | ✅ ~50ms avg |
-| CLS (Cumulative Layout Shift) | <0.1 | ✅ ~0.05 avg |
-| Time to Interactive (TTI) | <3.5s | ✅ ~2.2s avg |
-| Bundle Size (Initial) | <250KB | ✅ ~180KB |
+| Metric                         | Target | Current              |
+| ------------------------------ | ------ | -------------------- |
+| Lighthouse SEO                 | 100    | ✅ 100               |
+| Lighthouse Performance         | 90+    | 🔍 Varies by content |
+| LCP (Largest Contentful Paint) | <2.5s  | ✅ ~1.8s avg         |
+| FID (First Input Delay)        | <100ms | ✅ ~50ms avg         |
+| CLS (Cumulative Layout Shift)  | <0.1   | ✅ ~0.05 avg         |
+| Time to Interactive (TTI)      | <3.5s  | ✅ ~2.2s avg         |
+| Bundle Size (Initial)          | <250KB | ✅ ~180KB            |
 
 ---
 
@@ -2530,10 +2674,12 @@ All Phase 1 items are complete and deployed to the main branch.
 ### Phase 2 Priority Tasks (Next to Implement)
 
 #### 1. Client Provisioning Automation (HIGH PRIORITY)
+
 **Estimated Time:** 2 weeks
 **Complexity:** High
 
 **Tasks:**
+
 - [ ] Create Sanity dataset via API
 - [ ] Seed default settings document
 - [ ] Copy schema definitions to new dataset
@@ -2543,16 +2689,19 @@ All Phase 1 items are complete and deployed to the main branch.
 - [ ] Build admin UI for client creation
 
 **Files to Create:**
+
 - `scripts/provisioning/create-client.ts`
 - `scripts/provisioning/seed-dataset.ts`
 - `scripts/provisioning/copy-schema.ts`
 - `apps/web/app/(admin)/clients/new/page.tsx`
 
 #### 2. Admin Dashboard (HIGH PRIORITY)
+
 **Estimated Time:** 2 weeks
 **Complexity:** Medium
 
 **Tasks:**
+
 - [ ] Build client list view
 - [ ] Build client detail view
 - [ ] Implement client CRUD operations
@@ -2562,16 +2711,19 @@ All Phase 1 items are complete and deployed to the main branch.
 - [ ] Add support ticket system
 
 **Files to Create:**
+
 - `apps/web/app/(admin)/dashboard/page.tsx`
 - `apps/web/app/(admin)/clients/page.tsx`
 - `apps/web/app/(admin)/clients/[clientId]/page.tsx`
 - `apps/web/components/admin/*` (admin UI components)
 
 #### 3. Multi-Client Testing (MEDIUM PRIORITY)
+
 **Estimated Time:** 1 week
 **Complexity:** Medium
 
 **Tasks:**
+
 - [ ] Create test datasets in Sanity (client-a, client-b, client-c)
 - [ ] Configure local domain aliases in `/etc/hosts`
 - [ ] Test dataset switching
@@ -2580,6 +2732,7 @@ All Phase 1 items are complete and deployed to the main branch.
 - [ ] Performance profiling
 
 **Test Domains:**
+
 ```
 127.0.0.1 client-a.local
 127.0.0.1 client-b.local
@@ -2587,10 +2740,12 @@ All Phase 1 items are complete and deployed to the main branch.
 ```
 
 #### 4. Production Domain Setup (MEDIUM PRIORITY)
+
 **Estimated Time:** 1 week
 **Complexity:** Low
 
 **Tasks:**
+
 - [ ] Configure Vercel wildcard domains
 - [ ] Set up DNS for `*.buddsplumbing.com`
 - [ ] Configure SSL certificates
@@ -2598,10 +2753,12 @@ All Phase 1 items are complete and deployed to the main branch.
 - [ ] Add domain validation
 
 #### 5. Monitoring & Analytics (LOW PRIORITY)
+
 **Estimated Time:** 1 week
 **Complexity:** Medium
 
 **Tasks:**
+
 - [ ] Set up error tracking (Sentry)
 - [ ] Set up analytics (PostHog or similar)
 - [ ] Add performance monitoring
@@ -2616,17 +2773,20 @@ All Phase 1 items are complete and deployed to the main branch.
 ### Known Issues
 
 #### 1. Minor TypeScript Errors in compliance-1.tsx
+
 **Severity:** Low
 **Impact:** No runtime errors, dev warnings only
 **Fix:** Clean up type definitions in custom compliance block
 
 #### 2. ESLint Warnings in domain-mapping.ts
+
 **Severity:** Low
 **Issue:** `Headers` type usage warnings
 **Impact:** None - pre-existing from template
 **Fix:** Update type definitions (non-blocking)
 
 #### 3. Schemas Not in /packages/schemas
+
 **Severity:** Low
 **Issue:** Schemas remain in `/apps/studio/sanity/schemas/` instead of `/packages/schemas/`
 **Reason:** Sanity Studio requires schemas in specific location
@@ -2635,30 +2795,35 @@ All Phase 1 items are complete and deployed to the main branch.
 ### Design Decisions & Trade-offs
 
 #### 1. Using `blocks[]` Instead of `sections[]`
+
 **Decision:** Field named `blocks` not `sections`
 **Reason:** More semantic for CMS usage
 **Impact:** All references use "blocks" terminology
 **Trade-off:** Doesn't match roadmap terminology exactly
 
 #### 2. Client Context via React Context
+
 **Decision:** Use React Context for client data in client components
 **Alternative:** Could use cookies or local storage
 **Reason:** Type-safe, React-native, no persistence needed
 **Trade-off:** Requires provider wrapper
 
 #### 3. 60-Second ISR Revalidation
+
 **Decision:** Fixed 60-second revalidation for all pages
 **Alternative:** Could use on-demand revalidation
 **Reason:** Simple, predictable, works for most content updates
 **Trade-off:** Changes not instant (max 60s delay)
 
 #### 4. Fallback to Service Blocks
+
 **Decision:** Service-location pages use service blocks if no custom blocks
 **Alternative:** Could require custom blocks for every combo
 **Reason:** Enables progressive content enhancement
 **Trade-off:** Some pages may be too generic initially
 
 #### 5. Single NAP in siteSettings
+
 **Decision:** All business info (name, address, phone) in one settings doc
 **Alternative:** Could duplicate per location
 **Reason:** Simplifies management, better for schema.org
@@ -2667,6 +2832,7 @@ All Phase 1 items are complete and deployed to the main branch.
 ### Future Considerations
 
 #### Phase 3 Potential Features
+
 - White-label admin panels per client
 - API access for client integrations
 - Mobile app support
@@ -2679,12 +2845,14 @@ All Phase 1 items are complete and deployed to the main branch.
 - Customer portal
 
 #### Scalability Limits
+
 - **Sanity dataset limit:** ~100 datasets per project (upgrade plan needed for more)
 - **Vercel function limits:** 10-second timeout (use edge functions for heavy tasks)
 - **ISR cache:** 60-second minimum (could be issue for real-time updates)
 - **Build time:** Scales with number of pages (~1min per 1000 pages)
 
 #### Cost Considerations
+
 - **Sanity:** Free tier = 100K documents, 5GB bandwidth. Pro = $199/mo
 - **Vercel:** Free tier = 100GB bandwidth. Pro = $20/seat/mo
 - **At 50 clients:** Estimated $500-1000/mo infrastructure cost
@@ -2694,6 +2862,7 @@ All Phase 1 items are complete and deployed to the main branch.
 ## Appendix: Key File Locations
 
 ### Configuration Files
+
 ```
 /.env.local.example          # Environment variables template
 /tsconfig.json               # TypeScript configuration (strict mode)
@@ -2707,6 +2876,7 @@ All Phase 1 items are complete and deployed to the main branch.
 ```
 
 ### Core Application Files
+
 ```
 /apps/web/app/layout.tsx                    # Root layout
 /apps/web/app/(main)/layout.tsx             # Main site layout
@@ -2719,6 +2889,7 @@ All Phase 1 items are complete and deployed to the main branch.
 ```
 
 ### Sanity Integration
+
 ```
 /apps/web/sanity/lib/client.ts              # Sanity client
 /apps/web/sanity/lib/live.ts                # Live preview
@@ -2727,6 +2898,7 @@ All Phase 1 items are complete and deployed to the main branch.
 ```
 
 ### Schemas (Sanity Studio)
+
 ```
 /apps/studio/sanity/schemas/documents/page.ts
 /apps/studio/sanity/schemas/documents/service.ts
@@ -2739,6 +2911,7 @@ All Phase 1 items are complete and deployed to the main branch.
 ```
 
 ### Components
+
 ```
 /apps/web/components/blocks/index.tsx       # Block renderer
 /apps/web/components/blocks/hero/*.tsx      # Hero blocks
@@ -2749,6 +2922,7 @@ All Phase 1 items are complete and deployed to the main branch.
 ```
 
 ### Documentation
+
 ```
 /README.md                                  # Main README
 /project-rules/roadmap-v3.md                # Phase 1-3 roadmap
@@ -2809,6 +2983,7 @@ Infrastructure ready. Pending: client provisioning, admin dashboard, production 
 **Report Version:** 1.0
 
 **For Questions or Clarifications:**
+
 - Review project-rules/ documentation
 - Check implementation summaries in each app
 - Refer to inline code comments
@@ -2816,4 +2991,4 @@ Infrastructure ready. Pending: client provisioning, admin dashboard, production 
 
 ---
 
-*End of Comprehensive Project Handover Report*
+_End of Comprehensive Project Handover Report_

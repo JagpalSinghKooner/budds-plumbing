@@ -9,25 +9,25 @@
  * - Domain validation
  */
 
-import type { DomainConfig } from "./domain-types";
+import type { DomainConfig } from './domain-types';
 
-export type { DomainConfig } from "./domain-types";
+export type { DomainConfig } from './domain-types';
 
 /**
  * API version for Sanity
  */
-const API_VERSION = process.env.NEXT_PUBLIC_SANITY_API_VERSION || "2024-10-31";
+const API_VERSION = process.env.NEXT_PUBLIC_SANITY_API_VERSION || '2024-10-31';
 
 /**
  * Base domain for subdomain matching
  * Override with NEXT_PUBLIC_BASE_DOMAIN environment variable
  */
-const BASE_DOMAIN = process.env.NEXT_PUBLIC_BASE_DOMAIN || "buddsplumbing.com";
+const BASE_DOMAIN = process.env.NEXT_PUBLIC_BASE_DOMAIN || 'buddsplumbing.com';
 
 /**
  * Default project ID from environment
  */
-const DEFAULT_PROJECT_ID = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID || "";
+const DEFAULT_PROJECT_ID = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID || '';
 
 /**
  * Domain mappings configuration
@@ -38,33 +38,33 @@ export const DOMAIN_MAPPINGS: DomainConfig[] = [
   {
     domain: BASE_DOMAIN,
     projectId: DEFAULT_PROJECT_ID,
-    dataset: process.env.NEXT_PUBLIC_SANITY_DATASET || "production",
-    clientId: "budds-main",
+    dataset: process.env.NEXT_PUBLIC_SANITY_DATASET || 'production',
+    clientId: 'budds-main',
     enabled: true,
     branding: {
-      name: "Budds Plumbing",
+      name: 'Budds Plumbing',
     },
   },
   // www subdomain - redirect to main domain
   {
     domain: `www.${BASE_DOMAIN}`,
     projectId: DEFAULT_PROJECT_ID,
-    dataset: process.env.NEXT_PUBLIC_SANITY_DATASET || "production",
-    clientId: "budds-main",
+    dataset: process.env.NEXT_PUBLIC_SANITY_DATASET || 'production',
+    clientId: 'budds-main',
     enabled: true,
     branding: {
-      name: "Budds Plumbing",
+      name: 'Budds Plumbing',
     },
   },
   // Development/localhost domain
   {
-    domain: "localhost:3000",
+    domain: 'localhost:3000',
     projectId: DEFAULT_PROJECT_ID,
-    dataset: process.env.NEXT_PUBLIC_SANITY_DATASET || "development",
-    clientId: "budds-dev",
+    dataset: process.env.NEXT_PUBLIC_SANITY_DATASET || 'development',
+    clientId: 'budds-dev',
     enabled: true,
     branding: {
-      name: "Budds Plumbing (Dev)",
+      name: 'Budds Plumbing (Dev)',
     },
   },
   // Example subdomain client
@@ -101,9 +101,7 @@ export const DOMAIN_MAPPINGS: DomainConfig[] = [
  */
 export function extractDomain(headers: Headers): string {
   const host =
-    headers.get("x-forwarded-host") ||
-    headers.get("host") ||
-    "localhost:3000";
+    headers.get('x-forwarded-host') || headers.get('host') || 'localhost:3000';
   return host.toLowerCase();
 }
 
@@ -113,14 +111,12 @@ export function extractDomain(headers: Headers): string {
  */
 export function getDomainConfig(domain: string): DomainConfig | null {
   // Normalize domain (remove port for localhost)
-  const normalizedDomain = domain.includes("localhost")
-    ? "localhost:3000"
+  const normalizedDomain = domain.includes('localhost')
+    ? 'localhost:3000'
     : domain;
 
   const config = DOMAIN_MAPPINGS.find(
-    (mapping) =>
-      mapping.domain === normalizedDomain &&
-      mapping.enabled
+    (mapping) => mapping.domain === normalizedDomain && mapping.enabled
   );
 
   return config || null;
@@ -168,7 +164,7 @@ export function getSanityConfigForDomain(domain: string) {
     dataset: config.dataset,
     apiVersion: API_VERSION,
     useCdn: false,
-    perspective: "published" as const,
+    perspective: 'published' as const,
   };
 }
 
@@ -188,7 +184,7 @@ export function getSiteUrl(config: DomainConfig): string {
   }
 
   // Construct from domain
-  const protocol = config.domain.includes("localhost") ? "http" : "https";
+  const protocol = config.domain.includes('localhost') ? 'http' : 'https';
   return `${protocol}://${config.domain}`;
 }
 
@@ -196,10 +192,7 @@ export function getSiteUrl(config: DomainConfig): string {
  * Check if domain is a subdomain of the base domain
  */
 export function isSubdomain(domain: string): boolean {
-  return (
-    domain !== BASE_DOMAIN &&
-    domain.endsWith(`.${BASE_DOMAIN}`)
-  );
+  return domain !== BASE_DOMAIN && domain.endsWith(`.${BASE_DOMAIN}`);
 }
 
 /**
@@ -211,7 +204,7 @@ export function getSubdomainPrefix(domain: string): string | null {
     return null;
   }
 
-  return domain.replace(`.${BASE_DOMAIN}`, "");
+  return domain.replace(`.${BASE_DOMAIN}`, '');
 }
 
 /**

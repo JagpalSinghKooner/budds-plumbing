@@ -1,4 +1,4 @@
-import { groq } from "next-sanity";
+import { groq } from 'next-sanity';
 
 // @sanity-typegen-ignore
 export const formNewsletterQuery = groq`
