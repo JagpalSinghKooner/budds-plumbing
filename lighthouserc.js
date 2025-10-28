@@ -2,11 +2,11 @@ module.exports = {
   ci: {
     collect: {
       startServerCommand: 'pnpm --filter @budds-plumbing/web start',
-      startServerReadyPattern: 'ready on',
+      startServerReadyPattern: 'Ready in',
       url: [
         'http://localhost:3000/',
         'http://localhost:3000/services/drain-cleaning',
-        'http://localhost:3000/locations/toronto',
+        'http://localhost:3000/locations/cape-may',
       ],
       numberOfRuns: 3,
       settings: {

@@ -47,3 +47,5 @@ dist/apps/web/.next/
 # sanity
 .sanity/
 **/.sanity/
+apps/studio/dist/
+apps/studio/temp-schema.json
