@@ -17,9 +17,9 @@ export interface FaqProps extends FaqType {
 const faqRegistry: {
   [K in FaqVariant]: React.ComponentType<Record<string, unknown>>;
 } = {
-  'faq-1': Faq1,
-  'faq-2': Faq2,
-  'faq-3': Faq3,
+  'faq-1': Faq1 as React.ComponentType<Record<string, unknown>>,
+  'faq-2': Faq2 as React.ComponentType<Record<string, unknown>>,
+  'faq-3': Faq3 as React.ComponentType<Record<string, unknown>>,
 };
 
 export default faqRegistry;

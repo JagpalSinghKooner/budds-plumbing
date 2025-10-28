@@ -21,9 +21,9 @@ export interface HeroProps extends Omit<Hero1Type, '_type'> {
 const heroRegistry: {
   [K in HeroVariant]: React.ComponentType<Record<string, unknown>>;
 } = {
-  'hero-1': Hero1,
-  'hero-2': Hero2,
-  'hero-3': Hero3,
+  'hero-1': Hero1 as React.ComponentType<Record<string, unknown>>,
+  'hero-2': Hero2 as React.ComponentType<Record<string, unknown>>,
+  'hero-3': Hero3 as React.ComponentType<Record<string, unknown>>,
 };
 
 export default heroRegistry;

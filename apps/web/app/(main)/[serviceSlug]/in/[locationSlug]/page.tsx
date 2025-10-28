@@ -191,11 +191,10 @@ function renderPage(
 
   const businessSchema = generateLocalBusinessSchema({
     name: siteSettings?.businessName || 'Budds Plumbing',
-    description:
-      siteSettings?.meta_description || 'Professional plumbing services',
+    description: 'Professional plumbing services',
     url: siteUrl,
     telephone: siteSettings?.phoneNumber || '',
-    email: siteSettings?.email,
+    email: siteSettings?.email ?? undefined,
     address: siteSettings?.address
       ? {
           streetAddress: siteSettings.address.street || '',
@@ -211,7 +210,13 @@ function renderPage(
           postalCode: '',
           addressCountry: 'US',
         },
-    openingHours: siteSettings?.businessHours,
+    openingHours: siteSettings?.businessHours
+      ?.filter((hour) => hour.day && hour.open && hour.close)
+      .map((hour) => ({
+        day: hour.day as string,
+        open: hour.open as string,
+        close: hour.close as string,
+      })),
     areaServed: serviceLocation.location?.name
       ? [serviceLocation.location.name]
       : [],
@@ -248,7 +253,7 @@ function renderPage(
       {/* Page Content */}
       <main>
         {/* Render dynamic sections */}
-        {blocks && blocks.length > 0 && <SectionRenderer sections={blocks} />}
+        {blocks && blocks.length > 0 && <SectionRenderer sections={blocks as Parameters<typeof SectionRenderer>[0]['sections']} />}
 
         {/* Default content if no blocks */}
         {(!blocks || blocks.length === 0) && (

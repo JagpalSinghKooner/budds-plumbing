@@ -20,9 +20,9 @@ export interface TestimonialProps extends TestimonialType {
 const testimonialRegistry: {
   [K in TestimonialVariant]: React.ComponentType<Record<string, unknown>>;
 } = {
-  'testimonial-1': Testimonial1,
-  'testimonial-2': Testimonial2,
-  'testimonial-3': Testimonial3,
+  'testimonial-1': Testimonial1 as React.ComponentType<Record<string, unknown>>,
+  'testimonial-2': Testimonial2 as React.ComponentType<Record<string, unknown>>,
+  'testimonial-3': Testimonial3 as React.ComponentType<Record<string, unknown>>,
 };
 
 export default testimonialRegistry;

@@ -46,7 +46,10 @@ export default function GridRow({
               );
               return <div data-type={column._type} key={column._key} />;
             }
-            return <Component {...column} color={color} key={column._key} />;
+            return (
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              <Component key={column._key} {...(column as any)} color={color ?? undefined} />
+            );
           })}
         </div>
       )}

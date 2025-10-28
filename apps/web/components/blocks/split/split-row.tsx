@@ -49,12 +49,8 @@ export default function SplitRow({
               return <div data-type={column._type} key={column._key} />;
             }
             return (
-              <Component
-                {...column}
-                color={color}
-                noGap={noGap}
-                key={column._key}
-              />
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              <Component key={column._key} {...(column as any)} color={color ?? undefined} noGap={noGap ?? undefined} />
             );
           })}
         </div>

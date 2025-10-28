@@ -17,20 +17,20 @@ import Compliance1 from '@/components/blocks/compliance/compliance-1';
 type Block = NonNullable<NonNullable<PAGE_QUERYResult>['blocks']>[number];
 
 const componentMap: Record<string, React.ComponentType<Block>> = {
-  'hero-1': Hero1,
-  'hero-2': Hero2,
-  'section-header': SectionHeader,
-  'split-row': SplitRow,
-  'grid-row': GridRow,
-  'carousel-1': Carousel1,
-  'carousel-2': Carousel2,
-  'timeline-row': TimelineRow,
-  'cta-1': Cta1,
-  'logo-cloud-1': LogoCloud1,
-  faqs: FAQs,
-  'form-newsletter': FormNewsletter,
-  'all-posts': AllPosts,
-  'compliance-1': Compliance1,
+  'hero-1': Hero1 as React.ComponentType<Block>,
+  'hero-2': Hero2 as React.ComponentType<Block>,
+  'section-header': SectionHeader as React.ComponentType<Block>,
+  'split-row': SplitRow as React.ComponentType<Block>,
+  'grid-row': GridRow as React.ComponentType<Block>,
+  'carousel-1': Carousel1 as React.ComponentType<Block>,
+  'carousel-2': Carousel2 as React.ComponentType<Block>,
+  'timeline-row': TimelineRow as React.ComponentType<Block>,
+  'cta-1': Cta1 as React.ComponentType<Block>,
+  'logo-cloud-1': LogoCloud1 as React.ComponentType<Block>,
+  faqs: FAQs as React.ComponentType<Block>,
+  'form-newsletter': FormNewsletter as React.ComponentType<Block>,
+  'all-posts': AllPosts as React.ComponentType<Block>,
+  'compliance-1': Compliance1 as unknown as React.ComponentType<Block>,
 };
 
 export default function Blocks({ blocks }: { blocks: Block[] }) {

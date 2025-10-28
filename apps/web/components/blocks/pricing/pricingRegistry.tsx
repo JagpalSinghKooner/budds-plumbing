@@ -17,9 +17,9 @@ export interface PricingProps extends PricingType {
 const pricingRegistry: {
   [K in PricingVariant]: React.ComponentType<Record<string, unknown>>;
 } = {
-  'pricing-1': Pricing1,
-  'pricing-2': Pricing2,
-  'pricing-3': Pricing3,
+  'pricing-1': Pricing1 as React.ComponentType<Record<string, unknown>>,
+  'pricing-2': Pricing2 as React.ComponentType<Record<string, unknown>>,
+  'pricing-3': Pricing3 as React.ComponentType<Record<string, unknown>>,
 };
 
 export default pricingRegistry;

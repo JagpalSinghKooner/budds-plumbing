@@ -188,24 +188,14 @@ export default function SectionRendererDemo() {
       gridColumns: 'grid-cols-3',
       columns: [
         {
-          _type: 'grid-card',
+          _type: 'pricing-card',
           _key: 'pricing-card-1',
           title: 'Basic',
-          body: [
-            {
-              _type: 'block',
-              _key: 'pricing-block-1',
-              style: 'normal',
-              children: [
-                {
-                  _type: 'span',
-                  _key: 'pricing-span-1',
-                  text: '$99/month',
-                  marks: [],
-                },
-              ],
-            },
-          ],
+          price: {
+            value: 99,
+            period: 'month',
+          },
+          excerpt: 'Basic plan for small businesses',
         },
       ],
     } as GridRow,
@@ -278,7 +268,7 @@ export default function SectionRendererDemo() {
                     _key: 'invalid-variant',
                     variant: 'invalid-hero-variant',
                   },
-                ] as SectionType[]
+                ] as unknown as SectionType[]
               }
             />
           </div>

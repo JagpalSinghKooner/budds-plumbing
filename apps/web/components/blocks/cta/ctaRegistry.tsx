@@ -17,9 +17,9 @@ export interface CtaProps extends CtaType {
 const ctaRegistry: {
   [K in CtaVariant]: React.ComponentType<Record<string, unknown>>;
 } = {
-  'cta-1': Cta1,
-  'cta-2': Cta2,
-  'cta-3': Cta3,
+  'cta-1': Cta1 as React.ComponentType<Record<string, unknown>>,
+  'cta-2': Cta2 as React.ComponentType<Record<string, unknown>>,
+  'cta-3': Cta3 as React.ComponentType<Record<string, unknown>>,
 };
 
 export default ctaRegistry;
