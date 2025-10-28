@@ -17,7 +17,9 @@
     "clean": "turbo run clean && rm -rf node_modules",
     "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md}\"",
     "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,json,md}\"",
-    "prepare": "husky"
+    "prepare": "husky",
+    "provision:create": "cd scripts/provisioning && pnpm install && pnpm run create-client",
+    "provision:validate": "cd scripts/provisioning && pnpm install && pnpm run validate-client"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.3.1",

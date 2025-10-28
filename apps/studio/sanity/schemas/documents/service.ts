@@ -40,6 +40,14 @@ export default defineType({
       validation: (Rule) => Rule.required(),
     }),
     defineField({
+      name: 'category',
+      title: 'Category',
+      type: 'reference',
+      to: [{ type: 'serviceCategory' }],
+      group: 'settings',
+      validation: (Rule) => Rule.required(),
+    }),
+    defineField({
       name: 'blocks',
       type: 'array',
       group: 'content',

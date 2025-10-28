@@ -30,6 +30,8 @@
     "@sanity/preview-url-secret": "^2.1.15",
     "@sanity/ui": "^3.1.6",
     "@sanity/vision": "^4.10.0",
+    "@upstash/ratelimit": "^2.0.6",
+    "@upstash/redis": "^1.35.6",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "embla-carousel-react": "^8.6.0",

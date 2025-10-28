@@ -4,6 +4,7 @@ import {
   LOCATION_QUERY,
   LOCATIONS_SLUGS_QUERY,
 } from '@/sanity/queries/location';
+import { SETTINGS_QUERY } from '@/sanity/queries/settings';
 import {
   generateSEOMetadata,
   generateLocalBusinessSchema,
@@ -36,9 +37,14 @@ export async function generateStaticParams() {
  */
 export async function generateMetadata({ params }: LocationPageProps) {
   const { locationSlug } = await params;
-  const location = await client.fetch<Location>(LOCATION_QUERY, {
-    slug: locationSlug,
-  });
+
+  // Fetch location and siteSettings in parallel
+  const [location, siteSettings] = await Promise.all([
+    client.fetch<Location>(LOCATION_QUERY, {
+      slug: locationSlug,
+    }),
+    client.fetch(SETTINGS_QUERY),
+  ]);
 
   if (!location) {
     return {
@@ -49,21 +55,25 @@ export async function generateMetadata({ params }: LocationPageProps) {
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
   const canonical = `${siteUrl}/locations/${locationSlug}`;
 
+  // Title with fallback to siteSettings
+  const title = location.meta_title ||
+                `${siteSettings?.businessName || 'Budds Plumbing'} in ${location.name}`;
+
   return generateSEOMetadata({
-    title: location.meta_title || location.name || 'Location',
+    title,
     description: location.meta_description || '',
     canonical,
     noindex: location.noindex || false,
     openGraph: location.ogImage
       ? {
-          title: location.meta_title || location.name,
+          title,
           description: location.meta_description || '',
         }
       : undefined,
     twitter: location.ogImage
       ? {
           card: 'summary_large_image',
-          title: location.meta_title || location.name,
+          title,
           description: location.meta_description || '',
         }
       : undefined,
@@ -75,9 +85,14 @@ export async function generateMetadata({ params }: LocationPageProps) {
  */
 export default async function LocationPage({ params }: LocationPageProps) {
   const { locationSlug } = await params;
-  const location = await client.fetch<Location>(LOCATION_QUERY, {
-    slug: locationSlug,
-  });
+
+  // Fetch location and siteSettings in parallel
+  const [location, siteSettings] = await Promise.all([
+    client.fetch<Location>(LOCATION_QUERY, {
+      slug: locationSlug,
+    }),
+    client.fetch(SETTINGS_QUERY),
+  ]);
 
   if (!location) {
     notFound();
@@ -85,19 +100,28 @@ export default async function LocationPage({ params }: LocationPageProps) {
 
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
 
-  // Generate JSON-LD schemas
+  // Generate JSON-LD schemas using siteSettings data
   const businessSchema = generateLocalBusinessSchema({
-    name: location.name || 'Budds Plumbing',
-    description: location.meta_description || 'Professional plumbing services',
+    name: siteSettings?.businessName || 'Budds Plumbing',
+    description: location.meta_description || siteSettings?.meta_description || 'Professional plumbing services',
     url: `${siteUrl}/locations/${locationSlug}`,
-    telephone: '+1-555-PLUMBING',
-    address: {
-      streetAddress: '123 Main St',
-      addressLocality: location.name || 'City',
-      addressRegion: 'State',
-      postalCode: '12345',
+    telephone: siteSettings?.phoneNumber || '',
+    email: siteSettings?.email,
+    address: siteSettings?.address ? {
+      streetAddress: siteSettings.address.street || '',
+      addressLocality: siteSettings.address.city || '',
+      addressRegion: siteSettings.address.state || '',
+      postalCode: siteSettings.address.zip || '',
+      addressCountry: 'US',
+    } : {
+      streetAddress: '',
+      addressLocality: location.name || '',
+      addressRegion: '',
+      postalCode: '',
       addressCountry: 'US',
     },
+    openingHours: siteSettings?.businessHours,
+    areaServed: location.name ? [location.name] : [],
   });
 
   const combinedSchema = combineSchemas(businessSchema);

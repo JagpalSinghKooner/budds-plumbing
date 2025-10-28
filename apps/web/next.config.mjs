@@ -10,6 +10,27 @@ const nextConfig = {
       },
     ]
   },
+
+  // Multi-domain support configuration
+  async headers() {
+    return [
+      {
+        // Apply to all routes
+        source: '/:path*',
+        headers: [
+          {
+            key: 'X-DNS-Prefetch-Control',
+            value: 'on'
+          },
+          {
+            key: 'X-Frame-Options',
+            value: 'SAMEORIGIN'
+          },
+        ],
+      },
+    ];
+  },
+
   images: {
     unoptimized: true,
     qualities: [100],
@@ -20,6 +41,7 @@ const nextConfig = {
       },
     ],
   },
+
   // Skip static generation during build for validation
   skipTrailingSlashRedirect: true,
 

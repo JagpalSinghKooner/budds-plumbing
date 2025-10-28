@@ -1,6 +1,8 @@
 # Run lint-staged on staged files
 pnpm exec lint-staged
 
-# Note: Full typecheck disabled in pre-commit due to existing strict mode errors
-# Run 'pnpm typecheck' manually before pushing
-# TODO: Fix all TypeScript strict mode errors and re-enable typecheck in pre-commit
+# Run TypeScript typecheck
+pnpm typecheck
+
+# Run Prettier format check
+pnpm format:check

@@ -1,5 +1,18 @@
 import { groq } from 'next-sanity';
 
+export const SERVICE_CATEGORIES_QUERY = groq`
+  *[_type == "serviceCategory"] | order(orderRank) {
+    _id,
+    name,
+    slug,
+    "services": *[_type == "service" && references(^._id)] | order(name) {
+      _id,
+      name,
+      slug
+    }
+  }
+`;
+
 export const NAVIGATION_QUERY = groq`
   *[_type == "navigation"]{
     _type,
@@ -12,13 +25,25 @@ export const NAVIGATION_QUERY = groq`
       isExternal,
       href,
       target,
+      internalLink->{
+        _type,
+        _id,
+        slug,
+        name,
+        title,
+        "service": service->{slug},
+        "location": location->{slug}
+      },
       "resolvedLink": select(
-        isExternal => href,
-        internalLink._type == "page" => "/" + internalLink->slug.current,
-        internalLink._type == "post" => "/blog/" + internalLink->slug.current,
-        internalLink._type == "service" => "/services/" + internalLink->slug.current,
-        internalLink._type == "location" => "/locations/" + internalLink->slug.current,
-        internalLink._type == "service-location" => "/locations/" + internalLink->location->slug.current + "/services/" + internalLink->service->slug.current,
+        isExternal == true => href,
+        internalLink._ref != null && defined(internalLink->slug.current) && internalLink->_type == "page" => select(
+          internalLink->slug.current == "index" => "/",
+          "/" + internalLink->slug.current
+        ),
+        internalLink._ref != null && defined(internalLink->slug.current) && internalLink->_type == "post" => "/blog/" + internalLink->slug.current,
+        internalLink._ref != null && defined(internalLink->slug.current) && internalLink->_type == "service" => "/services/" + internalLink->slug.current,
+        internalLink._ref != null && defined(internalLink->slug.current) && internalLink->_type == "location" => "/locations/" + internalLink->slug.current,
+        internalLink._ref != null && internalLink->_type == "service-location" => "/" + internalLink->service->slug.current + "/in/" + internalLink->location->slug.current,
         "#"
       ),
       subLinks[]{
@@ -27,13 +52,25 @@ export const NAVIGATION_QUERY = groq`
         isExternal,
         href,
         target,
+        internalLink->{
+          _type,
+          _id,
+          slug,
+          name,
+          title,
+          "service": service->{slug},
+          "location": location->{slug}
+        },
         "resolvedLink": select(
-          isExternal => href,
-          internalLink._type == "page" => "/" + internalLink->slug.current,
-          internalLink._type == "post" => "/blog/" + internalLink->slug.current,
-          internalLink._type == "service" => "/services/" + internalLink->slug.current,
-          internalLink._type == "location" => "/locations/" + internalLink->slug.current,
-          internalLink._type == "service-location" => "/locations/" + internalLink->location->slug.current + "/services/" + internalLink->service->slug.current,
+          isExternal == true => href,
+          internalLink._ref != null && defined(internalLink->slug.current) && internalLink->_type == "page" => select(
+            internalLink->slug.current == "index" => "/",
+            "/" + internalLink->slug.current
+          ),
+          internalLink._ref != null && defined(internalLink->slug.current) && internalLink->_type == "post" => "/blog/" + internalLink->slug.current,
+          internalLink._ref != null && defined(internalLink->slug.current) && internalLink->_type == "service" => "/services/" + internalLink->slug.current,
+          internalLink._ref != null && defined(internalLink->slug.current) && internalLink->_type == "location" => "/locations/" + internalLink->slug.current,
+          internalLink._ref != null && internalLink->_type == "service-location" => "/" + internalLink->service->slug.current + "/in/" + internalLink->location->slug.current,
           "#"
         )
       }

@@ -3,6 +3,25 @@ import { groq } from "next-sanity";
 export const SETTINGS_QUERY = groq`*[_type == "settings"][0]{
   _type,
   siteName,
+  businessName,
+  phoneNumber,
+  email,
+  address {
+    street,
+    city,
+    state,
+    zip
+  },
+  businessHours[] {
+    day,
+    open,
+    close
+  },
+  emergencyAvailable,
+  licenseNumber,
+  insuranceInfo,
+  serviceRadius,
+  primaryServiceArea,
   logo{
     dark{
       ...,
@@ -39,3 +58,6 @@ export const SETTINGS_QUERY = groq`*[_type == "settings"][0]{
   },
   copyright
 }`;
+
+// Alias for backwards compatibility
+export const SITE_SETTINGS_QUERY = SETTINGS_QUERY;

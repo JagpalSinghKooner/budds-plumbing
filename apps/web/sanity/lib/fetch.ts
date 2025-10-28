@@ -1,6 +1,6 @@
 import { sanityFetch } from "@/sanity/lib/live";
 import { PAGE_QUERY, PAGES_SLUGS_QUERY } from "@/sanity/queries/page";
-import { NAVIGATION_QUERY } from "@/sanity/queries/navigation";
+import { NAVIGATION_QUERY, SERVICE_CATEGORIES_QUERY } from "@/sanity/queries/navigation";
 import { SETTINGS_QUERY } from "@/sanity/queries/settings";
 import {
   POST_QUERY,
@@ -16,6 +16,21 @@ import {
   NAVIGATION_QUERYResult,
   SETTINGS_QUERYResult,
 } from "@/sanity.types";
+
+interface ServiceCategory {
+  _id: string;
+  name: string | null;
+  slug: {
+    current: string;
+  } | null;
+  services?: Array<{
+    _id: string;
+    name: string | null;
+    slug: {
+      current: string;
+    } | null;
+  }> | null;
+}
 
 export const fetchSanityPageBySlug = async ({
   slug,
@@ -89,3 +104,12 @@ export const fetchSanitySettings = async (): Promise<SETTINGS_QUERYResult> => {
 
   return data;
 };
+
+export const fetchSanityServiceCategories =
+  async (): Promise<ServiceCategory[]> => {
+    const { data } = await sanityFetch({
+      query: SERVICE_CATEGORIES_QUERY,
+    });
+
+    return data as ServiceCategory[];
+  };

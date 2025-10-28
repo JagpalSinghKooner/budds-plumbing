@@ -1,0 +1,9 @@
+{
+  "name": "ACME Plumbing & Heating",
+  "slug": "acme",
+  "email": "contact@acmeplumbing.com",
+  "phone": "+1-555-123-4567",
+  "website": "https://acmeplumbing.com",
+  "datasetName": "client-acme",
+  "template": "plumbing"
+}

@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation';
 import { client } from '@/sanity/lib/client';
 import { SERVICE_QUERY, SERVICES_SLUGS_QUERY } from '@/sanity/queries/service';
+import { SETTINGS_QUERY } from '@/sanity/queries/settings';
 import {
   generateSEOMetadata,
   generateServiceSchema,
@@ -72,9 +73,14 @@ export async function generateMetadata({ params }: ServicePageProps) {
  */
 export default async function ServicePage({ params }: ServicePageProps) {
   const { serviceSlug } = await params;
-  const service = await client.fetch<Service>(SERVICE_QUERY, {
-    slug: serviceSlug,
-  });
+
+  // Fetch service and siteSettings in parallel
+  const [service, siteSettings] = await Promise.all([
+    client.fetch<Service>(SERVICE_QUERY, {
+      slug: serviceSlug,
+    }),
+    client.fetch(SETTINGS_QUERY),
+  ]);
 
   if (!service) {
     notFound();
@@ -82,29 +88,37 @@ export default async function ServicePage({ params }: ServicePageProps) {
 
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
 
-  // Generate JSON-LD schemas
+  // Generate JSON-LD schemas using siteSettings data
   const serviceSchema = generateServiceSchema({
     name: service.name || 'Service',
     description: service.meta_description || '',
     provider: {
-      name: 'Budds Plumbing',
+      name: siteSettings?.businessName || 'Budds Plumbing',
       url: siteUrl,
     },
     serviceType: 'Plumbing Service',
   });
 
   const businessSchema = generateLocalBusinessSchema({
-    name: 'Budds Plumbing',
-    description: 'Professional plumbing services',
+    name: siteSettings?.businessName || 'Budds Plumbing',
+    description: siteSettings?.meta_description || 'Professional plumbing services',
     url: siteUrl,
-    telephone: '+1-555-PLUMBING',
-    address: {
-      streetAddress: '123 Main St',
-      addressLocality: 'City',
-      addressRegion: 'State',
-      postalCode: '12345',
+    telephone: siteSettings?.phoneNumber || '',
+    email: siteSettings?.email,
+    address: siteSettings?.address ? {
+      streetAddress: siteSettings.address.street || '',
+      addressLocality: siteSettings.address.city || '',
+      addressRegion: siteSettings.address.state || '',
+      postalCode: siteSettings.address.zip || '',
+      addressCountry: 'US',
+    } : {
+      streetAddress: '',
+      addressLocality: '',
+      addressRegion: '',
+      postalCode: '',
       addressCountry: 'US',
     },
+    openingHours: siteSettings?.businessHours,
   });
 
   const combinedSchema = combineSchemas(serviceSchema, businessSchema);
