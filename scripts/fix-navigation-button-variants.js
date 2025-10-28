@@ -31,12 +31,8 @@ async function fixNavigationLinks() {
 
     // Update links to remove buttonVariant from regular nav items
     const updatedLinks = navigation.links.map((link) => {
-      // Keep buttonVariant only for explicit CTA buttons (like "Contact Us" with special styling)
+      // Keep buttonVariant only for explicit CTA buttons (like "Get Quote" or "Book Now")
       // For regular nav links, remove buttonVariant
-      const { buttonVariant, ...rest } = link;
-
-      // You can add logic here to keep buttonVariant for specific links
-      // For example, if the link title is "Contact Us" and you want it styled as a button
       const shouldKeepButtonVariant =
         link.title === 'Get Quote' || link.title === 'Book Now';
 
@@ -45,8 +41,24 @@ async function fixNavigationLinks() {
         return link;
       }
 
+      // Remove buttonVariant property if it exists
+      if (!Object.prototype.hasOwnProperty.call(link, 'buttonVariant')) {
+        return link;
+      }
+
       console.log(`  ✓ Removing buttonVariant from: ${link.title}`);
-      return rest;
+
+      // Create new link object without buttonVariant
+      const updatedLink = {};
+      for (const key in link) {
+        if (
+          Object.prototype.hasOwnProperty.call(link, key) &&
+          key !== 'buttonVariant'
+        ) {
+          updatedLink[key] = link[key];
+        }
+      }
+      return updatedLink;
     });
 
     // Update the navigation document

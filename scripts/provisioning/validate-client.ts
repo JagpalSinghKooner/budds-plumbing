@@ -132,7 +132,12 @@ async function validateSchema(client: SanityClient): Promise<{
       try {
         await client.fetch(query);
       } catch (error) {
-        errors.push(`Document type "${name}" may not be properly configured`);
+        const errorMessage =
+          error instanceof Error ? error.message : String(error);
+        console.warn(`Warning: Failed to query "${name}": ${errorMessage}`);
+        errors.push(
+          `Document type "${name}" may not be properly configured: ${errorMessage}`
+        );
       }
     }
 
@@ -242,7 +247,10 @@ async function validateClient(datasetName: string): Promise<ValidationResult> {
         warnings.push('Dataset is empty - no documents found');
       }
     } catch (error) {
-      warnings.push('Could not count total documents');
+      const errorMessage =
+        error instanceof Error ? error.message : String(error);
+      console.warn(`Warning: Could not count total documents: ${errorMessage}`);
+      warnings.push(`Could not count total documents: ${errorMessage}`);
     }
 
     // Return validation result

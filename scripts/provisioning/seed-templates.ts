@@ -133,7 +133,7 @@ export function createDefaultSettings(config: ClientConfig) {
 /**
  * Creates default navigation document
  */
-export function createDefaultNavigation(config: ClientConfig) {
+export function createDefaultNavigation() {
   return {
     _type: 'navigation' as const,
     _id: 'main-navigation',
@@ -323,7 +323,7 @@ export function generateSeedData(
 ): SeedData {
   const seedData: SeedData = {
     settings: createDefaultSettings(config),
-    navigation: createDefaultNavigation(config),
+    navigation: createDefaultNavigation(),
     homePage: createDefaultHomePage(config),
   };
 
@@ -381,7 +381,7 @@ export function generatePresetSeedData(
 
   const seedData: SeedData = {
     settings: createDefaultSettings(config),
-    navigation: createDefaultNavigation(config),
+    navigation: createDefaultNavigation(),
     homePage: {
       ...createDefaultHomePage(config),
       blocks: [

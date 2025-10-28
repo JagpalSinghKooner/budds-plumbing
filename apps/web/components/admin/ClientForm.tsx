@@ -22,17 +22,34 @@ interface ClientFormProps {
   mode: 'create' | 'edit';
 }
 
+interface FormElements extends HTMLFormControlsCollection {
+  name: HTMLInputElement;
+  email: HTMLInputElement;
+  status: HTMLSelectElement;
+  plan: HTMLSelectElement;
+  websiteUrl: HTMLInputElement;
+  contactPerson: HTMLInputElement;
+  phone: HTMLInputElement;
+  notes: HTMLTextAreaElement;
+}
+
+interface ClientFormElement extends HTMLFormElement {
+  readonly elements: FormElements;
+}
+
 export function ClientForm({ client, mode }: ClientFormProps) {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: React.FormEvent<ClientFormElement>) {
     event.preventDefault();
     setIsSubmitting(true);
     setError(null);
 
+    // Use native FormData API to extract form values
     const formData = new FormData(event.currentTarget);
+
     const data = {
       name: formData.get('name') as string,
       email: formData.get('email') as string,

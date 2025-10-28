@@ -7,7 +7,6 @@
 
 import { createClient, type SanityClient } from '@sanity/client';
 import * as readline from 'readline';
-import { promisify } from 'util';
 import type {
   ClientConfig,
   ProvisioningResult,

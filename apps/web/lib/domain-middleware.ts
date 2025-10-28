@@ -110,13 +110,12 @@ export function applySecurityHeaders(
 }
 
 /**
- * Apply caching headers based on domain and path
+ * Apply caching headers based on path
  * Different caching strategies for different content types
  */
 export function applyCachingHeaders(
   response: NextResponse,
-  request: NextRequest,
-  config: DomainConfig
+  request: NextRequest
 ): NextResponse {
   const { pathname } = request.nextUrl;
 
@@ -203,7 +202,7 @@ export function domainMiddleware(request: NextRequest): NextResponse {
   response = applySecurityHeaders(response, validation.config);
 
   // Apply caching headers
-  response = applyCachingHeaders(response, request, validation.config);
+  response = applyCachingHeaders(response, request);
 
   // Add domain context headers
   response = addDomainContextHeaders(response, validation.config);
