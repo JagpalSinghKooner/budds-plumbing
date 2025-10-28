@@ -13,7 +13,10 @@ import {
   combineSchemas,
 } from '@/lib/seo';
 import SectionRenderer from '@/components/SectionRenderer';
-import type { SERVICE_LOCATION_QUERYResult } from '@/sanity.types';
+import type {
+  SERVICE_LOCATION_QUERYResult,
+  SETTINGS_QUERYResult,
+} from '@/sanity.types';
 
 interface ServiceLocationPageProps {
   params: Promise<{
@@ -143,7 +146,7 @@ export default async function ServiceLocationPage({
     };
 
     return renderPage(
-      fallbackServiceLocation as any,
+      fallbackServiceLocation as NonNullable<SERVICE_LOCATION_QUERYResult>,
       siteSettings,
       serviceSlug,
       locationSlug
@@ -155,7 +158,7 @@ export default async function ServiceLocationPage({
 
 function renderPage(
   serviceLocation: NonNullable<SERVICE_LOCATION_QUERYResult>,
-  siteSettings: any,
+  siteSettings: SETTINGS_QUERYResult,
   serviceSlug: string,
   locationSlug: string
 ) {
@@ -245,9 +248,7 @@ function renderPage(
       {/* Page Content */}
       <main>
         {/* Render dynamic sections */}
-        {blocks && blocks.length > 0 && (
-          <SectionRenderer sections={blocks as any} />
-        )}
+        {blocks && blocks.length > 0 && <SectionRenderer sections={blocks} />}
 
         {/* Default content if no blocks */}
         {(!blocks || blocks.length === 0) && (

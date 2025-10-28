@@ -47,8 +47,10 @@ export interface SectionRendererProps {
 }
 
 // Registry type for type-safe registry lookup
+// Using Record<string, unknown> instead of any for better type safety
+// Each component accepts props that are objects with unknown structure
 type ComponentRegistry = {
-  [key: string]: React.ComponentType<any>;
+  [key: string]: React.ComponentType<Record<string, unknown>>;
 };
 
 // Map section _type to their respective registries
@@ -149,8 +151,11 @@ export default function SectionRenderer({ sections }: SectionRendererProps) {
         }
 
         // Render the component with all section props
+        // Type assertion is safe here because we've validated the registry lookup
         try {
-          return <Component {...section} key={key} />;
+          return (
+            <Component {...(section as Record<string, unknown>)} key={key} />
+          );
         } catch (error) {
           console.error(
             `SectionRenderer: Error rendering component for type: ${sectionWithKey._type}, variant: ${variant}`,

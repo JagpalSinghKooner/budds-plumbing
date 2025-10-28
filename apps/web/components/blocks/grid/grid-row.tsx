@@ -46,9 +46,7 @@ export default function GridRow({
               );
               return <div data-type={column._type} key={column._key} />;
             }
-            return (
-              <Component {...(column as any)} color={color} key={column._key} />
-            );
+            return <Component {...column} color={color} key={column._key} />;
           })}
         </div>
       )}

@@ -126,9 +126,14 @@ const NewsletterForm = () => {
 
 const Footer15 = ({ settings, navigation, socialLinks }: Footer15Props) => {
   // Extract logo URL safely
+  interface LogoAsset {
+    asset?: { url?: string };
+    dark?: { asset?: { url?: string } };
+    light?: { asset?: { url?: string } };
+  }
   const logoUrl = settings?.logo
-    ? (settings.logo as any).dark?.asset?.url ||
-      (settings.logo as any).light?.asset?.url ||
+    ? (settings.logo as LogoAsset).dark?.asset?.url ||
+      (settings.logo as LogoAsset).light?.asset?.url ||
       ''
     : '';
 
@@ -151,7 +156,7 @@ const Footer15 = ({ settings, navigation, socialLinks }: Footer15Props) => {
         links:
           link.subLinks?.map((subLink) => ({
             name: subLink.title || '',
-            href: (subLink as any).resolvedLink || '#',
+            href: subLink.resolvedLink || '#',
             target: subLink.target,
           })) || [],
       })) || [];
@@ -161,7 +166,7 @@ const Footer15 = ({ settings, navigation, socialLinks }: Footer15Props) => {
     const mainLinks =
       navigation[0]?.links?.map((link) => ({
         name: link.title || '',
-        href: (link as any).resolvedLink || '#',
+        href: link.resolvedLink || '#',
         target: link.target,
       })) || [];
 
@@ -175,7 +180,7 @@ const Footer15 = ({ settings, navigation, socialLinks }: Footer15Props) => {
 
   const currentYear = new Date().getFullYear();
   const businessName =
-    (settings as any)?.businessName || settings?.siteName || 'Company';
+    settings?.businessName || settings?.siteName || 'Company';
 
   return (
     <section className="bg-background py-16 md:py-24">
@@ -206,13 +211,13 @@ const Footer15 = ({ settings, navigation, socialLinks }: Footer15Props) => {
             )}
 
             {/* Contact Info */}
-            {(settings as any)?.phoneNumber && (
+            {settings?.phoneNumber && (
               <div className="text-muted-foreground">
                 <Link
-                  href={`tel:${(settings as any).phoneNumber}`}
+                  href={`tel:${settings.phoneNumber}`}
                   className="hover:text-foreground transition-colors"
                 >
-                  {(settings as any).phoneNumber}
+                  {settings.phoneNumber}
                 </Link>
               </div>
             )}
@@ -274,9 +279,9 @@ const Footer15 = ({ settings, navigation, socialLinks }: Footer15Props) => {
             © {currentYear} {businessName}. All rights reserved.
           </div>
 
-          {(settings as any)?.licenseNumber && (
+          {settings?.licenseNumber && (
             <div className="text-muted-foreground text-sm">
-              License #{(settings as any).licenseNumber}
+              License #{settings.licenseNumber}
             </div>
           )}
         </div>

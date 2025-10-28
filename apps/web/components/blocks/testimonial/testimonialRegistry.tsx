@@ -16,8 +16,9 @@ export interface TestimonialProps extends TestimonialType {
 }
 
 // Type-safe registry mapping variant strings to React components
+// Using Record<string, unknown> for props to avoid any while maintaining flexibility
 const testimonialRegistry: {
-  [K in TestimonialVariant]: React.ComponentType<TestimonialProps>;
+  [K in TestimonialVariant]: React.ComponentType<Record<string, unknown>>;
 } = {
   'testimonial-1': Testimonial1,
   'testimonial-2': Testimonial2,

@@ -4,5 +4,5 @@ import { Carousel2 as Carousel2Type } from '@/sanity.types';
 
 // Testimonial1 uses the existing Carousel2 component
 export default function Testimonial1(props: Carousel2Type) {
-  return <Carousel2 {...(props as any)} />;
+  return <Carousel2 {...props} />;
 }

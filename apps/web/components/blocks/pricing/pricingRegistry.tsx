@@ -13,8 +13,9 @@ export interface PricingProps extends PricingType {
 }
 
 // Type-safe registry mapping variant strings to React components
+// Using Record<string, unknown> for props to avoid any while maintaining flexibility
 const pricingRegistry: {
-  [K in PricingVariant]: React.ComponentType<PricingProps>;
+  [K in PricingVariant]: React.ComponentType<Record<string, unknown>>;
 } = {
   'pricing-1': Pricing1,
   'pricing-2': Pricing2,

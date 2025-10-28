@@ -13,8 +13,9 @@ export interface CtaProps extends CtaType {
 }
 
 // Type-safe registry mapping variant strings to React components
+// Using Record<string, unknown> for props to avoid any while maintaining flexibility
 const ctaRegistry: {
-  [K in CtaVariant]: React.ComponentType<any>;
+  [K in CtaVariant]: React.ComponentType<Record<string, unknown>>;
 } = {
   'cta-1': Cta1,
   'cta-2': Cta2,

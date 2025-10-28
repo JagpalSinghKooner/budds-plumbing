@@ -1,8 +1,10 @@
 import { client } from '@/sanity/lib/client';
 import { NAVIGATION_QUERY } from '@/sanity/queries/navigation';
+import type { NAVIGATION_QUERYResult } from '@/sanity.types';
 
 export default async function DebugNavPage() {
-  const navigation = await client.fetch(NAVIGATION_QUERY);
+  const navigation =
+    await client.fetch<NAVIGATION_QUERYResult>(NAVIGATION_QUERY);
 
   return (
     <div className="container mx-auto p-8">
@@ -19,7 +21,7 @@ export default async function DebugNavPage() {
         <h2 className="text-xl font-semibold mb-4">
           Navigation Links Analysis
         </h2>
-        {navigation?.[0]?.links?.map((link: any, idx: number) => (
+        {navigation?.[0]?.links?.map((link, idx: number) => (
           <div key={idx} className="mb-4 p-4 border rounded">
             <h3 className="font-bold">{link.title || 'No Title'}</h3>
             <div className="mt-2 text-sm space-y-1">
@@ -45,7 +47,7 @@ export default async function DebugNavPage() {
               {link.subLinks && link.subLinks.length > 0 && (
                 <div className="mt-2 ml-4 border-l-2 pl-4">
                   <p className="font-semibold">Sub Links:</p>
-                  {link.subLinks.map((subLink: any, subIdx: number) => (
+                  {link.subLinks.map((subLink, subIdx: number) => (
                     <div key={subIdx} className="mt-2 text-xs">
                       <p>
                         <strong>Title:</strong> {subLink.title || 'No Title'}

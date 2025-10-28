@@ -13,8 +13,9 @@ export interface FaqProps extends FaqType {
 }
 
 // Type-safe registry mapping variant strings to React components
+// Using Record<string, unknown> for props to avoid any while maintaining flexibility
 const faqRegistry: {
-  [K in FaqVariant]: React.ComponentType<FaqProps>;
+  [K in FaqVariant]: React.ComponentType<Record<string, unknown>>;
 } = {
   'faq-1': Faq1,
   'faq-2': Faq2,

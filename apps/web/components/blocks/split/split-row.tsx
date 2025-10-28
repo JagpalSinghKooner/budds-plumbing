@@ -50,7 +50,7 @@ export default function SplitRow({
             }
             return (
               <Component
-                {...(column as any)}
+                {...column}
                 color={color}
                 noGap={noGap}
                 key={column._key}

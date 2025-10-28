@@ -85,12 +85,12 @@ const Navbar2 = ({
     navigation[0]?.links?.map((link) => {
       const menuItem: MenuItem = {
         title: link.title,
-        url: (link as any).resolvedLink || '#',
+        url: link.resolvedLink || '#',
         target: link.target ? '_blank' : null,
         buttonVariant: link.buttonVariant,
         items: link.subLinks?.map((subLink) => ({
           title: subLink.title,
-          url: (subLink as any).resolvedLink || '#',
+          url: subLink.resolvedLink || '#',
           target: subLink.target ? '_blank' : null,
         })),
       };
@@ -116,7 +116,7 @@ const Navbar2 = ({
               .filter((service) => service.name && service.slug?.current)
               .map((service) => ({
                 title: service.name,
-                url: `/services/${service.slug!.current}`,
+                url: `/services/${service.slug?.current || ''}`,
               }));
           }
 
@@ -128,9 +128,13 @@ const Navbar2 = ({
     }) || [];
 
   // Extract logo URL safely
+  interface LogoAsset {
+    asset?: { url?: string };
+    dark?: { asset?: { url?: string } };
+  }
   const logoUrl = settings?.logo
-    ? (settings.logo as any).asset?.url ||
-      (settings.logo as any).dark?.asset?.url ||
+    ? (settings.logo as LogoAsset).asset?.url ||
+      (settings.logo as LogoAsset).dark?.asset?.url ||
       ''
     : '';
 
@@ -345,6 +349,8 @@ const CascadingCategoryMenu = ({ categories }: { categories: MenuItem[] }) => {
         <div
           key={`category-desktop-${idx}`}
           className="relative"
+          role="menuitem"
+          tabIndex={0}
           onMouseEnter={() => handleMouseEnter(category.title || null)}
           onMouseLeave={handleMouseLeave}
         >
@@ -359,6 +365,7 @@ const CascadingCategoryMenu = ({ categories }: { categories: MenuItem[] }) => {
             category.items.length > 0 && (
               <div
                 className="absolute left-full top-0 pl-3"
+                role="menu"
                 onMouseEnter={() => handleMouseEnter(category.title || null)}
                 onMouseLeave={handleMouseLeave}
               >

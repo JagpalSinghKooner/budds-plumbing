@@ -98,7 +98,7 @@ export const POST = async (request: Request) => {
 
       // In development, return success to allow testing
       if (process.env.NODE_ENV === 'development') {
-        console.log('Newsletter signup (dev mode):', email);
+        console.warn('Newsletter signup (dev mode):', email);
         return NextResponse.json({
           success: true,
           message: 'Email saved (development mode)',
@@ -132,11 +132,14 @@ export const POST = async (request: Request) => {
         success: true,
         message: 'Successfully subscribed to newsletter',
       });
-    } catch (resendError: any) {
+    } catch (resendError: unknown) {
       console.error('Resend API error:', resendError);
 
       // Check for duplicate email error
-      if (resendError?.message?.includes('already exists')) {
+      if (
+        resendError instanceof Error &&
+        resendError.message?.includes('already exists')
+      ) {
         return NextResponse.json({
           success: true,
           message: 'Email already subscribed',

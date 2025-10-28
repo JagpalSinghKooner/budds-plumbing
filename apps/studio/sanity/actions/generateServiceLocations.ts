@@ -100,7 +100,7 @@ export const generateServiceLocationsAction: DocumentActionComponent = (
               .commit();
           }
 
-          console.log(
+          console.warn(
             `Successfully created ${mutations.length} service-location page(s) for "${service.name}".`
           );
         }

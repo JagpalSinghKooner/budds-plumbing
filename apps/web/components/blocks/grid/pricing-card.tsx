@@ -25,10 +25,10 @@ export default function PricingCard({
   link,
 }: PricingCardProps) {
   // Helper function to safely extract text from strings or custom text objects
-  const getText = (value: any): string => {
+  const getText = (value: unknown): string => {
     if (typeof value === 'string') return value;
     if (value && typeof value === 'object' && 'text' in value)
-      return value.text;
+      return (value as { text: string }).text;
     return '';
   };
 

@@ -72,12 +72,16 @@ export default function FormNewsletter({
         } else {
           toast.error(result.error);
         }
-      } catch (error: any) {
-        toast.error(error.message);
-        throw new Error(error.message);
+      } catch (error: unknown) {
+        const errorMessage =
+          error instanceof Error
+            ? error.message
+            : 'An unexpected error occurred';
+        toast.error(errorMessage);
+        throw new Error(errorMessage);
       }
     },
-    [form]
+    [form, successMessage]
   );
 
   async function onSubmit(values: z.infer<typeof formSchema>) {

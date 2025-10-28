@@ -1,4 +1,5 @@
 import { orderableDocumentListDeskItem } from '@sanity/orderable-document-list';
+import type { StructureBuilder } from 'sanity/structure';
 import {
   Files,
   BookA,
@@ -9,7 +10,8 @@ import {
   Settings,
 } from 'lucide-react';
 
-export const structure = (S: any, context: any) =>
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const structure = (S: StructureBuilder, context: any) =>
   S.list()
     .title('Content')
     .items([
@@ -56,7 +58,7 @@ export const structure = (S: any, context: any) =>
         S,
         context,
       }),
-      S.divider({ title: 'Global' }),
+      S.divider(),
       S.listItem()
         .title('Navigation')
         .icon(Menu)

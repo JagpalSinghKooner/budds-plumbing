@@ -1,15 +1,25 @@
 import { defineField, defineType } from 'sanity';
 import { Info } from 'lucide-react';
 
-function extractPlainText(blocks: any): string {
+interface BlockChild {
+  text: string;
+  _type?: string;
+}
+
+interface Block {
+  _type: string;
+  children?: BlockChild[];
+}
+
+function extractPlainText(blocks: unknown): string {
   if (!blocks) return '';
   if (!Array.isArray(blocks)) return '';
   return blocks
-    .map((block) => {
+    .map((block: Block) => {
       if (block._type !== 'block' || !block.children) {
         return '';
       }
-      return block.children.map((child: any) => child.text).join('');
+      return block.children.map((child: BlockChild) => child.text).join('');
     })
     .join(' ');
 }

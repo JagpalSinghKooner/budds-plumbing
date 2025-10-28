@@ -17,8 +17,9 @@ export interface HeroProps extends Omit<Hero1Type, '_type'> {
 }
 
 // Type-safe registry mapping variant strings to React components
+// Using Record<string, unknown> for props to avoid any while maintaining flexibility
 const heroRegistry: {
-  [K in HeroVariant]: React.ComponentType<any>;
+  [K in HeroVariant]: React.ComponentType<Record<string, unknown>>;
 } = {
   'hero-1': Hero1,
   'hero-2': Hero2,

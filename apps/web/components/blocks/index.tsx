@@ -16,7 +16,7 @@ import Compliance1 from '@/components/blocks/compliance/compliance-1';
 
 type Block = NonNullable<NonNullable<PAGE_QUERYResult>['blocks']>[number];
 
-const componentMap: Record<string, React.ComponentType<any>> = {
+const componentMap: Record<string, React.ComponentType<Block>> = {
   'hero-1': Hero1,
   'hero-2': Hero2,
   'section-header': SectionHeader,
@@ -58,7 +58,7 @@ export default function Blocks({ blocks }: { blocks: Block[] }) {
           }
           return <div data-type={block._type} key={block._key} />;
         }
-        return <Component {...(block as any)} key={block._key} />;
+        return <Component {...block} key={block._key} />;
       })}
     </>
   );

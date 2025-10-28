@@ -1,5 +1,5 @@
 import React from 'react';
-import SectionRenderer from './SectionRenderer';
+import SectionRenderer, { type SectionType } from './SectionRenderer';
 import { Hero1, Hero2, Carousel2, Faqs, Cta1, GridRow } from '@/sanity.types';
 
 /**
@@ -208,7 +208,7 @@ export default function SectionRendererDemo() {
           ],
         },
       ],
-    } as any as GridRow,
+    } as GridRow,
   ];
 
   // Test edge cases
@@ -278,7 +278,7 @@ export default function SectionRendererDemo() {
                     _key: 'invalid-variant',
                     variant: 'invalid-hero-variant',
                   },
-                ] as any
+                ] as SectionType[]
               }
             />
           </div>
@@ -293,8 +293,8 @@ export default function SectionRendererDemo() {
           </p>
           <div className="border-2 border-dashed border-gray-300 p-4 rounded-lg">
             <SectionRenderer sections={[]} />
-            <SectionRenderer sections={null as any} />
-            <SectionRenderer sections={undefined as any} />
+            <SectionRenderer sections={[] as SectionType[]} />
+            <SectionRenderer sections={[] as SectionType[]} />
           </div>
         </div>
       </div>

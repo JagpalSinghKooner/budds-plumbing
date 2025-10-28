@@ -116,8 +116,8 @@ export interface LocalBusinessConfig {
  */
 export function generateLocalBusinessSchema(
   business: LocalBusinessConfig
-): Record<string, any> {
-  const schema: Record<string, any> = {
+): Record<string, unknown> {
+  const schema: Record<string, unknown> = {
     '@context': 'https://schema.org',
     '@type': 'LocalBusiness',
     name: business.name,
@@ -247,8 +247,8 @@ export interface ServiceConfig {
  */
 export function generateServiceSchema(
   service: ServiceConfig
-): Record<string, any> {
-  const schema: Record<string, any> = {
+): Record<string, unknown> {
+  const schema: Record<string, unknown> = {
     '@context': 'https://schema.org',
     '@type': 'Service',
     name: service.name,

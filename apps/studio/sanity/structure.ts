@@ -1,4 +1,5 @@
 import { orderableDocumentListDeskItem } from '@sanity/orderable-document-list';
+import type { StructureBuilder, StructureContext } from 'sanity/structure';
 import {
   Files,
   BookA,
@@ -12,7 +13,7 @@ import {
   MapPinned,
 } from 'lucide-react';
 
-export const structure = (S: any, context: any) =>
+export const structure = (S: StructureBuilder, context: StructureContext) =>
   S.list()
     .title('Content')
     .items([
