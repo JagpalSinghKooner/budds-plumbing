@@ -242,7 +242,8 @@ Rules:
 ### 9.2 Issues Identified & Root Cause Fixes
 
 #### Issue #1: Invalid Property Access in Debug Navigation
-**File**: [apps/web/app/(main)/debug-nav/page.tsx](apps/web/app/(main)/debug-nav/page.tsx)
+
+**File**: [apps/web/app/(main)/debug-nav/page.tsx](<apps/web/app/(main)/debug-nav/page.tsx>)
 **Error**: `Property 'internalLink' does not exist on type`
 
 **Root Cause**: Navigation GROQ query projects computed `resolvedLink` string, not raw `internalLink` reference. Code attempted to access properties that don't exist in query results.
@@ -254,15 +255,17 @@ Rules:
 ---
 
 #### Issue #2: Metadata Type Incompatibility
-**File**: [apps/web/app/(main)/services/[serviceSlug]/page.tsx](apps/web/app/(main)/services/[serviceSlug]/page.tsx:57-67)
+
+**File**: [apps/web/app/(main)/services/[serviceSlug]/page.tsx](<apps/web/app/(main)/services/[serviceSlug]/page.tsx:57-67>)
 
 **Error**: `Type 'string | null' is not assignable to type 'string | undefined'`
 
 **Root Cause**: Next.js metadata API requires `string | undefined`, but Sanity types correctly return `string | null`. TypeScript strict null checks caught the mismatch.
 
 **Fix**: Added fallback coalescing:
+
 ```typescript
-title: service.meta_title || service.name || 'Service'
+title: service.meta_title || service.name || 'Service';
 ```
 
 **Classification**: ✅ PROPER FIX - Conforms to Next.js API requirements with safe defaults.
@@ -270,17 +273,20 @@ title: service.meta_title || service.name || 'Service'
 ---
 
 #### Issue #3: Test Data Doesn't Match Schema
+
 **File**: [apps/web/components/SectionRendererDemo.tsx](apps/web/components/SectionRendererDemo.tsx:15-210)
 
 **Error**: Multiple type mismatches in test section data
 
 **Root Cause**: Demo component used outdated property names and wrong SectionPadding structure:
+
 - Used `body` property on GridCard instead of `excerpt`
 - Used `pt`/`pb` instead of `top`/`bottom` on SectionPadding
 - Included `resolvedLink` property that doesn't exist in base Link type
 - Used `null` for optional properties that should be `undefined`
 
 **Fix**: Rewrote all test data to match current generated types from `sanity.types.ts`:
+
 - Fixed SectionPadding: `{ top: boolean, bottom: boolean }`
 - Fixed GridCard properties
 - Removed non-existent properties
@@ -291,6 +297,7 @@ title: service.meta_title || service.name || 'Service'
 ---
 
 #### Issue #4: Asset Reference Check Using Wrong Property
+
 **File**: [apps/web/components/blocks/compliance/compliance-1.tsx](apps/web/components/blocks/compliance/compliance-1.tsx:62)
 
 **Error**: `Property '_id' does not exist on type reference`
@@ -304,6 +311,7 @@ title: service.meta_title || service.name || 'Service'
 ---
 
 #### Issue #5: Hero3 Stub Component Without Proper Types
+
 **File**: [apps/web/components/blocks/hero/Hero3.tsx](apps/web/components/blocks/hero/Hero3.tsx:5-16)
 
 **Error**: Component used `any` for props
@@ -311,6 +319,7 @@ title: service.meta_title || service.name || 'Service'
 **Root Cause**: Hero3 is a display variant that renders hero-1 or hero-2 blocks. Original implementation used `any` because there's no `hero-3` block type in schema.
 
 **Fix**: Properly typed as union of actual block types:
+
 ```typescript
 type Hero3Props = Hero1Block | Hero2Block;
 export default function Hero3(_props: Hero3Props) { ... }
@@ -321,7 +330,9 @@ export default function Hero3(_props: Hero3Props) { ... }
 ---
 
 #### Issue #6: Component Registry Type Safety
+
 **Files**:
+
 - [apps/web/components/blocks/hero/heroRegistry.tsx](apps/web/components/blocks/hero/heroRegistry.tsx:26-30)
 - [apps/web/components/blocks/faq/faqRegistry.tsx](apps/web/components/blocks/faq/faqRegistry.tsx:18-24)
 - [apps/web/components/blocks/testimonial/testimonialRegistry.tsx](apps/web/components/blocks/testimonial/testimonialRegistry.tsx:20-26)
@@ -333,6 +344,7 @@ export default function Hero3(_props: Hero3Props) { ... }
 **Root Cause**: Original implementation used `any` to avoid type complexity.
 
 **Fix**: All registries now use **proper mapped types** with NO `any`:
+
 ```typescript
 // Example: FAQ Registry
 const faqRegistry: {
@@ -349,7 +361,9 @@ const faqRegistry: {
 ---
 
 #### Issue #7: Unused Variables in Component Maps
+
 **Files**:
+
 - [apps/web/components/blocks/grid/grid-row.tsx](apps/web/components/blocks/grid/grid-row.tsx:13)
 - [apps/web/components/blocks/split/split-row.tsx](apps/web/components/blocks/split/split-row.tsx:14)
 
@@ -366,9 +380,11 @@ const faqRegistry: {
 ### 9.3 Unavoidable Type Assertions
 
 #### Location #1: Dynamic Component Rendering
+
 **File**: [apps/web/components/blocks/index.tsx](apps/web/components/blocks/index.tsx:66)
 
 **Code**:
+
 ```typescript
 // Safe: componentMap guarantees Component type matches block._type
 // TypeScript limitation: dynamic lookup prevents compile-time type proof
@@ -379,6 +395,7 @@ return <Component {...(block as any)} key={block._key} />;
 **Why Unavoidable**: TypeScript cannot prove at compile time that `componentMap[block._type]` returns a component accepting `block` as props after discriminated union narrowing. This is a **structural limitation of TypeScript's type system** with dynamic lookups.
 
 **Attempts Made** (all failed):
+
 - `as unknown as Parameters<typeof Component>[0]` - key prop typed as `never`
 - `as Record<string, unknown>` - key prop typed as `never`
 - `as never` - Cannot spread never type
@@ -386,6 +403,7 @@ return <Component {...(block as any)} key={block._key} />;
 - Type guards - Cannot narrow after dynamic string lookup
 
 **Why It's Safe**:
+
 1. `componentMap` enforces one-to-one mapping of block types to components
 2. Runtime validation confirms component exists before rendering
 3. Type safety enforced at all boundaries (registries, queries, schemas)
@@ -394,18 +412,21 @@ return <Component {...(block as any)} key={block._key} />;
 ---
 
 #### Location #2: SectionRenderer Variant Lookup
+
 **File**: [apps/web/components/SectionRenderer.tsx](apps/web/components/SectionRenderer.tsx:112-114)
 
 **Code**:
+
 ```typescript
-const Component = (
-  registry as Record<string, React.ComponentType<unknown>>
-)[variant];
+const Component = (registry as Record<string, React.ComponentType<unknown>>)[
+  variant
+];
 ```
 
 **Why Unavoidable**: Registry uses `as const` for type preservation, but dynamic string lookup requires index signature. Using `unknown` (not `any`) for component props is safer compromise.
 
 **Why It's Safe**:
+
 1. Runtime validation checks component exists before rendering
 2. Each registry properly typed at definition
 3. `unknown` forces explicit type handling at usage sites
@@ -428,6 +449,7 @@ const Component = (
 ### 9.5 Validation Results
 
 #### TypeScript
+
 ```bash
 ✅ @budds-plumbing/schemas:typecheck - PASS
 ✅ @budds-plumbing/ui:typecheck - PASS
@@ -436,12 +458,14 @@ const Component = (
 ```
 
 #### Linting
+
 ```bash
 ✅ All packages lint clean
 ✅ Root ESLint: 0 errors, 0 warnings
 ```
 
 #### Production Build
+
 ```bash
 ✅ 657 static pages generated
 ✅ Bundle size within limits
@@ -456,17 +480,20 @@ const Component = (
 **Total**: 10 files with TypeScript fixes
 
 #### Core Fixes:
+
 - `apps/web/app/(main)/debug-nav/page.tsx` - Removed invalid property access
 - `apps/web/app/(main)/services/[serviceSlug]/page.tsx` - Fixed metadata types
 - `apps/web/components/SectionRendererDemo.tsx` - Fixed test data types
 - `apps/web/components/blocks/compliance/compliance-1.tsx` - Fixed asset reference check
 
 #### Registry Improvements:
+
 - `apps/web/components/blocks/hero/Hero3.tsx` - Proper union typing
 - `apps/web/components/blocks/hero/heroRegistry.tsx` - Type-safe registry
 - `apps/web/components/blocks/index.tsx` - Controlled type assertion
 
 #### Minor Fixes:
+
 - `apps/web/components/SectionRenderer.tsx` - Type-safe registry lookup
 - `apps/web/components/blocks/grid/grid-row.tsx` - Unused variable naming
 - `apps/web/components/blocks/split/split-row.tsx` - Unused variable naming
@@ -476,6 +503,7 @@ const Component = (
 ### 9.7 What This Means for Phase 2
 
 **Green Lights**:
+
 1. ✅ Type system is sound - all fixes were root cause solutions
 2. ✅ No technical debt - unavoidable assertions are documented and safe
 3. ✅ Component architecture scales - registries properly extensible
@@ -488,18 +516,21 @@ const Component = (
 ### 9.8 Developer Notes
 
 **If You Add New Blocks**:
+
 1. Generate types: `pnpm sanity typegen`
 2. Create component in appropriate directory
 3. Add to registry with proper mapped type
 4. Run `pnpm typecheck` - should pass immediately
 
 **If You See TypeScript Errors**:
+
 1. **DON'T** use `any` or `@ts-ignore`
 2. Check if generated types are stale (`pnpm sanity typegen`)
 3. Verify GROQ query matches schema structure
 4. Fix root cause, not symptoms
 
 **Type Assertion Rule**:
+
 > Only acceptable in dynamic component rendering with full documentation of why TypeScript limitation prevents proper typing.
 
 ---

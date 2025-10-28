@@ -253,7 +253,13 @@ function renderPage(
       {/* Page Content */}
       <main>
         {/* Render dynamic sections */}
-        {blocks && blocks.length > 0 && <SectionRenderer sections={blocks as Parameters<typeof SectionRenderer>[0]['sections']} />}
+        {blocks && blocks.length > 0 && (
+          <SectionRenderer
+            sections={
+              blocks as Parameters<typeof SectionRenderer>[0]['sections']
+            }
+          />
+        )}
 
         {/* Default content if no blocks */}
         {(!blocks || blocks.length === 0) && (
