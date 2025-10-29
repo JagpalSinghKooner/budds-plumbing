@@ -1,11 +1,9 @@
 import { type SchemaTypeDefinition } from 'sanity';
-// Phase 1 Contract Schemas from packages/schemas
-import {
-  service,
-  location,
-  serviceLocation,
-  settings,
-} from '@budds-plumbing/schemas';
+// Phase 1 Contract Schemas - imported locally to avoid workspace resolution issues
+import { serviceSchema as service } from './schemas/phase1/service';
+import { locationSchema as location } from './schemas/phase1/location';
+import { serviceLocationSchema as serviceLocation } from './schemas/phase1/serviceLocation';
+import { siteSettingsSchema as settings } from './schemas/phase1/siteSettings';
 // Other documents
 import page from './schemas/documents/page';
 import post from './schemas/documents/post';

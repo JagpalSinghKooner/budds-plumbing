@@ -1,5 +1,10 @@
 import { type SchemaTypeDefinition } from 'sanity';
-// documents
+// Phase 1 Contract Schemas - imported locally to avoid workspace resolution issues
+import { serviceSchema as service } from './schemas/phase1/service';
+import { locationSchema as location } from './schemas/phase1/location';
+import { serviceLocationSchema as serviceLocation } from './schemas/phase1/serviceLocation';
+import { siteSettingsSchema as settings } from './schemas/phase1/siteSettings';
+// Other documents
 import page from './schemas/documents/page';
 import post from './schemas/documents/post';
 import author from './schemas/documents/author';
@@ -7,7 +12,6 @@ import category from './schemas/documents/category';
 import faq from './schemas/documents/faq';
 import testimonial from './schemas/documents/testimonial';
 import navigation from './schemas/documents/navigation';
-import settings from './schemas/documents/settings';
 
 // Schema UI shared objects
 import blockContent from './schemas/blocks/shared/block-content';
@@ -46,6 +50,9 @@ export const schema: { types: SchemaTypeDefinition[] } = {
     // documents
     page,
     post,
+    service,
+    location,
+    serviceLocation,
     author,
     category,
     faq,
