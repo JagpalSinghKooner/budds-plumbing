@@ -8,7 +8,7 @@ import { defineField, defineType } from 'sanity';
  * Single source of truth for LocalBusiness structured data
  */
 export const siteSettingsSchema = defineType({
-  name: 'siteSettings',
+  name: 'settings',
   title: 'Site Settings',
   type: 'document',
   groups: [

@@ -33,6 +33,12 @@ export const structure = (S: StructureBuilder, context: StructureContext) =>
             .defaultOrdering([{ field: '_createdAt', direction: 'desc' }]) // Default ordering
         ),
       S.divider({ title: 'Business' }),
+      orderableDocumentListDeskItem({
+        type: 'serviceCategory',
+        title: 'Service Categories',
+        S,
+        context,
+      }),
       S.listItem()
         .title('Services')
         .icon(Wrench)
@@ -102,5 +108,12 @@ export const structure = (S: StructureBuilder, context: StructureContext) =>
             .id('settings')
             .schemaType('settings')
             .documentId('settings')
+        ),
+      S.listItem()
+        .title('Clients')
+        .child(
+          S.documentTypeList('client')
+            .title('Clients')
+            .defaultOrdering([{ field: 'businessName', direction: 'asc' }])
         ),
     ]);
