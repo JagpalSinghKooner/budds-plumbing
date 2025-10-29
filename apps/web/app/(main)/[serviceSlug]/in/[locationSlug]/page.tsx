@@ -1,5 +1,5 @@
 import { notFound } from 'next/navigation';
-import { client } from '@/sanity/lib/client';
+import { client, getClientForRequest } from '@/sanity/lib/client';
 import {
   SERVICE_LOCATION_QUERY,
   SERVICE_LOCATIONS_SLUGS_QUERY,
@@ -48,7 +48,8 @@ export async function generateStaticParams() {
  */
 export async function generateMetadata({ params }: ServiceLocationPageProps) {
   const { serviceSlug, locationSlug } = await params;
-  const serviceLocation = await client.fetch<SERVICE_LOCATION_QUERYResult>(
+  const requestClient = await getClientForRequest();
+  const serviceLocation = await requestClient.fetch<SERVICE_LOCATION_QUERYResult>(
     SERVICE_LOCATION_QUERY,
     {
       serviceSlug,
@@ -111,25 +112,26 @@ export default async function ServiceLocationPage({
   params,
 }: ServiceLocationPageProps) {
   const { serviceSlug, locationSlug } = await params;
+  const requestClient = await getClientForRequest();
 
   // Fetch all required data in parallel
   const [serviceLocation, siteSettings] = await Promise.all([
-    client.fetch<SERVICE_LOCATION_QUERYResult>(SERVICE_LOCATION_QUERY, {
+    requestClient.fetch<SERVICE_LOCATION_QUERYResult>(SERVICE_LOCATION_QUERY, {
       serviceSlug,
       locationSlug,
     }),
-    client.fetch(SETTINGS_QUERY),
+    requestClient.fetch(SETTINGS_QUERY),
   ]);
 
   // If no serviceLocation document found, we still render with fallback
   // But we need at least the service and location to exist
   if (!serviceLocation?.service || !serviceLocation?.location) {
     // Try to fetch service directly as fallback
-    const service = await client.fetch(
+    const service = await requestClient.fetch(
       `*[_type == 'service' && slug.current == $serviceSlug][0]`,
       { serviceSlug }
     );
-    const location = await client.fetch(
+    const location = await requestClient.fetch(
       `*[_type == 'location' && slug.current == $locationSlug][0]`,
       { locationSlug }
     );
@@ -189,6 +191,15 @@ function renderPage(
       : [],
   });
 
+  // Filter and map business hours with proper typing
+  const openingHours = siteSettings?.businessHours
+    ?.filter((hour: any) => Boolean(hour?.day && hour?.open && hour?.close))
+    .map((hour: any) => ({
+      day: hour.day as string,
+      open: hour.open as string,
+      close: hour.close as string,
+    })) as Array<{ day: string; open: string; close: string }> | undefined;
+
   const businessSchema = generateLocalBusinessSchema({
     name: siteSettings?.businessName || 'Budds Plumbing',
     description: 'Professional plumbing services',
@@ -210,13 +221,7 @@ function renderPage(
           postalCode: '',
           addressCountry: 'US',
         },
-    openingHours: siteSettings?.businessHours
-      ?.filter((hour) => hour.day && hour.open && hour.close)
-      .map((hour) => ({
-        day: hour.day as string,
-        open: hour.open as string,
-        close: hour.close as string,
-      })),
+    openingHours,
     areaServed: serviceLocation.location?.name
       ? [serviceLocation.location.name]
       : [],
@@ -261,19 +266,7 @@ function renderPage(
           />
         )}
 
-        {/* Default content if no blocks */}
-        {(!blocks || blocks.length === 0) && (
-          <div className="container mx-auto px-4 py-16">
-            <h1 className="text-4xl font-bold mb-4">
-              {serviceLocation.service?.name} in{' '}
-              {serviceLocation.location?.name}
-            </h1>
-            <p className="text-muted-foreground">
-              Content coming soon. Please add blocks to this service-location in
-              the CMS.
-            </p>
-          </div>
-        )}
+        {/* Fallback: If service-location has no blocks, service blocks were already inherited above */}
       </main>
     </>
   );

@@ -4,6 +4,15 @@ import testimonialRegistry from './blocks/testimonial/testimonialRegistry';
 import faqRegistry from './blocks/faq/faqRegistry';
 import ctaRegistry from './blocks/cta/ctaRegistry';
 import pricingRegistry from './blocks/pricing/pricingRegistry';
+// Direct component imports for blocks without variant registries
+import SectionHeaderComponent from './blocks/section-header';
+import SplitRowComponent from './blocks/split/split-row';
+import Carousel1Component from './blocks/carousel/carousel-1';
+import TimelineRowComponent from './blocks/timeline/timeline-row';
+import LogoCloud1Component from './blocks/logo-cloud/logo-cloud-1';
+import FormNewsletterComponent from './blocks/forms/newsletter';
+import AllPostsComponent from './blocks/all-posts';
+import Compliance1Component from './blocks/compliance/compliance-1';
 import {
   Hero1,
   Hero2,
@@ -17,6 +26,8 @@ import {
   LogoCloud1,
   Faqs,
   FormNewsletter,
+  AllPosts,
+  Compliance1,
 } from '@/sanity.types';
 
 // Union type for all possible section types
@@ -32,7 +43,9 @@ export type SectionType =
   | Cta1
   | LogoCloud1
   | Faqs
-  | FormNewsletter;
+  | FormNewsletter
+  | AllPosts
+  | Compliance1;
 
 // Base section interface with required _key
 interface BaseSection {
@@ -53,13 +66,70 @@ type ComponentRegistry = {
   [key: string]: React.ComponentType<Record<string, unknown>>;
 };
 
+// Create simple registries for direct components (no variant support yet)
+const sectionHeaderRegistry: ComponentRegistry = {
+  'section-header': SectionHeaderComponent as React.ComponentType<
+    Record<string, unknown>
+  >,
+};
+
+const splitRowRegistry: ComponentRegistry = {
+  'split-row': SplitRowComponent as React.ComponentType<
+    Record<string, unknown>
+  >,
+};
+
+const carousel1Registry: ComponentRegistry = {
+  'carousel-1': Carousel1Component as unknown as React.ComponentType<
+    Record<string, unknown>
+  >,
+};
+
+const timelineRowRegistry: ComponentRegistry = {
+  'timeline-row': TimelineRowComponent as React.ComponentType<
+    Record<string, unknown>
+  >,
+};
+
+const logoCloud1Registry: ComponentRegistry = {
+  'logo-cloud-1': LogoCloud1Component as React.ComponentType<
+    Record<string, unknown>
+  >,
+};
+
+const formNewsletterRegistry: ComponentRegistry = {
+  'form-newsletter': FormNewsletterComponent as React.ComponentType<
+    Record<string, unknown>
+  >,
+};
+
+const allPostsRegistry: ComponentRegistry = {
+  'all-posts': AllPostsComponent as React.ComponentType<
+    Record<string, unknown>
+  >,
+};
+
+const compliance1Registry: ComponentRegistry = {
+  'compliance-1': Compliance1Component as React.ComponentType<
+    Record<string, unknown>
+  >,
+};
+
 // Map section _type to their respective registries
 const registryMap: {
   [key: string]: ComponentRegistry;
 } = {
   'hero-1': heroRegistry,
   'hero-2': heroRegistry,
+  'section-header': sectionHeaderRegistry,
+  'split-row': splitRowRegistry,
+  'carousel-1': carousel1Registry,
   'carousel-2': testimonialRegistry,
+  'timeline-row': timelineRowRegistry,
+  'logo-cloud-1': logoCloud1Registry,
+  'form-newsletter': formNewsletterRegistry,
+  'all-posts': allPostsRegistry,
+  'compliance-1': compliance1Registry,
   faqs: faqRegistry,
   'cta-1': ctaRegistry,
   'grid-row': pricingRegistry,
@@ -71,7 +141,15 @@ const defaultVariants: {
 } = {
   'hero-1': 'hero-1',
   'hero-2': 'hero-2',
+  'section-header': 'section-header',
+  'split-row': 'split-row',
+  'carousel-1': 'carousel-1',
   'carousel-2': 'testimonial-1',
+  'timeline-row': 'timeline-row',
+  'logo-cloud-1': 'logo-cloud-1',
+  'form-newsletter': 'form-newsletter',
+  'all-posts': 'all-posts',
+  'compliance-1': 'compliance-1',
   faqs: 'faq-1',
   'cta-1': 'cta-1',
   'grid-row': 'pricing-1',
@@ -91,6 +169,11 @@ const defaultVariants: {
  * - Missing _key: Generates fallback key using index
  * - Null/undefined sections: Filters out invalid sections
  *
+ * Registry Coverage:
+ * - All Phase 1 block types are registered
+ * - Blocks without variant support use single-entry registries
+ * - No fallback to console warnings - all types handled
+ *
  * @param sections - Array of section objects from Sanity
  * @returns Rendered section components
  */
@@ -102,7 +185,6 @@ export default function SectionRenderer({ sections }: SectionRendererProps) {
   );
 
   if (!validSections || validSections.length === 0) {
-    console.warn('SectionRenderer: No valid sections to render');
     return null;
   }
 

@@ -1,4 +1,4 @@
-import { sanityFetch } from '@/sanity/lib/live';
+import { sanityFetch, getDefineLiveForRequest } from '@/sanity/lib/live';
 import { PAGE_QUERY, PAGES_SLUGS_QUERY } from '@/sanity/queries/page';
 import {
   NAVIGATION_QUERY,
@@ -40,7 +40,8 @@ export const fetchSanityPageBySlug = async ({
 }: {
   slug: string;
 }): Promise<PAGE_QUERYResult> => {
-  const { data } = await sanityFetch({
+  const { sanityFetch: requestSanityFetch } = await getDefineLiveForRequest();
+  const { data } = await requestSanityFetch({
     query: PAGE_QUERY,
     params: { slug },
   });
@@ -60,7 +61,8 @@ export const fetchSanityPagesStaticParams =
   };
 
 export const fetchSanityPosts = async (): Promise<POSTS_QUERYResult> => {
-  const { data } = await sanityFetch({
+  const { sanityFetch: requestSanityFetch } = await getDefineLiveForRequest();
+  const { data } = await requestSanityFetch({
     query: POSTS_QUERY,
   });
 
@@ -72,7 +74,8 @@ export const fetchSanityPostBySlug = async ({
 }: {
   slug: string;
 }): Promise<POST_QUERYResult> => {
-  const { data } = await sanityFetch({
+  const { sanityFetch: requestSanityFetch } = await getDefineLiveForRequest();
+  const { data } = await requestSanityFetch({
     query: POST_QUERY,
     params: { slug },
   });
@@ -93,7 +96,8 @@ export const fetchSanityPostsStaticParams =
 
 export const fetchSanityNavigation =
   async (): Promise<NAVIGATION_QUERYResult> => {
-    const { data } = await sanityFetch({
+    const { sanityFetch: requestSanityFetch } = await getDefineLiveForRequest();
+    const { data } = await requestSanityFetch({
       query: NAVIGATION_QUERY,
     });
 
@@ -101,7 +105,8 @@ export const fetchSanityNavigation =
   };
 
 export const fetchSanitySettings = async (): Promise<SETTINGS_QUERYResult> => {
-  const { data } = await sanityFetch({
+  const { sanityFetch: requestSanityFetch } = await getDefineLiveForRequest();
+  const { data } = await requestSanityFetch({
     query: SETTINGS_QUERY,
   });
 
@@ -111,7 +116,8 @@ export const fetchSanitySettings = async (): Promise<SETTINGS_QUERYResult> => {
 export const fetchSanityServiceCategories = async (): Promise<
   ServiceCategory[]
 > => {
-  const { data } = await sanityFetch({
+  const { sanityFetch: requestSanityFetch } = await getDefineLiveForRequest();
+  const { data } = await requestSanityFetch({
     query: SERVICE_CATEGORIES_QUERY,
   });
 

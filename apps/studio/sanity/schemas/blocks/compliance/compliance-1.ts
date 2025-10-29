@@ -8,6 +8,14 @@ export default defineType({
   icon: ShieldCheck,
   fields: [
     defineField({
+      name: 'variant',
+      type: 'string',
+      title: 'Variant',
+      description: 'Rendering variant for this block',
+      initialValue: 'compliance-1',
+      hidden: true,
+    }),
+    defineField({
       name: 'padding',
       type: 'section-padding',
     }),

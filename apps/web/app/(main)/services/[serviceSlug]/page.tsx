@@ -1,5 +1,5 @@
 import { notFound } from 'next/navigation';
-import { client } from '@/sanity/lib/client';
+import { client, getClientForRequest } from '@/sanity/lib/client';
 import { SERVICE_QUERY, SERVICES_SLUGS_QUERY } from '@/sanity/queries/service';
 import { SETTINGS_QUERY } from '@/sanity/queries/settings';
 import {
@@ -34,7 +34,8 @@ export async function generateStaticParams() {
  */
 export async function generateMetadata({ params }: ServicePageProps) {
   const { serviceSlug } = await params;
-  const service = await client.fetch<Service>(SERVICE_QUERY, {
+  const requestClient = await getClientForRequest();
+  const service = await requestClient.fetch<Service>(SERVICE_QUERY, {
     slug: serviceSlug,
   });
 
@@ -73,13 +74,14 @@ export async function generateMetadata({ params }: ServicePageProps) {
  */
 export default async function ServicePage({ params }: ServicePageProps) {
   const { serviceSlug } = await params;
+  const requestClient = await getClientForRequest();
 
   // Fetch service and siteSettings in parallel
   const [service, siteSettings] = await Promise.all([
-    client.fetch<Service>(SERVICE_QUERY, {
+    requestClient.fetch<Service>(SERVICE_QUERY, {
       slug: serviceSlug,
     }),
-    client.fetch(SETTINGS_QUERY),
+    requestClient.fetch(SETTINGS_QUERY),
   ]);
 
   if (!service) {

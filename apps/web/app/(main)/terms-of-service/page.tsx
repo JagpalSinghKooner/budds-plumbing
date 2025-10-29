@@ -1,5 +1,5 @@
 import { Metadata } from 'next';
-import Blocks from '@/components/blocks';
+import SectionRenderer from '@/components/SectionRenderer';
 import { fetchSanityPageBySlug } from '@/sanity/lib/fetch';
 import { generatePageMetadata } from '@/sanity/lib/metadata';
 import MissingSanityPage from '@/components/ui/missing-sanity-page';
@@ -17,5 +17,5 @@ export default async function TermsOfServicePage() {
     return MissingSanityPage({ document: 'page', slug: 'terms-of-service' });
   }
 
-  return <Blocks blocks={page?.blocks ?? []} />;
+  return <SectionRenderer sections={(page?.blocks ?? []) as any} />;
 }

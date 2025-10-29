@@ -10,6 +10,14 @@ export default defineType({
   icon: LetterText,
   fields: [
     defineField({
+      name: 'variant',
+      type: 'string',
+      title: 'Variant',
+      description: 'Rendering variant for this block',
+      initialValue: 'section-header',
+      hidden: true,
+    }),
+    defineField({
       name: 'padding',
       type: 'section-padding',
     }),

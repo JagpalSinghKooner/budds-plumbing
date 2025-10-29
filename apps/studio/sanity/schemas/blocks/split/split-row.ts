@@ -10,6 +10,14 @@ export default defineType({
   icon: SquareSplitHorizontal,
   fields: [
     defineField({
+      name: 'variant',
+      type: 'string',
+      title: 'Variant',
+      description: 'Rendering variant for this block',
+      initialValue: 'split-row',
+      hidden: true,
+    }),
+    defineField({
       name: 'padding',
       type: 'section-padding',
     }),

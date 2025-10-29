@@ -7,6 +7,14 @@ export default defineType({
   icon: Images,
   fields: [
     defineField({
+      name: 'variant',
+      type: 'string',
+      title: 'Variant',
+      description: 'Rendering variant for this block',
+      initialValue: 'logo-cloud-1',
+      hidden: true,
+    }),
+    defineField({
       name: 'padding',
       type: 'section-padding',
     }),

@@ -11,6 +11,14 @@ export default defineType({
   icon: Mails,
   fields: [
     defineField({
+      name: 'variant',
+      type: 'string',
+      title: 'Variant',
+      description: 'Rendering variant for this block',
+      initialValue: 'form-newsletter',
+      hidden: true,
+    }),
+    defineField({
       name: 'padding',
       type: 'section-padding',
     }),

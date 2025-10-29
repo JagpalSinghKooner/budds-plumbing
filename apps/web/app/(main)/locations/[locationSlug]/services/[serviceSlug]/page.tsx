@@ -1,9 +1,10 @@
 import { notFound } from 'next/navigation';
-import { client } from '@/sanity/lib/client';
+import { client, getClientForRequest } from '@/sanity/lib/client';
 import {
   SERVICE_LOCATION_QUERY,
   SERVICE_LOCATIONS_SLUGS_QUERY,
 } from '@/sanity/queries/service-location';
+import { SETTINGS_QUERY } from '@/sanity/queries/settings';
 import {
   generateSEOMetadata,
   generateServiceSchema,
@@ -42,7 +43,8 @@ export async function generateStaticParams() {
  */
 export async function generateMetadata({ params }: ServiceLocationPageProps) {
   const { locationSlug, serviceSlug } = await params;
-  const serviceLocation = await client.fetch<SERVICE_LOCATION_QUERYResult>(
+  const requestClient = await getClientForRequest();
+  const serviceLocation = await requestClient.fetch<SERVICE_LOCATION_QUERYResult>(
     SERVICE_LOCATION_QUERY,
     {
       locationSlug,
@@ -109,13 +111,19 @@ export default async function ServiceLocationPage({
   params,
 }: ServiceLocationPageProps) {
   const { locationSlug, serviceSlug } = await params;
-  const serviceLocation = await client.fetch<SERVICE_LOCATION_QUERYResult>(
-    SERVICE_LOCATION_QUERY,
-    {
-      locationSlug,
-      serviceSlug,
-    }
-  );
+  const requestClient = await getClientForRequest();
+
+  // Fetch service-location and siteSettings in parallel
+  const [serviceLocation, siteSettings] = await Promise.all([
+    requestClient.fetch<SERVICE_LOCATION_QUERYResult>(
+      SERVICE_LOCATION_QUERY,
+      {
+        locationSlug,
+        serviceSlug,
+      }
+    ),
+    requestClient.fetch(SETTINGS_QUERY),
+  ]);
 
   if (
     !serviceLocation ||
@@ -133,7 +141,7 @@ export default async function ServiceLocationPage({
       ? serviceLocation.blocks
       : serviceLocation.service.blocks;
 
-  // Generate JSON-LD schemas
+  // Generate JSON-LD schemas using siteSettings data
   const serviceSchema = generateServiceSchema({
     name: serviceLocation.service.name
       ? `${serviceLocation.service.name} in ${serviceLocation.location.name}`
@@ -143,26 +151,49 @@ export default async function ServiceLocationPage({
       serviceLocation.service.meta_description ||
       '',
     provider: {
-      name: 'Budds Plumbing',
+      name: siteSettings?.businessName || 'Budds Plumbing',
       url: siteUrl,
     },
     serviceType: 'Plumbing Service',
   });
 
+  // Filter and map business hours with proper typing
+  const openingHours = siteSettings?.businessHours
+    ?.filter((hour: any) => Boolean(hour?.day && hour?.open && hour?.close))
+    .map((hour: any) => ({
+      day: hour.day as string,
+      open: hour.open as string,
+      close: hour.close as string,
+    })) as Array<{ day: string; open: string; close: string }> | undefined;
+
   const businessSchema = generateLocalBusinessSchema({
-    name: serviceLocation.location.name || 'Budds Plumbing',
+    name: siteSettings?.businessName || 'Budds Plumbing',
     description:
       serviceLocation.location.meta_description ||
+      siteSettings?.meta_description ||
       'Professional plumbing services',
     url: siteUrl,
-    telephone: '+1-555-PLUMBING',
-    address: {
-      streetAddress: '123 Main St',
-      addressLocality: serviceLocation.location.name || 'City',
-      addressRegion: 'State',
-      postalCode: '12345',
-      addressCountry: 'US',
-    },
+    telephone: siteSettings?.phoneNumber || '',
+    email: siteSettings?.email ?? undefined,
+    address: siteSettings?.address
+      ? {
+          streetAddress: siteSettings.address.street || '',
+          addressLocality: siteSettings.address.city || '',
+          addressRegion: siteSettings.address.state || '',
+          postalCode: siteSettings.address.zip || '',
+          addressCountry: 'US',
+        }
+      : {
+          streetAddress: '',
+          addressLocality: serviceLocation.location.name || '',
+          addressRegion: '',
+          postalCode: '',
+          addressCountry: 'US',
+        },
+    openingHours,
+    areaServed: serviceLocation.location.name
+      ? [serviceLocation.location.name]
+      : [],
   });
 
   const combinedSchema = combineSchemas(serviceSchema, businessSchema);
@@ -188,17 +219,15 @@ export default async function ServiceLocationPage({
           />
         )}
 
-        {/* Default content if no blocks */}
-        {(!blocks || blocks.length === 0) && (
-          <div className="container mx-auto px-4 py-16">
-            <h1 className="text-4xl font-bold mb-4">
-              {serviceLocation.service.name} in {serviceLocation.location.name}
-            </h1>
-            <p className="text-muted-foreground">
-              Content coming soon. Please add blocks to this service-location in
-              the CMS.
-            </p>
-          </div>
+        {/* Fallback content inherits from service if service-location has no blocks */}
+        {(!blocks || blocks.length === 0) && serviceLocation.service.blocks && (
+          <SectionRenderer
+            sections={
+              serviceLocation.service.blocks as Parameters<
+                typeof SectionRenderer
+              >[0]['sections']
+            }
+          />
         )}
       </main>
     </>

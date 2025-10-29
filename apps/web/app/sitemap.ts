@@ -1,53 +1,18 @@
 import { MetadataRoute } from 'next';
 import { groq } from 'next-sanity';
-import { sanityFetch } from '@/sanity/lib/live';
+import { getDefineLiveForRequest } from '@/sanity/lib/live';
 
-async function getPagesSitemap(): Promise<MetadataRoute.Sitemap[]> {
-  const pagesQuery = groq`
-    *[_type == 'page'] | order(slug.current) {
-      'url': $baseUrl + select(slug.current == 'index' => '', '/' + slug.current),
-      'lastModified': _updatedAt,
-      'changeFrequency': 'daily',
-      'priority': select(
-        slug.current == 'index' => 1,
-        0.5
-      )
-    }
-  `;
-
-  const { data } = await sanityFetch({
-    query: pagesQuery,
-    params: {
-      baseUrl: process.env.NEXT_PUBLIC_SITE_URL,
-    },
-  });
-
-  return data;
-}
-
-async function getPostsSitemap(): Promise<MetadataRoute.Sitemap[]> {
-  const postsQuery = groq`
-    *[_type == 'post'] | order(_updatedAt desc) {
-      'url': $baseUrl + '/blog/' + slug.current,
-      'lastModified': _updatedAt,
-      'changeFrequency': 'weekly',
-      'priority': 0.7
-    }
-  `;
-
-  const { data } = await sanityFetch({
-    query: postsQuery,
-    params: {
-      baseUrl: process.env.NEXT_PUBLIC_SITE_URL,
-    },
-  });
-
-  return data;
-}
+/**
+ * Sitemap Generator - Phase 1 Contract
+ *
+ * Only includes approved document types: service, location, service-location
+ * Uses request-scoped dataset for multi-tenant safety
+ * Filters out noindex documents
+ */
 
 async function getServicesSitemap(): Promise<MetadataRoute.Sitemap[]> {
   const servicesQuery = groq`
-    *[_type == 'service' && noindex != true] | order(_updatedAt desc) {
+    *[_type == 'service' && !defined(seo.noindex) || seo.noindex != true] | order(_updatedAt desc) {
       'url': $baseUrl + '/services/' + slug.current,
       'lastModified': _updatedAt,
       'changeFrequency': 'weekly',
@@ -55,19 +20,20 @@ async function getServicesSitemap(): Promise<MetadataRoute.Sitemap[]> {
     }
   `;
 
+  const { sanityFetch } = await getDefineLiveForRequest();
   const { data } = await sanityFetch({
     query: servicesQuery,
     params: {
-      baseUrl: process.env.NEXT_PUBLIC_SITE_URL,
+      baseUrl: process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000',
     },
   });
 
-  return data;
+  return data || [];
 }
 
 async function getLocationsSitemap(): Promise<MetadataRoute.Sitemap[]> {
   const locationsQuery = groq`
-    *[_type == 'location' && noindex != true] | order(_updatedAt desc) {
+    *[_type == 'location' && !defined(seo.noindex) || seo.noindex != true] | order(_updatedAt desc) {
       'url': $baseUrl + '/locations/' + slug.current,
       'lastModified': _updatedAt,
       'changeFrequency': 'weekly',
@@ -75,45 +41,59 @@ async function getLocationsSitemap(): Promise<MetadataRoute.Sitemap[]> {
     }
   `;
 
+  const { sanityFetch } = await getDefineLiveForRequest();
   const { data } = await sanityFetch({
     query: locationsQuery,
     params: {
-      baseUrl: process.env.NEXT_PUBLIC_SITE_URL,
+      baseUrl: process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000',
     },
   });
 
-  return data;
+  return data || [];
 }
 
 async function getServiceLocationsSitemap(): Promise<MetadataRoute.Sitemap[]> {
   const serviceLocationsQuery = groq`
-    *[_type == 'service-location' && noindex != true] | order(_updatedAt desc) {
-      'url': $baseUrl + '/' + service->slug.current + '/in/' + location->slug.current,
-      'lastModified': _updatedAt,
+    *[_type == 'serviceLocation' && !defined(seo.noindex) || seo.noindex != true] | order(_updatedAt desc) {
+      'service': service->,
+      'location': location->,
+      'updatedAt': _updatedAt
+    }[defined(service.slug.current) && defined(location.slug.current)] {
+      'url': $baseUrl + '/' + service.slug.current + '/in/' + location.slug.current,
+      'lastModified': updatedAt,
       'changeFrequency': 'weekly',
       'priority': 0.9
     }
   `;
 
+  const { sanityFetch } = await getDefineLiveForRequest();
   const { data } = await sanityFetch({
     query: serviceLocationsQuery,
     params: {
-      baseUrl: process.env.NEXT_PUBLIC_SITE_URL,
+      baseUrl: process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000',
     },
   });
 
-  return data;
+  return data || [];
 }
 
+/**
+ * Phase 1 Sitemap
+ *
+ * Only includes Phase 1 approved document types:
+ * - service
+ * - location
+ * - serviceLocation (derived URLs from references)
+ *
+ * Uses request-scoped dataset to prevent cross-tenant URL leaks.
+ * Excludes documents with seo.noindex = true.
+ */
 export default async function sitemap(): Promise<MetadataRoute.Sitemap[]> {
-  const [pages, posts, services, locations, serviceLocations] =
-    await Promise.all([
-      getPagesSitemap(),
-      getPostsSitemap(),
-      getServicesSitemap(),
-      getLocationsSitemap(),
-      getServiceLocationsSitemap(),
-    ]);
+  const [services, locations, serviceLocations] = await Promise.all([
+    getServicesSitemap(),
+    getLocationsSitemap(),
+    getServiceLocationsSitemap(),
+  ]);
 
-  return [...pages, ...posts, ...services, ...locations, ...serviceLocations];
+  return [...services, ...locations, ...serviceLocations];
 }

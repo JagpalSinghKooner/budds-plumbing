@@ -166,7 +166,7 @@ export function addDomainContextHeaders(
   // Add custom headers for domain context
   response.headers.set('x-domain', config.domain);
   response.headers.set('x-client-id', config.clientId);
-  response.headers.set('x-dataset', config.dataset);
+  response.headers.set('x-sanity-dataset', config.dataset);
 
   if (config.projectId) {
     response.headers.set('x-project-id', config.projectId);
@@ -235,7 +235,7 @@ export function getDomainConfigFromResponse(headers: Headers): DomainContext {
   return {
     domain: headers.get('x-domain') || 'localhost:3000',
     clientId: headers.get('x-client-id') || 'budds-dev',
-    dataset: headers.get('x-dataset') || 'development',
+    dataset: headers.get('x-sanity-dataset') || 'development',
     projectId: headers.get('x-project-id') || undefined,
   };
 }

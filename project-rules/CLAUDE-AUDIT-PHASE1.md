@@ -1,540 +1,346 @@
-# CLAUDE CODE AUDIT — PHASE 1 (CORE PLATFORM)
-
-**Source of Truth:** `roadmap-v3.md`
-**Goal:** Verify that the Core Platform (single business foundation) is production-grade, error-free, secure, and aligned with roadmap-v3 before moving to Phase 2.
-
----
-
-## 1. CORE VALIDATION SEQUENCE
-
-Claude must audit in this exact order. Stop if any section fails.
-
-### 1.1 Repository Structure & Tooling
-
-1. Confirm monorepo structure:
-
-   ```
-   /apps/web
-   /apps/studio
-   /packages/ui
-   /packages/schemas
-   /scripts
-   ```
-
-   - All folders exist.
-   - Each has a README.md explaining purpose.
-   - `packages/ui` and `packages/schemas` imported via workspace alias.
-
-2. Workspace configuration:
-   - `pnpm-workspace.yaml` lists all apps/packages.
-   - `turbo.json` defines pipeline: lint, typecheck, build, deploy.
-
-3. Code quality setup:
-   - ESLint and Prettier fully configured.
-   - tsconfig has `"strict": true`.
-   - No skipLibCheck, allowJs, or any shortcuts.
-   - `pnpm typecheck` passes with zero errors.
-
-4. Pre-commit pipeline:
-   - `.husky/pre-commit` runs `pnpm typecheck`, `pnpm lint`, `pnpm format:check`.
-   - No TODO disabling steps.
-
-5. CI/CD setup:
-   - `.github/workflows/ci.yml` includes TypeScript, ESLint, Prettier, Build, Lighthouse (SEO 100).
-   - Build fails if Lighthouse SEO < 100 or JS bundle > 250KB.
-
-6. Ensure zero `eslint-disable`, zero `ts-ignore`, and no “temporary fix” comments.
-
----
-
-## 2. CORE PLATFORM LOGIC
-
-### 2.1 ShadcnBlocks Integration
-
-- `page.sections[]` renders dynamically via `SectionRenderer.tsx`.
-- Editors can reorder, edit, and publish sections without code changes.
-- SectionRenderer must:
-  - Map `_type` + `variant` to registry.
-  - Catch unknown variants (no crash).
-
-### 2.2 Design System
-
-- Tailwind uses tokens for color, typography, spacing.
-- No inline styles or hex values.
-- `/packages/ui/README.md` documents usage.
-
-### 2.3 Schema Architecture (Lean Contract — All Content via Blocks)
-
-**Core Rule**
-
-- All visible content delivered through `sections[]` (blocks[]).
-- Pages contain only identifiers and SEO.
-- No top-level body text or hardcoded JSX copy.
-
-#### A. service
-
-```
-name (string, required)
-slug (slug, required)
-seo (object, required)
-sections[] (array, required)
-```
-
-#### B. location
-
-```
-name (string, required)
-slug (slug, required)
-seo (object, required)
-sections[] (array, required)
-```
-
-- No phoneNumber (single NAP handled via siteSettings).
-
-#### C. serviceLocationPage
-
-```
-service (reference, required)
-location (reference, required)
-seo (object, optional)
-sections[] (array, optional)
-```
-
-- URL: `/[serviceSlug]/in/[locationSlug]`.
-- No slug field.
-- Computed title: `${service.name} in ${location.name}`.
-- If not found → use service.sections (fallback).
-- Must **never block rendering**.
-
-#### D. siteSettings
-
-```
-businessName
-phoneNumber
-email
-address
-emergencyAvailable
-defaultSeo
-logo / brand
-```
-
-- Single NAP for all pages.
-- No hardcoded details in React.
-
----
-
-## 3. ROUTING CONTRACT
-
-| Page               | Path                             | Data Source                     | Description               |
-| ------------------ | -------------------------------- | ------------------------------- | ------------------------- |
-| Service            | /services/[serviceSlug]          | service                         | General service info      |
-| Location           | /locations/[locationSlug]        | location                        | Coverage area info        |
-| Service + Location | /[serviceSlug]/in/[locationSlug] | serviceLocationPage (+fallback) | Local SEO conversion page |
-
-Rules:
-
-- `/in/` is static (no standalone page).
-- Redirect legacy `/locations/[location]/services/[service]` → `/[service]/in/[location]`.
-- Sitemap outputs only these three URL types.
-- Breadcrumb: Home > Service > Service in Location.
-
----
-
-## 4. PAGE RENDER CONTRACT
-
-### /services/[serviceSlug]
-
-- Fetch service + siteSettings.
-- Render `SectionRenderer(service.sections)`.
-- SEO:
-  - title = service.seo.title || service.name
-  - description = service.seo.description
-  - canonical = /services/[serviceSlug]
-  - robots = noindex if true
-- JSON-LD: Service + LocalBusiness (NAP from siteSettings)
-
-### /locations/[locationSlug]
-
-- Fetch location + siteSettings.
-- Render `SectionRenderer(location.sections)`.
-- SEO:
-  - title = location.seo.title || `${siteSettings.businessName} in ${location.name}`
-  - canonical = /locations/[locationSlug]
-- JSON-LD: LocalBusiness (NAP from siteSettings), areaServed = location.name
-
-### /[serviceSlug]/in/[locationSlug]
-
-- Fetch service, location, serviceLocationPage, siteSettings.
-- Render sections:
-  - if serviceLocationPage.sections exist → render those.
-  - else → service.sections.
-- SEO:
-  - title = `${service.name} in ${location.name}`
-  - description = serviceLocationPage.seo.description || service.seo.description
-  - canonical = /[serviceSlug]/in/[locationSlug]
-- JSON-LD: LocalBusiness + BreadcrumbList.
-- Page must render even if no document found (fallback).
-
----
-
-## 5. SECURITY & PERFORMANCE
-
-- `.env` never committed.
-- Only NEXT*PUBLIC* vars exposed to client.
-- API routes: Zod validation + rate limiting + CSRF check.
-- Await all async external calls.
-- No dangerouslySetInnerHTML without sanitisation.
-- No process.env in client components.
-- Lighthouse SEO = 100, Performance ≥95, Bundle <250KB, LCP <2.5s, CLS <0.1.
-- Use next/image with lazy loading.
-
----
-
-## 6. CI/CD REQUIREMENTS
-
-| Check              | Location        | Must Pass |
-| ------------------ | --------------- | --------- |
-| TypeScript         | CI + Pre-commit | ✅        |
-| ESLint             | CI + Pre-commit | ✅        |
-| Prettier           | CI + Pre-commit | ✅        |
-| Lighthouse SEO 100 | CI              | ✅        |
-| Bundle < 250KB     | CI              | ✅        |
-| Build              | CI              | ✅        |
-
----
-
-## 7. EDITOR WORKFLOW VALIDATION
-
-- Non-dev editors can:
-  - Reorder sections.
-  - Change variants.
-  - Publish → Live updates (ISR).
-- No code deployment required for content changes.
-
----
-
-## 8. FINAL BULLETPROOF CHECKLIST
-
-- ✅ No TypeScript or lint errors.
-- ✅ No eslint-disable, ts-ignore, TODO.
-- ✅ siteSettings used for all business info.
-- ✅ All page content via Sanity sections[].
-- ✅ serviceLocationPage optional but never blocks rendering.
-- ✅ Routing strictly /services/, /locations/, /[service]/in/[location].
-- ✅ Fallback logic verified.
-- ✅ Lighthouse SEO 100.
-- ✅ Bundle <250KB.
-- ✅ ISR + revalidation work on Vercel.
-- ✅ Editor workflow verified.
-
----
-
-## 9. TYPESCRIPT AUDIT HANDOVER (2025-10-28)
-
-### 9.1 Executive Summary
-
-**Status**: ✅ **0 TypeScript errors, 0 lint errors, production build successful**
-
-**Commit**: `c3ccf28` - "Fix TypeScript errors for Vercel deployment"
-**Remote**: Already pushed to GitHub
-**Validation**: All packages typecheck clean, linting passes, production build generates 657 static pages
-
-### 9.2 Issues Identified & Root Cause Fixes
-
-#### Issue #1: Invalid Property Access in Debug Navigation
-
-**File**: [apps/web/app/(main)/debug-nav/page.tsx](<apps/web/app/(main)/debug-nav/page.tsx>)
-**Error**: `Property 'internalLink' does not exist on type`
-
-**Root Cause**: Navigation GROQ query projects computed `resolvedLink` string, not raw `internalLink` reference. Code attempted to access properties that don't exist in query results.
-
-**Fix**: Removed invalid property access for `link.internalLink?._type` and `link.internalLink?.slug.current` (lines 40-51).
-
-**Classification**: ✅ PROPER FIX - Code was wrong, schema was correct.
-
----
-
-#### Issue #2: Metadata Type Incompatibility
-
-**File**: [apps/web/app/(main)/services/[serviceSlug]/page.tsx](<apps/web/app/(main)/services/[serviceSlug]/page.tsx:57-67>)
-
-**Error**: `Type 'string | null' is not assignable to type 'string | undefined'`
-
-**Root Cause**: Next.js metadata API requires `string | undefined`, but Sanity types correctly return `string | null`. TypeScript strict null checks caught the mismatch.
-
-**Fix**: Added fallback coalescing:
-
-```typescript
-title: service.meta_title || service.name || 'Service';
-```
-
-**Classification**: ✅ PROPER FIX - Conforms to Next.js API requirements with safe defaults.
-
----
-
-#### Issue #3: Test Data Doesn't Match Schema
-
-**File**: [apps/web/components/SectionRendererDemo.tsx](apps/web/components/SectionRendererDemo.tsx:15-210)
-
-**Error**: Multiple type mismatches in test section data
-
-**Root Cause**: Demo component used outdated property names and wrong SectionPadding structure:
-
-- Used `body` property on GridCard instead of `excerpt`
-- Used `pt`/`pb` instead of `top`/`bottom` on SectionPadding
-- Included `resolvedLink` property that doesn't exist in base Link type
-- Used `null` for optional properties that should be `undefined`
-
-**Fix**: Rewrote all test data to match current generated types from `sanity.types.ts`:
-
-- Fixed SectionPadding: `{ top: boolean, bottom: boolean }`
-- Fixed GridCard properties
-- Removed non-existent properties
-- Proper typing with union types
-
-**Classification**: ✅ PROPER FIX - Test data was wrong, production code and schema were correct.
-
----
-
-#### Issue #4: Asset Reference Check Using Wrong Property
-
-**File**: [apps/web/components/blocks/compliance/compliance-1.tsx](apps/web/components/blocks/compliance/compliance-1.tsx:62)
-
-**Error**: `Property '_id' does not exist on type reference`
-
-**Root Cause**: Asset is a **reference type** (`_ref`), not an expanded object with `_id`. Code checked for wrong property.
-
-**Fix**: Changed check from `badge.image.asset?._id` to `badge.image.asset?._ref`
-
-**Classification**: ✅ PROPER FIX - Code didn't match Sanity reference type structure.
-
----
-
-#### Issue #5: Hero3 Stub Component Without Proper Types
-
-**File**: [apps/web/components/blocks/hero/Hero3.tsx](apps/web/components/blocks/hero/Hero3.tsx:5-16)
-
-**Error**: Component used `any` for props
-
-**Root Cause**: Hero3 is a display variant that renders hero-1 or hero-2 blocks. Original implementation used `any` because there's no `hero-3` block type in schema.
-
-**Fix**: Properly typed as union of actual block types:
-
-```typescript
-type Hero3Props = Hero1Block | Hero2Block;
-export default function Hero3(_props: Hero3Props) { ... }
-```
-
-**Classification**: ✅ PROPER FIX - Component now correctly typed for blocks it actually renders.
-
----
-
-#### Issue #6: Component Registry Type Safety
-
-**Files**:
-
-- [apps/web/components/blocks/hero/heroRegistry.tsx](apps/web/components/blocks/hero/heroRegistry.tsx:26-30)
-- [apps/web/components/blocks/faq/faqRegistry.tsx](apps/web/components/blocks/faq/faqRegistry.tsx:18-24)
-- [apps/web/components/blocks/testimonial/testimonialRegistry.tsx](apps/web/components/blocks/testimonial/testimonialRegistry.tsx:20-26)
-- [apps/web/components/blocks/cta/ctaRegistry.tsx](apps/web/components/blocks/cta/ctaRegistry.tsx:17-23)
-- [apps/web/components/blocks/pricing/pricingRegistry.tsx](apps/web/components/blocks/pricing/pricingRegistry.tsx:18-24)
-
-**Error**: Registries used overly broad types or `any`
-
-**Root Cause**: Original implementation used `any` to avoid type complexity.
-
-**Fix**: All registries now use **proper mapped types** with NO `any`:
-
-```typescript
-// Example: FAQ Registry
-const faqRegistry: {
-  [K in FaqVariant]: React.ComponentType<FaqsBlock>;
-} = {
-  'faq-1': Faq1,
-  'faq-2': Faq2,
-  'faq-3': Faq3,
+# Phase 1 Audit Findings & 100-Point Recovery Plan
+
+## Scope & Scoring Context
+
+- Phase 1 requires a production-grade single-tenant launch that can scale to multi-tenant without refactoring.
+- SEO scope for these businesses is limited to a single **LocalBusiness** schema sourced from Sanity site settings; FAQ and other schemas are handled inside page components and are not Phase 1 blockers.
+- Score target: 100/100 = every roadmap deliverable met, no hardcoded fallbacks, and multi-tenant readiness complete.
+
+## Status by Roadmap Deliverable
+
+- **Monorepo structure (`apps/web`, `apps/studio`, `packages/ui`, `packages/schemas`) → PARTIAL.** Skeleton exists but `packages/schemas` is still a placeholder export, so shared schemas/types are not centralized.【F:packages/schemas/index.ts†L1-L4】
+- **SectionRenderer drives Shadcn blocks with variant registry → PARTIAL.** Renderer exists yet the registry map only wires six `_type` values; many blocks fall back to console warnings instead of rendering.【F:apps/web/components/SectionRenderer.tsx†L56-L151】
+- **Block schemas expose `variant` control → PARTIAL.** Blocks such as `carousel-1` ship sizing/color fields but no `variant` selector, blocking registry-driven variants.【F:apps/studio/sanity/schemas/blocks/carousel/carousel-1.ts†L1-L64】
+- **Service schema matches Phase 1 contract (`sections[]`, lean SEO, no legacy fields) → WRONG.** Document still uses `blocks`, requires slug/category, and stores raw meta fields instead of shared objects.【F:apps/studio/sanity/schemas/documents/service.ts†L20-L111】
+- **Location schema matches contract (coverage info, sections[], fallback to site settings) → WRONG.** Schema relies on `blocks`, keeps manual slug, and lacks structured coverage/operating fields mandated in the roadmap.【F:apps/studio/sanity/schemas/documents/location.ts†L20-L93】
+- **Service-location schema derives path from references (no slug) with optional sections[] → WRONG.** Schema keeps a required slug and its own `blocks` array, breaking computed routing and fallback behaviour.【F:apps/studio/sanity/schemas/documents/service-location.ts†L20-L120】
+- **siteSettings centralizes NAP + default SEO used by all pages → PARTIAL.** NAP fields exist, but there is no `defaultSeo` object; pages improvise meta fallbacks and hardcode LocalBusiness data in places.【F:apps/studio/sanity/schemas/documents/settings.ts†L1-L137】
+- **Dynamic routes use per-request dataset client → PARTIAL.** `/services/[slug]`, `/locations/[slug]`, and `/[service]/in/[location]` fetch with the legacy `client` tied to the default dataset, so multi-tenant isolation fails.【F:apps/web/app/(main)/services/[serviceSlug]/page.tsx†L1-L83】【F:apps/web/app/(main)/locations/[locationSlug]/page.tsx†L1-L97】【F:apps/web/app/(main)/locations/[locationSlug]/services/[serviceSlug]/page.tsx†L1-L118】
+- **LocalBusiness schema generated from siteSettings for every route → PARTIAL.** Service and location routes hydrate from siteSettings, but the service-location route hardcodes NAP data and the dataset mismatch can leak another tenant’s settings.【F:apps/web/app/(main)/locations/[locationSlug]/services/[serviceSlug]/page.tsx†L136-L166】
+- **sitemap.xml limited to active service/location/service-location docs per dataset → WRONG.** Sitemap uses shared `sanityFetch` (default dataset) and includes `page`/`post` docs outside Phase 1 scope.【F:apps/web/app/sitemap.ts†L1-L78】
+- **Content-only fallback (no hardcoded marketing copy) → WRONG.** Routes render “Content coming soon” placeholders instead of Sanity-managed fallback sections.【F:apps/web/app/(main)/services/[serviceSlug]/page.tsx†L146-L153】【F:apps/web/app/(main)/locations/[locationSlug]/services/[serviceSlug]/page.tsx†L191-L200】【F:apps/web/app/(main)/locations/[locationSlug]/page.tsx†L148-L160】
+- **CI enforcement at roadmap thresholds (SEO 100, JS bundle ≤ 250KB) → PARTIAL.** Lighthouse config relaxes SEO to 0.95 and script bundle to 400KB so regressions pass.【F:lighthouserc.js†L21-L37】
+- **Middleware propagates dataset headers consumed by server components → WRONG.** Middleware sets `x-dataset` but server utilities read `x-sanity-dataset`, so dataset overrides never apply.【F:apps/web/lib/domain-middleware.ts†L162-L209】【F:apps/web/sanity/env.ts†L28-L43】
+- **Legacy block map removed in favour of SectionRenderer → WRONG.** `apps/web/components/blocks/index.tsx` still duplicates rendering logic and must be deprecated.【F:apps/web/components/blocks/index.tsx†L1-L65】
+
+## Code Errors & Architecture Drift
+
+- **Dataset header mismatch** – Middleware writes `x-dataset` while `getDataset()` looks for `x-sanity-dataset`, forcing every request onto the default dataset and breaking tenant isolation.【F:apps/web/lib/domain-middleware.ts†L162-L209】【F:apps/web/sanity/env.ts†L28-L43】
+- **Incomplete registry coverage** – SectionRenderer only maps six `_type` keys; valid blocks like `section-header`, `split-row`, `timeline-row`, and forms never render through the shared pipeline.【F:apps/web/components/SectionRenderer.tsx†L56-L151】
+- **Legacy block mapper still active** – `components/blocks/index.tsx` duplicates rendering logic, ensuring future edits drift from the registry approach.【F:apps/web/components/blocks/index.tsx†L1-L65】
+- **Hardcoded NAP in service-location route** – LocalBusiness schema uses literal strings for address/phone instead of siteSettings, creating data drift when details change.【F:apps/web/app/(main)/locations/[locationSlug]/services/[serviceSlug]/page.tsx†L152-L166】
+- **Hardcoded “Content coming soon” copy** – Dynamic routes render inline placeholders when sections are empty, violating the “all marketing content in Sanity” rule.【F:apps/web/app/(main)/services/[serviceSlug]/page.tsx†L146-L153】【F:apps/web/app/(main)/locations/[locationSlug]/services/[serviceSlug]/page.tsx†L191-L200】【F:apps/web/app/(main)/locations/[locationSlug]/page.tsx†L148-L160】
+- **Sitemap not tenant-safe** – Queries run through shared `sanityFetch`, so tenants risk leaking each other’s URLs and unsupported document types appear in the feed.【F:apps/web/app/sitemap.ts†L1-L78】
+
+## SEO & Routing Observations (LocalBusiness Focus)
+
+- **Canonical duplication** – Service-location content lives at both `/[service]/in/[location]` and `/locations/[location]/services/[service]`, producing duplicate canonicals and splitting authority.【F:apps/web/app/(main)/locations/[locationSlug]/services/[serviceSlug]/page.tsx†L63-L205】
+- **LocalBusiness consistency gap** – Only the service-location route breaks the single-source-of-truth rule by hardcoding phone/address; service and location routes already hydrate from siteSettings.【F:apps/web/app/(main)/locations/[locationSlug]/services/[serviceSlug]/page.tsx†L152-L166】【F:apps/web/app/(main)/services/[serviceSlug]/page.tsx†L102-L125】【F:apps/web/app/(main)/locations/[locationSlug]/page.tsx†L104-L130】
+- **Dataset isolation risk** – Because dataset headers are ignored, LocalBusiness schema can read another tenant’s settings during multi-tenant rollout, violating Phase 1 readiness.【F:apps/web/sanity/env.ts†L28-L43】【F:apps/web/lib/domain-middleware.ts†L162-L209】
+
+## Schema & Content Model Gaps
+
+- **Service document drift** – Retains category refs, manual slug, and `blocks` array instead of roadmap `sections[]` with structured intro/seo objects, complicating automation and variant fallback.【F:apps/studio/sanity/schemas/documents/service.ts†L20-L111】
+- **Location document drift** – Same `blocks` pattern, no structured coverage/operating fields, and manual slug, limiting regional personalization tooling.【F:apps/studio/sanity/schemas/documents/location.ts†L20-L93】
+- **Service-location document drift** – Required slug + `blocks` prevent deterministic URL computation and fallback logic across tenants.【F:apps/studio/sanity/schemas/documents/service-location.ts†L20-L120】
+- **Missing block variants** – Carousel and other blocks lack `variant` dropdowns, so the editor can’t select registry presentations, undermining the “Sections[] + variant” contract.【F:apps/studio/sanity/schemas/blocks/carousel/carousel-1.ts†L1-L64】
+- **No shared schema package** – With `packages/schemas` empty, there is no single source for document definitions or generated types, blocking CLI automation and reuse.【F:packages/schemas/index.ts†L1-L4】
+- **Site settings without `defaultSeo`** – SEO defaults live in ad-hoc fields (`meta_description`) not defined in the schema, so pages add manual fallbacks and risk drift.【F:apps/studio/sanity/schemas/documents/settings.ts†L1-L137】【F:apps/web/app/(main)/services/[serviceSlug]/page.tsx†L47-L68】
+
+## Technical Debt Risks Affecting Future Phases
+
+1. **Dataset routing failure** – Without aligned headers and request-aware clients, Phase 2 multi-tenant rollouts will leak cross-client data. Fix: align header name and require `getClientForRequest()` everywhere.【F:apps/web/lib/domain-middleware.ts†L162-L209】【F:apps/web/sanity/env.ts†L28-L43】【F:apps/web/sanity/lib/client.ts†L1-L61】
+2. **Duplicate service-location route** – Two URL patterns will create canonical conflicts and double maintenance. Fix: remove `/locations/[location]/services/[service]` once canonical `/[service]/in/[location]` is stable.【F:apps/web/app/(main)/locations/[locationSlug]/services/[serviceSlug]/page.tsx†L1-L205】
+3. **Legacy block mapper** – As new blocks ship, developers will touch `SectionRenderer` and `components/blocks/index.tsx`, guaranteeing divergence. Fix: delete the legacy mapper after registry coverage expands.【F:apps/web/components/blocks/index.tsx†L1-L65】
+4. **Schema drift** – Automation, AI content generation, and dataset provisioning scripts will fail with the current field shapes. Fix: migrate service/location/service-location documents to the roadmap contract and publish shared types.【F:apps/studio/sanity/schemas/documents/service.ts†L20-L111】【F:apps/studio/sanity/schemas/documents/location.ts†L20-L93】【F:apps/studio/sanity/schemas/documents/service-location.ts†L20-L120】
+5. **Relaxed CI thresholds** – With SEO and bundle budgets loosened, regressions slip through, undermining platform guarantees. Fix: restore roadmap thresholds in Lighthouse config.【F:lighthouserc.js†L21-L37】
+6. **Hardcoded marketing copy** – Inline placeholders prevent localization/AI updates and require code deploys for messaging changes. Fix: provide CMS-managed fallback sections or reuse service-level sections only.【F:apps/web/app/(main)/services/[serviceSlug]/page.tsx†L146-L153】【F:apps/web/app/(main)/locations/[locationSlug]/page.tsx†L148-L160】
+
+## Step-by-Step Plan to Reach 100/100
+
+1. **Unify dataset plumbing**
+   - Rename middleware header to `x-sanity-dataset` (or update `getDataset` to read `x-dataset`) and refactor every server fetch to call `getClientForRequest()` or `getDefineLiveForRequest()` before querying.【F:apps/web/lib/domain-middleware.ts†L162-L209】【F:apps/web/sanity/env.ts†L28-L43】【F:apps/web/sanity/lib/client.ts†L1-L61】
+   - Regression test routes to confirm tenant-specific datasets resolve.
+2. **Refactor schemas to roadmap contract**
+   - Move `service`, `location`, `service-location`, and `settings` schemas into `packages/schemas` with `sections[]` arrays, computed paths, and a shared `defaultSeo` object.
+   - Remove manual slug on service-location, ensure service/location slug references drive the path, and generate TypeScript types for frontend consumption.【F:apps/studio/sanity/schemas/documents/service.ts†L20-L111】【F:apps/studio/sanity/schemas/documents/location.ts†L20-L93】【F:apps/studio/sanity/schemas/documents/service-location.ts†L20-L120】【F:packages/schemas/index.ts†L1-L4】
+3. **Expand registry & remove legacy mapper**
+   - Register every block `_type` + variant in `SectionRenderer` (hero, section-header, split, grid, carousel, timeline, forms, testimonials, etc.).
+   - Once coverage is complete, delete `components/blocks/index.tsx` and update any callers to use `SectionRenderer` exclusively.【F:apps/web/components/SectionRenderer.tsx†L56-L151】【F:apps/web/components/blocks/index.tsx†L1-L65】
+4. **Add `variant` dropdowns to all blocks**
+   - Update block schemas (carousel, section-header, timelines, forms, CTA) to expose a `variant` field aligned with frontend registries.
+   - Provide validation/defaults so editors can always select a supported variant.【F:apps/studio/sanity/schemas/blocks/carousel/carousel-1.ts†L1-L64】
+5. **Centralize LocalBusiness data**
+   - Extend `siteSettings` with a structured `defaultSeo` object and ensure LocalBusiness schema generation pulls address/phone/email exclusively from settings.
+   - Update the service-location route to consume `siteSettings` instead of hardcoded strings and remove the duplicate `/locations/.../services/...` route.【F:apps/studio/sanity/schemas/documents/settings.ts†L1-L137】【F:apps/web/app/(main)/locations/[locationSlug]/services/[serviceSlug]/page.tsx†L136-L200】
+6. **Eliminate hardcoded fallbacks**
+   - Provide CMS-managed fallback sections (e.g., default hero + CTA) or reuse service-level sections when page arrays are empty.
+   - Remove inline “Content coming soon” strings from every route.【F:apps/web/app/(main)/services/[serviceSlug]/page.tsx†L146-L153】【F:apps/web/app/(main)/locations/[locationSlug]/page.tsx†L148-L160】【F:apps/web/app/(main)/locations/[locationSlug]/services/[serviceSlug]/page.tsx†L191-L200】
+7. **Rebuild sitemap with dataset awareness**
+   - Use `getDefineLiveForRequest()` to scope queries to the incoming dataset and limit entries to active service/location/service-location documents.
+   - Remove `page`/`post` queries until those content types are part of the approved roadmap.【F:apps/web/app/sitemap.ts†L1-L78】【F:apps/web/sanity/lib/live.ts†L1-L34】
+8. **Restore CI guardrails**
+   - Set Lighthouse SEO minimum back to 1.0, tighten bundle budget to 250KB, and ensure performance thresholds align with roadmap expectations.【F:lighthouserc.js†L21-L37】
+9. **Document & automate**
+   - Update project documentation to reference the shared schema package, registry usage, and dataset header contract so future phases inherit the correct patterns.
+   - Add lint/test checks that fail when blocks without `variant` fields or legacy renderers are introduced.
+
+Execute these steps in order; completing steps 1–7 removes every blocker called out in this audit and positions the platform for a true 100/100 Phase 1 sign-off.
+
+
+# Phase 1 Audit Findings & 100-Point Recovery Plan
+
+## Scope & Scoring Context
+
+- Phase 1 requires a production-grade single-tenant launch that can scale to multi-tenant without refactoring.
+- SEO scope for these businesses is limited to a single **LocalBusiness** schema sourced from Sanity site settings; FAQ and other schemas are handled inside page components and are not Phase 1 blockers.
+- Score target: 100/100 = every roadmap deliverable met, no hardcoded fallbacks, and multi-tenant readiness complete.
+
+## Status by Roadmap Deliverable
+
+- **Monorepo structure (`apps/web`, `apps/studio`, `packages/ui`, `packages/schemas`) → PARTIAL.** Skeleton exists but `packages/schemas` is still a placeholder export, so shared schemas/types are not centralized.【F:packages/schemas/index.ts†L1-L4】
+- **SectionRenderer drives Shadcn blocks with variant registry → PARTIAL.** Renderer exists yet the registry map only wires six `_type` values; many blocks fall back to console warnings instead of rendering.【F:apps/web/components/SectionRenderer.tsx†L56-L151】
+- **Block schemas expose `variant` control → PARTIAL.** Blocks such as `carousel-1` ship sizing/color fields but no `variant` selector, blocking registry-driven variants.【F:apps/studio/sanity/schemas/blocks/carousel/carousel-1.ts†L1-L64】
+- **Service schema matches Phase 1 contract (`sections[]`, lean SEO, no legacy fields) → WRONG.** Document still uses `blocks`, requires slug/category, and stores raw meta fields instead of shared objects.【F:apps/studio/sanity/schemas/documents/service.ts†L20-L111】
+- **Location schema matches contract (coverage info, sections[], fallback to site settings) → WRONG.** Schema relies on `blocks`, keeps manual slug, and lacks structured coverage/operating fields mandated in the roadmap.【F:apps/studio/sanity/schemas/documents/location.ts†L20-L93】
+- **Service-location schema derives path from references (no slug) with optional sections[] → WRONG.** Schema keeps a required slug and its own `blocks` array, breaking computed routing and fallback behaviour.【F:apps/studio/sanity/schemas/documents/service-location.ts†L20-L120】
+- **siteSettings centralizes NAP + default SEO used by all pages → PARTIAL.** NAP fields exist, but there is no `defaultSeo` object; pages improvise meta fallbacks and hardcode LocalBusiness data in places.【F:apps/studio/sanity/schemas/documents/settings.ts†L1-L137】
+- **Dynamic routes use per-request dataset client → PARTIAL.** `/services/[slug]`, `/locations/[slug]`, and `/[service]/in/[location]` fetch with the legacy `client` tied to the default dataset, so multi-tenant isolation fails.【F:apps/web/app/(main)/services/[serviceSlug]/page.tsx†L1-L83】【F:apps/web/app/(main)/locations/[locationSlug]/page.tsx†L1-L97】【F:apps/web/app/(main)/locations/[locationSlug]/services/[serviceSlug]/page.tsx†L1-L118】
+- **LocalBusiness schema generated from siteSettings for every route → PARTIAL.** Service and location routes hydrate from siteSettings, but the service-location route hardcodes NAP data and the dataset mismatch can leak another tenant’s settings.【F:apps/web/app/(main)/locations/[locationSlug]/services/[serviceSlug]/page.tsx†L136-L166】
+- **sitemap.xml limited to active service/location/service-location docs per dataset → WRONG.** Sitemap uses shared `sanityFetch` (default dataset) and includes `page`/`post` docs outside Phase 1 scope.【F:apps/web/app/sitemap.ts†L1-L78】
+- **Content-only fallback (no hardcoded marketing copy) → WRONG.** Routes render “Content coming soon” placeholders instead of Sanity-managed fallback sections.【F:apps/web/app/(main)/services/[serviceSlug]/page.tsx†L146-L153】【F:apps/web/app/(main)/locations/[locationSlug]/services/[serviceSlug]/page.tsx†L191-L200】【F:apps/web/app/(main)/locations/[locationSlug]/page.tsx†L148-L160】
+- **CI enforcement at roadmap thresholds (SEO 100, JS bundle ≤ 250KB) → PARTIAL.** Lighthouse config relaxes SEO to 0.95 and script bundle to 400KB so regressions pass.【F:lighthouserc.js†L21-L37】
+- **Middleware propagates dataset headers consumed by server components → WRONG.** Middleware sets `x-dataset` but server utilities read `x-sanity-dataset`, so dataset overrides never apply.【F:apps/web/lib/domain-middleware.ts†L162-L209】【F:apps/web/sanity/env.ts†L28-L43】
+- **Legacy block map removed in favour of SectionRenderer → WRONG.** `apps/web/components/blocks/index.tsx` still duplicates rendering logic and must be deprecated.【F:apps/web/components/blocks/index.tsx†L1-L65】
+
+## Code Errors & Architecture Drift
+
+- **Dataset header mismatch** – Middleware writes `x-dataset` while `getDataset()` looks for `x-sanity-dataset`, forcing every request onto the default dataset and breaking tenant isolation.【F:apps/web/lib/domain-middleware.ts†L162-L209】【F:apps/web/sanity/env.ts†L28-L43】
+- **Incomplete registry coverage** – SectionRenderer only maps six `_type` keys; valid blocks like `section-header`, `split-row`, `timeline-row`, and forms never render through the shared pipeline.【F:apps/web/components/SectionRenderer.tsx†L56-L151】
+- **Legacy block mapper still active** – `components/blocks/index.tsx` duplicates rendering logic, ensuring future edits drift from the registry approach.【F:apps/web/components/blocks/index.tsx†L1-L65】
+- **Hardcoded NAP in service-location route** – LocalBusiness schema uses literal strings for address/phone instead of siteSettings, creating data drift when details change.【F:apps/web/app/(main)/locations/[locationSlug]/services/[serviceSlug]/page.tsx†L152-L166】
+- **Hardcoded “Content coming soon” copy** – Dynamic routes render inline placeholders when sections are empty, violating the “all marketing content in Sanity” rule.【F:apps/web/app/(main)/services/[serviceSlug]/page.tsx†L146-L153】【F:apps/web/app/(main)/locations/[locationSlug]/services/[serviceSlug]/page.tsx†L191-L200】【F:apps/web/app/(main)/locations/[locationSlug]/page.tsx†L148-L160】
+- **Sitemap not tenant-safe** – Queries run through shared `sanityFetch`, so tenants risk leaking each other’s URLs and unsupported document types appear in the feed.【F:apps/web/app/sitemap.ts†L1-L78】
+
+## SEO & Routing Observations (LocalBusiness Focus)
+
+- **Canonical duplication** – Service-location content lives at both `/[service]/in/[location]` and `/locations/[location]/services/[service]`, producing duplicate canonicals and splitting authority.【F:apps/web/app/(main)/locations/[locationSlug]/services/[serviceSlug]/page.tsx†L63-L205】
+- **LocalBusiness consistency gap** – Only the service-location route breaks the single-source-of-truth rule by hardcoding phone/address; service and location routes already hydrate from siteSettings.【F:apps/web/app/(main)/locations/[locationSlug]/services/[serviceSlug]/page.tsx†L152-L166】【F:apps/web/app/(main)/services/[serviceSlug]/page.tsx†L102-L125】【F:apps/web/app/(main)/locations/[locationSlug]/page.tsx†L104-L130】
+- **Dataset isolation risk** – Because dataset headers are ignored, LocalBusiness schema can read another tenant’s settings during multi-tenant rollout, violating Phase 1 readiness.【F:apps/web/sanity/env.ts†L28-L43】【F:apps/web/lib/domain-middleware.ts†L162-L209】
+
+## Schema & Content Model Gaps
+
+- **Service document drift** – Retains category refs, manual slug, and `blocks` array instead of roadmap `sections[]` with structured intro/seo objects, complicating automation and variant fallback.【F:apps/studio/sanity/schemas/documents/service.ts†L20-L111】
+- **Location document drift** – Same `blocks` pattern, no structured coverage/operating fields, and manual slug, limiting regional personalization tooling.【F:apps/studio/sanity/schemas/documents/location.ts†L20-L93】
+- **Service-location document drift** – Required slug + `blocks` prevent deterministic URL computation and fallback logic across tenants.【F:apps/studio/sanity/schemas/documents/service-location.ts†L20-L120】
+- **Missing block variants** – Carousel and other blocks lack `variant` dropdowns, so the editor can’t select registry presentations, undermining the “Sections[] + variant” contract.【F:apps/studio/sanity/schemas/blocks/carousel/carousel-1.ts†L1-L64】
+- **No shared schema package** – With `packages/schemas` empty, there is no single source for document definitions or generated types, blocking CLI automation and reuse.【F:packages/schemas/index.ts†L1-L4】
+- **Site settings without `defaultSeo`** – SEO defaults live in ad-hoc fields (`meta_description`) not defined in the schema, so pages add manual fallbacks and risk drift.【F:apps/studio/sanity/schemas/documents/settings.ts†L1-L137】【F:apps/web/app/(main)/services/[serviceSlug]/page.tsx†L47-L68】
+
+## Technical Debt Risks Affecting Future Phases
+
+1. **Dataset routing failure** – Without aligned headers and request-aware clients, Phase 2 multi-tenant rollouts will leak cross-client data. Fix: align header name and require `getClientForRequest()` everywhere.【F:apps/web/lib/domain-middleware.ts†L162-L209】【F:apps/web/sanity/env.ts†L28-L43】【F:apps/web/sanity/lib/client.ts†L1-L61】
+2. **Duplicate service-location route** – Two URL patterns will create canonical conflicts and double maintenance. Fix: remove `/locations/[location]/services/[service]` once canonical `/[service]/in/[location]` is stable.【F:apps/web/app/(main)/locations/[locationSlug]/services/[serviceSlug]/page.tsx†L1-L205】
+3. **Legacy block mapper** – As new blocks ship, developers will touch `SectionRenderer` and `components/blocks/index.tsx`, guaranteeing divergence. Fix: delete the legacy mapper after registry coverage expands.【F:apps/web/components/blocks/index.tsx†L1-L65】
+4. **Schema drift** – Automation, AI content generation, and dataset provisioning scripts will fail with the current field shapes. Fix: migrate service/location/service-location documents to the roadmap contract and publish shared types.【F:apps/studio/sanity/schemas/documents/service.ts†L20-L111】【F:apps/studio/sanity/schemas/documents/location.ts†L20-L93】【F:apps/studio/sanity/schemas/documents/service-location.ts†L20-L120】
+5. **Relaxed CI thresholds** – With SEO and bundle budgets loosened, regressions slip through, undermining platform guarantees. Fix: restore roadmap thresholds in Lighthouse config.【F:lighthouserc.js†L21-L37】
+6. **Hardcoded marketing copy** – Inline placeholders prevent localization/AI updates and require code deploys for messaging changes. Fix: provide CMS-managed fallback sections or reuse service-level sections only.【F:apps/web/app/(main)/services/[serviceSlug]/page.tsx†L146-L153】【F:apps/web/app/(main)/locations/[locationSlug]/page.tsx†L148-L160】
+
+## Step-by-Step Plan to Reach 100/100
+
+1. **Unify dataset plumbing**
+   - Rename middleware header to `x-sanity-dataset` (or update `getDataset` to read `x-dataset`) and refactor every server fetch to call `getClientForRequest()` or `getDefineLiveForRequest()` before querying.【F:apps/web/lib/domain-middleware.ts†L162-L209】【F:apps/web/sanity/env.ts†L28-L43】【F:apps/web/sanity/lib/client.ts†L1-L61】
+   - Regression test routes to confirm tenant-specific datasets resolve.
+2. **Refactor schemas to roadmap contract**
+   - Move `service`, `location`, `service-location`, and `settings` schemas into `packages/schemas` with `sections[]` arrays, computed paths, and a shared `defaultSeo` object.
+   - Remove manual slug on service-location, ensure service/location slug references drive the path, and generate TypeScript types for frontend consumption.【F:apps/studio/sanity/schemas/documents/service.ts†L20-L111】【F:apps/studio/sanity/schemas/documents/location.ts†L20-L93】【F:apps/studio/sanity/schemas/documents/service-location.ts†L20-L120】【F:packages/schemas/index.ts†L1-L4】
+3. **Expand registry & remove legacy mapper**
+   - Register every block `_type` + variant in `SectionRenderer` (hero, section-header, split, grid, carousel, timeline, forms, testimonials, etc.).
+   - Once coverage is complete, delete `components/blocks/index.tsx` and update any callers to use `SectionRenderer` exclusively.【F:apps/web/components/SectionRenderer.tsx†L56-L151】【F:apps/web/components/blocks/index.tsx†L1-L65】
+4. **Add `variant` dropdowns to all blocks**
+   - Update block schemas (carousel, section-header, timelines, forms, CTA) to expose a `variant` field aligned with frontend registries.
+   - Provide validation/defaults so editors can always select a supported variant.【F:apps/studio/sanity/schemas/blocks/carousel/carousel-1.ts†L1-L64】
+5. **Centralize LocalBusiness data**
+   - Extend `siteSettings` with a structured `defaultSeo` object and ensure LocalBusiness schema generation pulls address/phone/email exclusively from settings.
+   - Update the service-location route to consume `siteSettings` instead of hardcoded strings and remove the duplicate `/locations/.../services/...` route.【F:apps/studio/sanity/schemas/documents/settings.ts†L1-L137】【F:apps/web/app/(main)/locations/[locationSlug]/services/[serviceSlug]/page.tsx†L136-L200】
+6. **Eliminate hardcoded fallbacks**
+   - Provide CMS-managed fallback sections (e.g., default hero + CTA) or reuse service-level sections when page arrays are empty.
+   - Remove inline “Content coming soon” strings from every route.【F:apps/web/app/(main)/services/[serviceSlug]/page.tsx†L146-L153】【F:apps/web/app/(main)/locations/[locationSlug]/page.tsx†L148-L160】【F:apps/web/app/(main)/locations/[locationSlug]/services/[serviceSlug]/page.tsx†L191-L200】
+7. **Rebuild sitemap with dataset awareness**
+   - Use `getDefineLiveForRequest()` to scope queries to the incoming dataset and limit entries to active service/location/service-location documents.
+   - Remove `page`/`post` queries until those content types are part of the approved roadmap.【F:apps/web/app/sitemap.ts†L1-L78】【F:apps/web/sanity/lib/live.ts†L1-L34】
+8. **Restore CI guardrails**
+   - Set Lighthouse SEO minimum back to 1.0, tighten bundle budget to 250KB, and ensure performance thresholds align with roadmap expectations.【F:lighthouserc.js†L21-L37】
+9. **Document & automate**
+   - Update project documentation to reference the shared schema package, registry usage, and dataset header contract so future phases inherit the correct patterns.
+   - Add lint/test checks that fail when blocks without `variant` fields or legacy renderers are introduced.
+
+Execute these steps in order; completing steps 1–7 removes every blocker called out in this audit and positions the platform for a true 100/100 Phase 1 sign-off.
+
+Next Steps After Phase 1
+Immediate: Verification & Testing
+1. Test Dataset Isolation
+# Start dev server
+pnpm dev
+
+# Test domain routing works
+curl -H "Host: localhost:3000" http://localhost:3000/
+# Verify x-sanity-dataset header is set correctly
+
+# Test a service page renders
+curl http://localhost:3000/services/drain-cleaning
+2. Run Lighthouse CI
+# Build production bundle
+pnpm build
+
+# Start production server
+pnpm start
+
+# Run Lighthouse CI (will fail if SEO < 100 or JS > 250KB)
+pnpm lhci autorun
+3. Verify Schema Changes
+# Regenerate Sanity types
+cd apps/web
+pnpm typegen
+
+# Typecheck entire codebase
+pnpm typecheck
+4. Test Sitemap
+# With server running
+curl http://localhost:3000/sitemap.xml
+# Verify only service, location, serviceLocation URLs appear
+# Verify no page/post URLs
+Phase 2: Multi-Tenant Rollout
+1. Create Second Tenant Dataset In Sanity Studio:
+Create new dataset: client2-production
+Clone schema from packages/schemas
+Populate with client2's business data (siteSettings)
+Add services/locations for client2
+2. Add Domain Mapping Edit apps/web/lib/domain-middleware.ts:
+export const domainConfigs: Record<string, DomainConfig> = {
+  'buddsplumbing.com': {
+    domain: 'buddsplumbing.com',
+    clientId: 'budds',
+    dataset: 'production',
+    projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID,
+  },
+  'client2plumbing.com': {
+    domain: 'client2plumbing.com',
+    clientId: 'client2',
+    dataset: 'client2-production',
+    projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID,
+  },
 };
-```
-
-**Classification**: ✅ PROPER FIX - Full type safety without any shortcuts.
-
----
-
-#### Issue #7: Unused Variables in Component Maps
-
-**Files**:
-
-- [apps/web/components/blocks/grid/grid-row.tsx](apps/web/components/blocks/grid/grid-row.tsx:13)
-- [apps/web/components/blocks/split/split-row.tsx](apps/web/components/blocks/split/split-row.tsx:14)
-
-**Error**: `'componentMap' is assigned a value but never used`
-
-**Root Cause**: Maps defined but code uses switch statements for rendering.
-
-**Fix**: Prefixed with underscore per TypeScript convention: `_componentMap`
-
-**Classification**: ✅ PROPER FIX - Standard TypeScript pattern for intentionally unused code.
-
----
-
-### 9.3 Unavoidable Type Assertions
-
-#### Location #1: Dynamic Component Rendering
-
-**File**: [apps/web/components/blocks/index.tsx](apps/web/components/blocks/index.tsx:66)
-
-**Code**:
-
-```typescript
-// Safe: componentMap guarantees Component type matches block._type
-// TypeScript limitation: dynamic lookup prevents compile-time type proof
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-return <Component {...(block as any)} key={block._key} />;
-```
-
-**Why Unavoidable**: TypeScript cannot prove at compile time that `componentMap[block._type]` returns a component accepting `block` as props after discriminated union narrowing. This is a **structural limitation of TypeScript's type system** with dynamic lookups.
-
-**Attempts Made** (all failed):
-
-- `as unknown as Parameters<typeof Component>[0]` - key prop typed as `never`
-- `as Record<string, unknown>` - key prop typed as `never`
-- `as never` - Cannot spread never type
-- Complex mapped types - Union collapse creates impossible types
-- Type guards - Cannot narrow after dynamic string lookup
-
-**Why It's Safe**:
-
-1. `componentMap` enforces one-to-one mapping of block types to components
-2. Runtime validation confirms component exists before rendering
-3. Type safety enforced at all boundaries (registries, queries, schemas)
-4. **Single controlled assertion point** vs scattered patches
-
----
-
-#### Location #2: SectionRenderer Variant Lookup
-
-**File**: [apps/web/components/SectionRenderer.tsx](apps/web/components/SectionRenderer.tsx:112-114)
-
-**Code**:
-
-```typescript
-const Component = (registry as Record<string, React.ComponentType<unknown>>)[
-  variant
-];
-```
-
-**Why Unavoidable**: Registry uses `as const` for type preservation, but dynamic string lookup requires index signature. Using `unknown` (not `any`) for component props is safer compromise.
-
-**Why It's Safe**:
-
-1. Runtime validation checks component exists before rendering
-2. Each registry properly typed at definition
-3. `unknown` forces explicit type handling at usage sites
-4. Fallback to null if component not found
-
----
-
-### 9.4 Current Type Safety Guarantees
-
-✅ **All 5 variant registries**: Zero `any`, fully mapped types
-✅ **All GROQ query results**: Properly typed via `sanity.types.ts`
-✅ **All component props**: Extracted from PAGE_QUERYResult with proper nullability
-✅ **All schemas**: Strict typing with no shortcuts
-✅ **Build pipeline**: `strict: true`, zero errors, zero warnings
-
-**Remaining `any` usage**: **1 line** (unavoidable due to TypeScript limitation)
-
----
-
-### 9.5 Validation Results
-
-#### TypeScript
-
-```bash
-✅ @budds-plumbing/schemas:typecheck - PASS
-✅ @budds-plumbing/ui:typecheck - PASS
-✅ @budds-plumbing/studio:typecheck - PASS
-✅ @budds-plumbing/web:typecheck - PASS
-```
-
-#### Linting
-
-```bash
-✅ All packages lint clean
-✅ Root ESLint: 0 errors, 0 warnings
-```
-
-#### Production Build
-
-```bash
-✅ 657 static pages generated
-✅ Bundle size within limits
-✅ No build errors
-✅ Build time: ~30 seconds
-```
-
----
-
-### 9.6 Files Modified
-
-**Total**: 10 files with TypeScript fixes
-
-#### Core Fixes:
-
-- `apps/web/app/(main)/debug-nav/page.tsx` - Removed invalid property access
-- `apps/web/app/(main)/services/[serviceSlug]/page.tsx` - Fixed metadata types
-- `apps/web/components/SectionRendererDemo.tsx` - Fixed test data types
-- `apps/web/components/blocks/compliance/compliance-1.tsx` - Fixed asset reference check
-
-#### Registry Improvements:
-
-- `apps/web/components/blocks/hero/Hero3.tsx` - Proper union typing
-- `apps/web/components/blocks/hero/heroRegistry.tsx` - Type-safe registry
-- `apps/web/components/blocks/index.tsx` - Controlled type assertion
-
-#### Minor Fixes:
-
-- `apps/web/components/SectionRenderer.tsx` - Type-safe registry lookup
-- `apps/web/components/blocks/grid/grid-row.tsx` - Unused variable naming
-- `apps/web/components/blocks/split/split-row.tsx` - Unused variable naming
-
----
-
-### 9.7 What This Means for Phase 2
-
-**Green Lights**:
-
-1. ✅ Type system is sound - all fixes were root cause solutions
-2. ✅ No technical debt - unavoidable assertions are documented and safe
-3. ✅ Component architecture scales - registries properly extensible
-4. ✅ Build pipeline reliable - consistent validation across all packages
-
-**Confidence Level**: **HIGH** - Codebase ready for Phase 2 expansion.
-
----
-
-### 9.8 Developer Notes
-
-**If You Add New Blocks**:
-
-1. Generate types: `pnpm sanity typegen`
-2. Create component in appropriate directory
-3. Add to registry with proper mapped type
-4. Run `pnpm typecheck` - should pass immediately
-
-**If You See TypeScript Errors**:
-
-1. **DON'T** use `any` or `@ts-ignore`
-2. Check if generated types are stale (`pnpm sanity typegen`)
-3. Verify GROQ query matches schema structure
-4. Fix root cause, not symptoms
-
-**Type Assertion Rule**:
-
-> Only acceptable in dynamic component rendering with full documentation of why TypeScript limitation prevents proper typing.
-
----
-
-**Audit Completed By**: Claude (Sonnet 4.5)
-**Date**: 2025-10-28
-**Status**: ✅ PRODUCTION READY
+3. Test Multi-Tenant Isolation
+# Test domain 1
+curl -H "Host: buddsplumbing.com" http://localhost:3000/
+
+# Test domain 2
+curl -H "Host: client2plumbing.com" http://localhost:3000/
+
+# Verify each sees only their dataset content
+4. Deploy Multi-Tenant
+Configure DNS for both domains
+Deploy to Vercel with both domains mapped
+Verify each domain routes to correct dataset
+Phase 3: Production Optimization
+1. SEO Enhancements
+Add structured data validation tests
+Implement dynamic sitemaps per domain
+Add robots.txt per tenant
+Set up Google Search Console per domain
+2. Performance Monitoring
+Set up Vercel Analytics
+Monitor Core Web Vitals per tenant
+Track bundle size in CI
+Set up Lighthouse CI in GitHub Actions
+3. Content Migration
+Migrate legacy blocks → sections[]
+Migrate legacy flat SEO fields → seo object
+Remove hidden legacy fields from schemas
+Clean up old service-location manual slugs
+4. Editorial Improvements
+Add visible variant dropdowns to blocks (currently hidden)
+Create variant component registry
+Build preview system for variants
+Add block templates for common layouts
+Phase 4: Scale Infrastructure
+1. Automate Tenant Provisioning Create script:
+# scripts/provision-tenant.sh
+TENANT_ID=$1
+TENANT_DATASET="${TENANT_ID}-production"
+
+# 1. Create Sanity dataset
+sanity dataset create $TENANT_DATASET
+
+# 2. Import schema
+sanity schema extract --output=schema.json
+sanity schema import --dataset=$TENANT_DATASET schema.json
+
+# 3. Seed siteSettings
+# ...
+2. Build Tenant Admin Dashboard
+List all tenants
+View dataset stats
+Manage domain mappings
+Monitor SEO scores per tenant
+3. Centralized Monitoring
+Aggregate Lighthouse scores across tenants
+Track bundle size trends
+Monitor dataset query performance
+Set up alerts for SEO regressions
+Recommended Order
+Week 1: Verification
+ Fix any TypeScript errors from schema changes
+ Test all routes render correctly
+ Run Lighthouse CI and fix any failures
+ Verify sitemap generates correctly
+Week 2: Deploy Phase 1
+ Deploy single-tenant production
+ Set up monitoring (Vercel Analytics)
+ Configure Lighthouse CI in GitHub Actions
+ Document deployment process
+Week 3: Second Tenant
+ Create second dataset in Sanity
+ Add domain mapping
+ Test locally with host headers
+ Deploy multi-tenant
+Week 4: Scale
+ Add 3rd-5th tenants
+ Build provisioning automation
+ Set up centralized monitoring
+ Document tenant onboarding
+Blockers to Watch
+Potential Issues:
+TypeScript errors from schema changes
+Run pnpm typegen in apps/web
+Fix any type mismatches (blocks → sections)
+Lighthouse CI failures
+Bundle size might exceed 250KB initially
+May need to optimize imports or lazy-load blocks
+SEO might not be 100 if meta tags missing
+Legacy data migration
+Existing service-location docs have manual slugs
+Need migration script to remove legacy slug field
+Fallback to service blocks might not work if blocks[] array is used instead of sections[]
+Missing siteSettings data
+If siteSettings doesn't have all NAP fields populated
+LocalBusiness schema will have empty strings
+Need to populate siteSettings before deploying
+First Action Right Now
+# 1. Regenerate types from new schemas
+cd /Users/jagpalkooner/budds-plumbing-2/apps/web
+pnpm typegen
+
+# 2. Run typecheck
+pnpm typecheck
+
+# 3. If passing, start dev server
+pnpm dev
+
+# 4. Open browser and test
+# - http://localhost:3000/
+# - http://localhost:3000/services/drain-cleaning
+# - http://localhost:3000/locations/cape-may
+# - http://localhost:3000/sitemap.xml
+If you see errors, we fix them before proceeding to Phase 2. Would you like me to run the typegen and typecheck now to verify Phase 1 is ready?

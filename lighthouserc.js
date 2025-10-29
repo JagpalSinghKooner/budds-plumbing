@@ -18,40 +18,40 @@ module.exports = {
     },
     assert: {
       assertions: {
-        // SEO requirements (target 95%+ - realistic for production)
-        'categories:seo': ['warn', { minScore: 0.95 }],
+        // Phase 1 Contract: SEO must be 100
+        'categories:seo': ['error', { minScore: 1.0 }],
 
-        // Performance requirements
-        'categories:performance': ['warn', { minScore: 0.9 }],
-        'categories:accessibility': ['warn', { minScore: 0.85 }],
-        'categories:best-practices': ['warn', { minScore: 0.9 }],
+        // Performance requirements (enforced)
+        'categories:performance': ['error', { minScore: 0.9 }],
+        'categories:accessibility': ['error', { minScore: 0.85 }],
+        'categories:best-practices': ['error', { minScore: 0.9 }],
 
         // Specific metrics from roadmap
-        'first-contentful-paint': ['warn', { maxNumericValue: 2000 }],
-        'largest-contentful-paint': ['warn', { maxNumericValue: 2500 }],
-        'cumulative-layout-shift': ['warn', { maxNumericValue: 0.1 }],
-        'total-blocking-time': ['warn', { maxNumericValue: 300 }],
+        'first-contentful-paint': ['error', { maxNumericValue: 2000 }],
+        'largest-contentful-paint': ['error', { maxNumericValue: 2500 }],
+        'cumulative-layout-shift': ['error', { maxNumericValue: 0.1 }],
+        'total-blocking-time': ['error', { maxNumericValue: 300 }],
 
-        // Bundle size requirement - increased to realistic threshold
-        'resource-summary:script:size': ['warn', { maxNumericValue: 400000 }], // 400KB
+        // Phase 1 Contract: JS bundle ≤ 250KB
+        'resource-summary:script:size': ['error', { maxNumericValue: 250000 }],
 
         // No render-blocking resources
-        'render-blocking-resources': ['warn', { maxLength: 0 }],
+        'render-blocking-resources': ['error', { maxLength: 0 }],
 
         // Image optimization
-        'uses-responsive-images': 'warn',
-        'uses-optimized-images': 'warn',
-        'modern-image-formats': 'warn',
-        'image-aspect-ratio': 'warn',
+        'uses-responsive-images': 'error',
+        'uses-optimized-images': 'error',
+        'modern-image-formats': 'error',
+        'image-aspect-ratio': 'error',
 
-        // SEO specific checks
+        // SEO specific checks (all enforced)
         'document-title': 'error',
         'meta-description': 'error',
-        'link-text': 'warn',
+        'link-text': 'error',
         'crawlable-anchors': 'error',
         'is-crawlable': 'error',
         'robots-txt': 'error',
-        hreflang: 'warn',
+        hreflang: 'error',
         canonical: 'error',
       },
     },

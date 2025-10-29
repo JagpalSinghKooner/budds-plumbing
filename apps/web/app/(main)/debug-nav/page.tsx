@@ -1,10 +1,11 @@
-import { client } from '@/sanity/lib/client';
+import { getClientForRequest } from '@/sanity/lib/client';
 import { NAVIGATION_QUERY } from '@/sanity/queries/navigation';
 import type { NAVIGATION_QUERYResult } from '@/sanity.types';
 
 export default async function DebugNavPage() {
+  const requestClient = await getClientForRequest();
   const navigation =
-    await client.fetch<NAVIGATION_QUERYResult>(NAVIGATION_QUERY);
+    await requestClient.fetch<NAVIGATION_QUERYResult>(NAVIGATION_QUERY);
 
   return (
     <div className="container mx-auto p-8">

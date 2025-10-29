@@ -1,5 +1,5 @@
 import { notFound } from 'next/navigation';
-import { client } from '@/sanity/lib/client';
+import { client, getClientForRequest } from '@/sanity/lib/client';
 import {
   LOCATION_QUERY,
   LOCATIONS_SLUGS_QUERY,
@@ -37,13 +37,14 @@ export async function generateStaticParams() {
  */
 export async function generateMetadata({ params }: LocationPageProps) {
   const { locationSlug } = await params;
+  const requestClient = await getClientForRequest();
 
   // Fetch location and siteSettings in parallel
   const [location, siteSettings] = await Promise.all([
-    client.fetch<Location>(LOCATION_QUERY, {
+    requestClient.fetch<Location>(LOCATION_QUERY, {
       slug: locationSlug,
     }),
-    client.fetch(SETTINGS_QUERY),
+    requestClient.fetch(SETTINGS_QUERY),
   ]);
 
   if (!location) {
@@ -86,13 +87,14 @@ export async function generateMetadata({ params }: LocationPageProps) {
  */
 export default async function LocationPage({ params }: LocationPageProps) {
   const { locationSlug } = await params;
+  const requestClient = await getClientForRequest();
 
   // Fetch location and siteSettings in parallel
   const [location, siteSettings] = await Promise.all([
-    client.fetch<Location>(LOCATION_QUERY, {
+    requestClient.fetch<Location>(LOCATION_QUERY, {
       slug: locationSlug,
     }),
-    client.fetch(SETTINGS_QUERY),
+    requestClient.fetch(SETTINGS_QUERY),
   ]);
 
   if (!location) {

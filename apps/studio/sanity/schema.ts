@@ -1,5 +1,12 @@
 import { type SchemaTypeDefinition } from 'sanity';
-// documents
+// Phase 1 Contract Schemas from packages/schemas
+import {
+  service,
+  location,
+  serviceLocation,
+  settings,
+} from '@budds-plumbing/schemas';
+// Other documents
 import page from './schemas/documents/page';
 import post from './schemas/documents/post';
 import author from './schemas/documents/author';
@@ -7,11 +14,7 @@ import category from './schemas/documents/category';
 import faq from './schemas/documents/faq';
 import testimonial from './schemas/documents/testimonial';
 import navigation from './schemas/documents/navigation';
-import settings from './schemas/documents/settings';
-import service from './schemas/documents/service';
 import serviceCategory from './schemas/documents/service-category';
-import location from './schemas/documents/location';
-import serviceLocation from './schemas/documents/service-location';
 import client from './schemas/documents/client';
 
 // Schema UI shared objects
