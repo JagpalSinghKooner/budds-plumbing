@@ -44,13 +44,14 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: ServiceLocationPageProps) {
   const { locationSlug, serviceSlug } = await params;
   const requestClient = await getClientForRequest();
-  const serviceLocation = await requestClient.fetch<SERVICE_LOCATION_QUERYResult>(
-    SERVICE_LOCATION_QUERY,
-    {
-      locationSlug,
-      serviceSlug,
-    }
-  );
+  const serviceLocation =
+    await requestClient.fetch<SERVICE_LOCATION_QUERYResult>(
+      SERVICE_LOCATION_QUERY,
+      {
+        locationSlug,
+        serviceSlug,
+      }
+    );
 
   if (
     !serviceLocation ||
@@ -115,13 +116,10 @@ export default async function ServiceLocationPage({
 
   // Fetch service-location and siteSettings in parallel
   const [serviceLocation, siteSettings] = await Promise.all([
-    requestClient.fetch<SERVICE_LOCATION_QUERYResult>(
-      SERVICE_LOCATION_QUERY,
-      {
-        locationSlug,
-        serviceSlug,
-      }
-    ),
+    requestClient.fetch<SERVICE_LOCATION_QUERYResult>(SERVICE_LOCATION_QUERY, {
+      locationSlug,
+      serviceSlug,
+    }),
     requestClient.fetch(SETTINGS_QUERY),
   ]);
 

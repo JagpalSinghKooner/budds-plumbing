@@ -49,13 +49,14 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: ServiceLocationPageProps) {
   const { serviceSlug, locationSlug } = await params;
   const requestClient = await getClientForRequest();
-  const serviceLocation = await requestClient.fetch<SERVICE_LOCATION_QUERYResult>(
-    SERVICE_LOCATION_QUERY,
-    {
-      serviceSlug,
-      locationSlug,
-    }
-  );
+  const serviceLocation =
+    await requestClient.fetch<SERVICE_LOCATION_QUERYResult>(
+      SERVICE_LOCATION_QUERY,
+      {
+        serviceSlug,
+        locationSlug,
+      }
+    );
 
   if (
     !serviceLocation ||

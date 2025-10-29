@@ -8,7 +8,7 @@ import { defineField, defineType } from 'sanity';
  * Represents service+location combination pages (e.g., /hvac-repair/in/toronto)
  */
 export const serviceLocationSchema = defineType({
-  name: 'serviceLocation',
+  name: 'service-location',
   type: 'document',
   title: 'Service Location',
   groups: [
@@ -92,7 +92,9 @@ export const serviceLocationSchema = defineType({
           description:
             'Brief description for search engine results. Falls back to service description.',
           validation: (Rule) =>
-            Rule.max(160).warning('Meta descriptions should be under 160 characters'),
+            Rule.max(160).warning(
+              'Meta descriptions should be under 160 characters'
+            ),
         }),
         defineField({
           name: 'noindex',

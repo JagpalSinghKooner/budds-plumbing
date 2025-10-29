@@ -86,7 +86,9 @@ export const siteSettingsSchema = defineType({
       group: 'business',
       description: 'Official business name for LocalBusiness schema',
       validation: (Rule) =>
-        Rule.required().error('Business name is required for schema.org markup'),
+        Rule.required().error(
+          'Business name is required for schema.org markup'
+        ),
     }),
     defineField({
       name: 'phoneNumber',
@@ -100,7 +102,9 @@ export const siteSettingsSchema = defineType({
           .custom((phone) => {
             if (!phone) return true;
             const phoneRegex = /^[\d\s\-()]+$/;
-            return phoneRegex.test(phone) || 'Please enter a valid phone number';
+            return (
+              phoneRegex.test(phone) || 'Please enter a valid phone number'
+            );
           }),
     }),
     defineField({
@@ -151,7 +155,9 @@ export const siteSettingsSchema = defineType({
         }),
       ],
       validation: (Rule) =>
-        Rule.required().error('Business address is required for LocalBusiness schema'),
+        Rule.required().error(
+          'Business address is required for LocalBusiness schema'
+        ),
     }),
     defineField({
       name: 'businessHours',
@@ -250,7 +256,8 @@ export const siteSettingsSchema = defineType({
       title: 'Default SEO',
       type: 'object',
       group: 'seo',
-      description: 'Fallback SEO settings used when pages don\'t define their own',
+      description:
+        "Fallback SEO settings used when pages don't define their own",
       fields: [
         defineField({
           name: 'title',
@@ -265,15 +272,19 @@ export const siteSettingsSchema = defineType({
           title: 'Default Meta Description',
           type: 'text',
           rows: 3,
-          description: 'Default description for pages without custom descriptions',
+          description:
+            'Default description for pages without custom descriptions',
           validation: (Rule) =>
-            Rule.max(160).warning('Meta descriptions should be under 160 characters'),
+            Rule.max(160).warning(
+              'Meta descriptions should be under 160 characters'
+            ),
         }),
         defineField({
           name: 'ogImage',
           title: 'Default Social Share Image',
           type: 'image',
-          description: 'Default image for social media sharing (1200x630px recommended)',
+          description:
+            'Default image for social media sharing (1200x630px recommended)',
           options: {
             hotspot: true,
           },
@@ -300,7 +311,8 @@ export const siteSettingsSchema = defineType({
       title: 'Primary Service Area',
       type: 'string',
       group: 'serviceAreas',
-      description: 'Main geographic area of service (e.g., "Greater Toronto Area")',
+      description:
+        'Main geographic area of service (e.g., "Greater Toronto Area")',
       validation: (Rule) =>
         Rule.required().error('Primary service area is required'),
     }),

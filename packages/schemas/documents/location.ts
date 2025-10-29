@@ -129,7 +129,9 @@ export const locationSchema = defineType({
           rows: 3,
           description: 'Brief description for search engine results',
           validation: (Rule) =>
-            Rule.max(160).warning('Meta descriptions should be under 160 characters'),
+            Rule.max(160).warning(
+              'Meta descriptions should be under 160 characters'
+            ),
         }),
         defineField({
           name: 'noindex',
@@ -142,7 +144,8 @@ export const locationSchema = defineType({
           name: 'ogImage',
           title: 'Social Share Image',
           type: 'image',
-          description: 'Image for social media sharing (1200x630px recommended)',
+          description:
+            'Image for social media sharing (1200x630px recommended)',
           options: {
             hotspot: true,
           },

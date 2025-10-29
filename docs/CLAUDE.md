@@ -32,7 +32,7 @@ export default async function MyPage() {
 import { client } from '@/sanity/lib/client';
 
 export default async function MyPage() {
-  const data = await client.fetch(MY_QUERY);  // Uses env var dataset
+  const data = await client.fetch(MY_QUERY); // Uses env var dataset
   // ...
 }
 ```
@@ -95,7 +95,7 @@ defineField({
     { type: 'split-row' },
     // ...
   ],
-})
+});
 ```
 
 Legacy `blocks` field exists hidden for backward compatibility. New schemas use `sections`.
@@ -114,7 +114,7 @@ defineField({
   name: 'slug',
   type: 'slug',
   validation: (Rule) => Rule.required(),
-})
+});
 
 // ✅ CORRECT
 // No slug field. URL is computed from references at runtime.
@@ -142,7 +142,7 @@ defineField({
     defineField({ name: 'ogImage', type: 'image' }),
   ],
   validation: (Rule) => Rule.required(),
-})
+});
 ```
 
 **Usage:** Fallback meta tags when pages don't define custom SEO.
@@ -190,8 +190,8 @@ defineField({
   title: 'Variant',
   description: 'Rendering variant for this block',
   initialValue: 'carousel-1',
-  hidden: true,  // Phase 1: single variant per block type
-})
+  hidden: true, // Phase 1: single variant per block type
+});
 ```
 
 **Why:** Editorial control over presentation. Enables future multi-variant blocks.
@@ -209,7 +209,9 @@ defineField({
 import NewBlockComponent from './blocks/category/new-block';
 
 const newBlockRegistry: ComponentRegistry = {
-  'new-block': NewBlockComponent as React.ComponentType<Record<string, unknown>>,
+  'new-block': NewBlockComponent as React.ComponentType<
+    Record<string, unknown>
+  >,
 };
 
 const registryMap = {
@@ -240,13 +242,15 @@ const defaultVariants = {
 const businessSchema = generateLocalBusinessSchema({
   name: siteSettings?.businessName || '',
   telephone: siteSettings?.phoneNumber || '',
-  address: siteSettings?.address ? {
-    streetAddress: siteSettings.address.street,
-    addressLocality: siteSettings.address.city,
-    addressRegion: siteSettings.address.state,
-    postalCode: siteSettings.address.zip,
-    addressCountry: 'US',
-  } : undefined,
+  address: siteSettings?.address
+    ? {
+        streetAddress: siteSettings.address.street,
+        addressLocality: siteSettings.address.city,
+        addressRegion: siteSettings.address.state,
+        postalCode: siteSettings.address.zip,
+        addressCountry: 'US',
+      }
+    : undefined,
 });
 ```
 
@@ -337,7 +341,7 @@ export default async function sitemap() {
 import { sanityFetch } from '@/sanity/lib/live';
 
 export default async function sitemap() {
-  const { data } = await sanityFetch({ query: QUERY });  // Uses default dataset
+  const { data } = await sanityFetch({ query: QUERY }); // Uses default dataset
   // ...
 }
 ```
@@ -437,7 +441,7 @@ If any of these are true, Phase 1 fails:
 ### Adding a new block type
 
 1. Create schema in `apps/studio/sanity/schemas/blocks/[category]/[block-name].ts`
-2. Add `variant` field (hidden, default = block _type)
+2. Add `variant` field (hidden, default = block \_type)
 3. Create component in `apps/web/components/blocks/[category]/[block-name].tsx`
 4. Register in `SectionRenderer.tsx` registry + default variants
 5. Add to allowed types in service/location schemas

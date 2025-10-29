@@ -87,7 +87,6 @@
 
 Execute these steps in order; completing steps 1–7 removes every blocker called out in this audit and positions the platform for a true 100/100 Phase 1 sign-off.
 
-
 # Phase 1 Audit Findings & 100-Point Recovery Plan
 
 ## Scope & Scoring Context
@@ -179,168 +178,203 @@ Execute these steps in order; completing steps 1–7 removes every blocker calle
 
 Next Steps After Phase 1
 Immediate: Verification & Testing
+
 1. Test Dataset Isolation
+
 # Start dev server
+
 pnpm dev
 
 # Test domain routing works
+
 curl -H "Host: localhost:3000" http://localhost:3000/
+
 # Verify x-sanity-dataset header is set correctly
 
 # Test a service page renders
-curl http://localhost:3000/services/drain-cleaning
-2. Run Lighthouse CI
+
+curl http://localhost:3000/services/drain-cleaning 2. Run Lighthouse CI
+
 # Build production bundle
+
 pnpm build
 
 # Start production server
+
 pnpm start
 
 # Run Lighthouse CI (will fail if SEO < 100 or JS > 250KB)
-pnpm lhci autorun
-3. Verify Schema Changes
+
+pnpm lhci autorun 3. Verify Schema Changes
+
 # Regenerate Sanity types
+
 cd apps/web
 pnpm typegen
 
 # Typecheck entire codebase
-pnpm typecheck
-4. Test Sitemap
+
+pnpm typecheck 4. Test Sitemap
+
 # With server running
+
 curl http://localhost:3000/sitemap.xml
+
 # Verify only service, location, serviceLocation URLs appear
+
 # Verify no page/post URLs
+
 Phase 2: Multi-Tenant Rollout
+
 1. Create Second Tenant Dataset In Sanity Studio:
-Create new dataset: client2-production
-Clone schema from packages/schemas
-Populate with client2's business data (siteSettings)
-Add services/locations for client2
+   Create new dataset: client2-production
+   Clone schema from packages/schemas
+   Populate with client2's business data (siteSettings)
+   Add services/locations for client2
 2. Add Domain Mapping Edit apps/web/lib/domain-middleware.ts:
-export const domainConfigs: Record<string, DomainConfig> = {
-  'buddsplumbing.com': {
-    domain: 'buddsplumbing.com',
-    clientId: 'budds',
-    dataset: 'production',
-    projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID,
-  },
-  'client2plumbing.com': {
-    domain: 'client2plumbing.com',
-    clientId: 'client2',
-    dataset: 'client2-production',
-    projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID,
-  },
-};
+   export const domainConfigs: Record<string, DomainConfig> = {
+   'buddsplumbing.com': {
+   domain: 'buddsplumbing.com',
+   clientId: 'budds',
+   dataset: 'production',
+   projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID,
+   },
+   'client2plumbing.com': {
+   domain: 'client2plumbing.com',
+   clientId: 'client2',
+   dataset: 'client2-production',
+   projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID,
+   },
+   };
 3. Test Multi-Tenant Isolation
+
 # Test domain 1
+
 curl -H "Host: buddsplumbing.com" http://localhost:3000/
 
 # Test domain 2
+
 curl -H "Host: client2plumbing.com" http://localhost:3000/
 
 # Verify each sees only their dataset content
+
 4. Deploy Multi-Tenant
-Configure DNS for both domains
-Deploy to Vercel with both domains mapped
-Verify each domain routes to correct dataset
-Phase 3: Production Optimization
+   Configure DNS for both domains
+   Deploy to Vercel with both domains mapped
+   Verify each domain routes to correct dataset
+   Phase 3: Production Optimization
 1. SEO Enhancements
-Add structured data validation tests
-Implement dynamic sitemaps per domain
-Add robots.txt per tenant
-Set up Google Search Console per domain
-2. Performance Monitoring
-Set up Vercel Analytics
-Monitor Core Web Vitals per tenant
-Track bundle size in CI
-Set up Lighthouse CI in GitHub Actions
-3. Content Migration
-Migrate legacy blocks → sections[]
-Migrate legacy flat SEO fields → seo object
-Remove hidden legacy fields from schemas
-Clean up old service-location manual slugs
-4. Editorial Improvements
-Add visible variant dropdowns to blocks (currently hidden)
-Create variant component registry
-Build preview system for variants
-Add block templates for common layouts
-Phase 4: Scale Infrastructure
+   Add structured data validation tests
+   Implement dynamic sitemaps per domain
+   Add robots.txt per tenant
+   Set up Google Search Console per domain
+1. Performance Monitoring
+   Set up Vercel Analytics
+   Monitor Core Web Vitals per tenant
+   Track bundle size in CI
+   Set up Lighthouse CI in GitHub Actions
+1. Content Migration
+   Migrate legacy blocks → sections[]
+   Migrate legacy flat SEO fields → seo object
+   Remove hidden legacy fields from schemas
+   Clean up old service-location manual slugs
+1. Editorial Improvements
+   Add visible variant dropdowns to blocks (currently hidden)
+   Create variant component registry
+   Build preview system for variants
+   Add block templates for common layouts
+   Phase 4: Scale Infrastructure
 1. Automate Tenant Provisioning Create script:
+
 # scripts/provision-tenant.sh
+
 TENANT_ID=$1
 TENANT_DATASET="${TENANT_ID}-production"
 
 # 1. Create Sanity dataset
+
 sanity dataset create $TENANT_DATASET
 
 # 2. Import schema
+
 sanity schema extract --output=schema.json
 sanity schema import --dataset=$TENANT_DATASET schema.json
 
 # 3. Seed siteSettings
+
 # ...
+
 2. Build Tenant Admin Dashboard
-List all tenants
-View dataset stats
-Manage domain mappings
-Monitor SEO scores per tenant
+   List all tenants
+   View dataset stats
+   Manage domain mappings
+   Monitor SEO scores per tenant
 3. Centralized Monitoring
-Aggregate Lighthouse scores across tenants
-Track bundle size trends
-Monitor dataset query performance
-Set up alerts for SEO regressions
-Recommended Order
-Week 1: Verification
- Fix any TypeScript errors from schema changes
- Test all routes render correctly
- Run Lighthouse CI and fix any failures
- Verify sitemap generates correctly
-Week 2: Deploy Phase 1
- Deploy single-tenant production
- Set up monitoring (Vercel Analytics)
- Configure Lighthouse CI in GitHub Actions
- Document deployment process
-Week 3: Second Tenant
- Create second dataset in Sanity
- Add domain mapping
- Test locally with host headers
- Deploy multi-tenant
-Week 4: Scale
- Add 3rd-5th tenants
- Build provisioning automation
- Set up centralized monitoring
- Document tenant onboarding
-Blockers to Watch
-Potential Issues:
-TypeScript errors from schema changes
-Run pnpm typegen in apps/web
-Fix any type mismatches (blocks → sections)
-Lighthouse CI failures
-Bundle size might exceed 250KB initially
-May need to optimize imports or lazy-load blocks
-SEO might not be 100 if meta tags missing
-Legacy data migration
-Existing service-location docs have manual slugs
-Need migration script to remove legacy slug field
-Fallback to service blocks might not work if blocks[] array is used instead of sections[]
-Missing siteSettings data
-If siteSettings doesn't have all NAP fields populated
-LocalBusiness schema will have empty strings
-Need to populate siteSettings before deploying
-First Action Right Now
+   Aggregate Lighthouse scores across tenants
+   Track bundle size trends
+   Monitor dataset query performance
+   Set up alerts for SEO regressions
+   Recommended Order
+   Week 1: Verification
+   Fix any TypeScript errors from schema changes
+   Test all routes render correctly
+   Run Lighthouse CI and fix any failures
+   Verify sitemap generates correctly
+   Week 2: Deploy Phase 1
+   Deploy single-tenant production
+   Set up monitoring (Vercel Analytics)
+   Configure Lighthouse CI in GitHub Actions
+   Document deployment process
+   Week 3: Second Tenant
+   Create second dataset in Sanity
+   Add domain mapping
+   Test locally with host headers
+   Deploy multi-tenant
+   Week 4: Scale
+   Add 3rd-5th tenants
+   Build provisioning automation
+   Set up centralized monitoring
+   Document tenant onboarding
+   Blockers to Watch
+   Potential Issues:
+   TypeScript errors from schema changes
+   Run pnpm typegen in apps/web
+   Fix any type mismatches (blocks → sections)
+   Lighthouse CI failures
+   Bundle size might exceed 250KB initially
+   May need to optimize imports or lazy-load blocks
+   SEO might not be 100 if meta tags missing
+   Legacy data migration
+   Existing service-location docs have manual slugs
+   Need migration script to remove legacy slug field
+   Fallback to service blocks might not work if blocks[] array is used instead of sections[]
+   Missing siteSettings data
+   If siteSettings doesn't have all NAP fields populated
+   LocalBusiness schema will have empty strings
+   Need to populate siteSettings before deploying
+   First Action Right Now
+
 # 1. Regenerate types from new schemas
+
 cd /Users/jagpalkooner/budds-plumbing-2/apps/web
 pnpm typegen
 
 # 2. Run typecheck
+
 pnpm typecheck
 
 # 3. If passing, start dev server
+
 pnpm dev
 
 # 4. Open browser and test
+
 # - http://localhost:3000/
+
 # - http://localhost:3000/services/drain-cleaning
+
 # - http://localhost:3000/locations/cape-may
+
 # - http://localhost:3000/sitemap.xml
+
 If you see errors, we fix them before proceeding to Phase 2. Would you like me to run the typegen and typecheck now to verify Phase 1 is ready?
