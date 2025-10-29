@@ -67,6 +67,17 @@ export const DOMAIN_MAPPINGS: DomainConfig[] = [
       name: 'Budds Plumbing (Dev)',
     },
   },
+  // Vercel deployment domain
+  {
+    domain: 'budds-plumbing-studio.vercel.app',
+    projectId: DEFAULT_PROJECT_ID,
+    dataset: process.env.NEXT_PUBLIC_SANITY_DATASET || 'production',
+    clientId: 'budds-main',
+    enabled: true,
+    branding: {
+      name: 'Budds Plumbing',
+    },
+  },
   // Example subdomain client
   // {
   //   domain: `client1.${BASE_DOMAIN}`,
