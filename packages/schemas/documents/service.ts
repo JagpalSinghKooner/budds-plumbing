@@ -4,8 +4,8 @@ import { defineField, defineType } from 'sanity';
  * Service Schema - Phase 1 Contract
  *
  * Uses sections[] array for content blocks
- * Lean SEO with structured fields
- * No legacy category reference required for Phase 1
+ * Lean SEO with structured seo object
+ * No legacy fields - clean Phase 1 implementation
  */
 export const serviceSchema = defineType({
   name: 'service',
@@ -125,70 +125,6 @@ export const serviceSchema = defineType({
           },
         }),
       ],
-    }),
-    // Keep legacy fields for backward compatibility during migration
-    defineField({
-      name: 'category',
-      title: 'Category (Legacy)',
-      type: 'reference',
-      to: [{ type: 'serviceCategory' }],
-      group: 'content',
-      description: 'Legacy field - optional for Phase 1',
-      hidden: true,
-    }),
-    defineField({
-      name: 'blocks',
-      title: 'Blocks (Legacy)',
-      type: 'array',
-      group: 'content',
-      description: 'Legacy field - use sections[] instead',
-      hidden: true,
-      of: [
-        { type: 'hero-1' },
-        { type: 'hero-2' },
-        { type: 'section-header' },
-        { type: 'split-row' },
-        { type: 'grid-row' },
-        { type: 'carousel-1' },
-        { type: 'carousel-2' },
-        { type: 'timeline-row' },
-        { type: 'cta-1' },
-        { type: 'logo-cloud-1' },
-        { type: 'faqs' },
-        { type: 'form-newsletter' },
-      ],
-    }),
-    defineField({
-      name: 'meta_title',
-      title: 'Meta Title (Legacy)',
-      type: 'string',
-      group: 'seo',
-      description: 'Legacy field - use seo.title instead',
-      hidden: true,
-    }),
-    defineField({
-      name: 'meta_description',
-      title: 'Meta Description (Legacy)',
-      type: 'text',
-      group: 'seo',
-      description: 'Legacy field - use seo.description instead',
-      hidden: true,
-    }),
-    defineField({
-      name: 'noindex',
-      title: 'No Index (Legacy)',
-      type: 'boolean',
-      group: 'seo',
-      description: 'Legacy field - use seo.noindex instead',
-      hidden: true,
-    }),
-    defineField({
-      name: 'ogImage',
-      title: 'OG Image (Legacy)',
-      type: 'image',
-      group: 'seo',
-      description: 'Legacy field - use seo.ogImage instead',
-      hidden: true,
     }),
   ],
   preview: {
